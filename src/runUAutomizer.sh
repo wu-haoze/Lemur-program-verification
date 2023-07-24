@@ -5,4 +5,4 @@ filename=$(realpath $1)
 cd /home/haozewu/Projects/vmware/GPT_MC/UAutomizer-linux
 shift
 
-echo python3 ../src/runUAutomizer.py $filename $@
+python3 ../src/runUAutomizer.py $filename $@
