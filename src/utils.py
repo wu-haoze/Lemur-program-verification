@@ -5,6 +5,7 @@ import subprocess
 def parse_args():
     parser = argparse.ArgumentParser(description="GPT4MC.")
     parser.add_argument("input", help="Path to the yaml file.")
+    parser.add_argument("-v", "--verifier", type=str, default="uautomizer", choices=["uautomizer", "cbmc"], help="Verifier uautomizer/cbmc.")
     parser.add_argument("--prop", type=str, default="reach", choices=["term", "reach"], help="Property type term/reach.")
     return parser.parse_args()
 

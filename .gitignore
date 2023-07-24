@@ -1,6 +1,12 @@
 *~
 Ultimate.log
 
+cbmc
+uautomizer
+cbmc.zip
+uautomizer.zip
+sv-benchmarks-main
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
