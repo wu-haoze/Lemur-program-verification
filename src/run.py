@@ -4,9 +4,9 @@ from task import Task
 import utils
 
 PATH_DIR = abspath(os.path.dirname(__file__))
-VERIFIERS = {"uautomizer": join(PATH_DIR, "../uautomizer/Ultimate.py"),
-             "cbmc": join(PATH_DIR, "../cbmc/cbmc")}
-SV_BENCHMARK_DIR = join(PATH_DIR, "../sv-benchmarks-main/")
+VERIFIERS = {"uautomizer": join(PATH_DIR, "../tools/uautomizer/Ultimate.py"),
+             "cbmc": join(PATH_DIR, "../tools/cbmc/cbmc")}
+SV_BENCHMARK_DIR = join(PATH_DIR, "../benchmarks/sv-benchmarks-main/")
 
 if __name__ == "__main__":
     args = utils.parse_args()
@@ -14,8 +14,7 @@ if __name__ == "__main__":
 
     VERIFIER = VERIFIERS[args.verifier]
 
-    working_dir = join(PATH_DIR, f"../{args.verifier}")
-    os.chdir(working_dir)
+    os.chdir(dirname(VERIFIER))
     if args.verifier == "cbmc":
         command = f"{VERIFIER} --propertyfile {task.property} --{task.arch.split('bit')[0]} {task.source_code}"
     elif args.verifier == "uautomizer":
