@@ -6,6 +6,7 @@ cbmc.zip
 uautomizer.zip
 sv-benchmarks-main
 sv-benchmarks-main.zip
+tools/uautomizer/witness.graphml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
