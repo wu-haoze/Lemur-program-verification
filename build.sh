@@ -18,12 +18,5 @@ then
     rm -rf cbmc
     unzip cbmc.zip
 fi
-if [ ! -f uautomizer.zip ]
-then
-    wget https://gitlab.com/sosy-lab/sv-comp/archives-2023/raw/svcomp23/2023/uautomizer.zip
-    rm -rf UAutomizer-linux uautomizer
-    unzip uautomizer.zip
-    mv UAutomizer-linux uautomizer
-fi
 
 cd ../

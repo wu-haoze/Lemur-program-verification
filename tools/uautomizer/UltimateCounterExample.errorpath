@@ -1,0 +1,18 @@
+[L5]               unsigned char n = __VERIFIER_nondet_uchar();
+[L6]   COND FALSE  !(n == 0)
+[L9]               unsigned char v = 0;
+[L10]              unsigned int  s = 0;
+[L11]              unsigned int  i = 0;
+       VAL         [i=0, n=1, s=0, v=0]
+[L12]  COND TRUE   i < n
+[L13]              v = __VERIFIER_nondet_uchar()
+[L17]              s += v
+[L18]              ++i
+       VAL         [i=1, n=1, s=255, v=255]
+[L12]  COND FALSE  !(i < n)
+       VAL         [i=1, n=1, s=255, v=255]
+[L20]  COND TRUE   s > 254 * n
+       VAL         [i=1, n=1, s=255, v=255]
+[L21]              reach_error()
+       VAL         [i=1, n=1, s=255, v=255]
+

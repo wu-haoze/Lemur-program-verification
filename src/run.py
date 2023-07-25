@@ -22,5 +22,7 @@ if __name__ == "__main__":
     if args.verifier == "cbmc":
         command = f"{VERIFIER} --propertyfile {task.property} --{task.arch.split('bit')[0]} {task.source_code}"
     elif args.verifier == "uautomizer":
-        command = f"{VERIFIER} --spec {task.property} --file {task.source_code} --architecture {task.arch} --full-output"
+        command = f"{VERIFIER} --spec {task.property} --file {task.source_code} --architecture {task.arch}"
+        if args.bitprecise:
+            command += " --bitprecise"
     utils.run_subprocess(command)
