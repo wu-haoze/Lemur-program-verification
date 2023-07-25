@@ -2,6 +2,7 @@ import os
 from os.path import join, dirname, abspath
 from task import Task
 import utils
+#import rewritter
 
 PATH_DIR = abspath(os.path.dirname(__file__))
 VERIFIERS = {"uautomizer": join(PATH_DIR, "../tools/uautomizer/Ultimate.py"),
@@ -14,10 +15,12 @@ if __name__ == "__main__":
 
     VERIFIER = VERIFIERS[args.verifier]
 
+    #r = rewritter.Rewritter(open(task.source_code).read())
+    #exit(0)
+
     os.chdir(dirname(VERIFIER))
     if args.verifier == "cbmc":
         command = f"{VERIFIER} --propertyfile {task.property} --{task.arch.split('bit')[0]} {task.source_code}"
     elif args.verifier == "uautomizer":
-        command = f"{VERIFIER} --spec {task.property} --file {task.source_code} --architecture {task.arch}"
-
+        command = f"{VERIFIER} --spec {task.property} --file {task.source_code} --architecture {task.arch} --full-output"
     utils.run_subprocess(command)
