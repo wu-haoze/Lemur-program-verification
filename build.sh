@@ -4,9 +4,9 @@ mkdir benchmarks
 cd benchmarks
 if [ ! -f sv-benchmarks-main.zip ]
 then
-    wget https://gitlab.com/sosy-lab/benchmarking/sv-benchmarks/-/archive/main/sv-benchmarks-main.zip
-    rm -rf sv-benchmarks-main
-    unzip sv-benchmarks-main.zip
+    wget https://gitlab.com/sosy-lab/benchmarking/sv-benchmarks/-/archive/svcomp23/sv-benchmarks-svcomp23.zip
+    rm -rf sv-benchmarks-svcomp23
+    unzip sv-benchmarks-svcomp23.zip
 fi
 cd ../
 

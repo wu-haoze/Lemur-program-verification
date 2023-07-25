@@ -4,8 +4,7 @@ Ultimate.log
 cbmc
 cbmc.zip
 uautomizer.zip
-sv-benchmarks-main
-sv-benchmarks-main.zip
+sv-benchmarks-*
 tools/uautomizer/witness.graphml
 
 # Byte-compiled / optimized / DLL files
