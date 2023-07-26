@@ -1,18 +1,50 @@
-[L5]               unsigned char n = __VERIFIER_nondet_uchar();
-[L6]   COND FALSE  !(n == 0)
-[L9]               unsigned char v = 0;
-[L10]              unsigned int  s = 0;
-[L11]              unsigned int  i = 0;
-       VAL         [i=0, n=1, s=0, v=0]
-[L12]  COND TRUE   i < n
-[L13]              v = __VERIFIER_nondet_uchar()
-[L17]              s += v
-[L18]              ++i
-       VAL         [i=1, n=1, s=255, v=255]
-[L12]  COND FALSE  !(i < n)
-       VAL         [i=1, n=1, s=255, v=255]
-[L20]  COND TRUE   s > 254 * n
-       VAL         [i=1, n=1, s=255, v=255]
-[L21]              reach_error()
-       VAL         [i=1, n=1, s=255, v=255]
+[L19]              int N;
+       VAL         [N=0]
+[L23]              N = __VERIFIER_nondet_int()
+[L24]  COND FALSE  !(N <= 0)
+[L25]  CALL        assume_abort_if_not(N <= 2147483647/sizeof(int))
+[L13]  COND FALSE  !(!cond)
+       VAL         [\old(cond)=1, cond=1, N=1]
+[L25]  RET         assume_abort_if_not(N <= 2147483647/sizeof(int))
+[L27]              int i;
+[L28]              long long sum[1];
+[L29]              int *a = malloc(sizeof(int)*N);
+[L31]              sum[0] = N
+[L32]              i=0
+       VAL         [a={-1:0}, i=0, N=1, sum={7:0}]
+[L32]  COND TRUE   i<N
+[L34]              a[i] = 1
+       VAL         [a={-1:0}, i=0, N=1, sum={7:0}]
+[L32]              i++
+       VAL         [a={-1:0}, i=1, N=1, sum={7:0}]
+[L32]  COND FALSE  !(i<N)
+       VAL         [a={-1:0}, i=1, N=1, sum={7:0}]
+[L37]              i=0
+       VAL         [a={-1:0}, i=0, N=1, sum={7:0}]
+[L37]  COND TRUE   i<N
+[L39]  EXPR        a[i]
+       VAL         [a={-1:0}, a[i]=1, i=0, N=1, sum={7:0}]
+[L39]  COND TRUE   a[i] == 1
+[L40]  EXPR        a[i]
+[L40]              a[i] = a[i] + 4
+[L37]              i++
+       VAL         [a={-1:0}, i=1, N=1, sum={7:0}]
+[L37]  COND FALSE  !(i<N)
+       VAL         [a={-1:0}, i=1, N=1, sum={7:0}]
+[L46]              i=0
+       VAL         [a={-1:0}, i=0, N=1, sum={7:0}]
+[L46]  COND TRUE   i<N
+[L48]  EXPR        sum[0]
+[L48]  EXPR        a[i]
+[L48]              sum[0] = sum[0] + a[i]
+[L46]              i++
+       VAL         [a={-1:0}, i=1, N=1, sum={7:0}]
+[L46]  COND FALSE  !(i<N)
+       VAL         [a={-1:0}, i=1, N=1, sum={7:0}]
+[L51]  EXPR        sum[0]
+[L51]  CALL        __VERIFIER_assert(sum[0] == 5*N)
+[L15]  COND TRUE   !(cond)
+       VAL         [\old(cond)=0, cond=0, N=1]
+[L15]              reach_error()
+       VAL         [\old(cond)=0, cond=0, N=1]
 

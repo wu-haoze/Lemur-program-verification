@@ -11,7 +11,7 @@ SV_BENCHMARK_DIR = join(PATH_DIR, "../benchmarks/sv-benchmarks-main/")
 
 if __name__ == "__main__":
     args = utils.parse_args()
-    task = Task(args.input, args.prop, SV_BENCHMARK_DIR)
+    task = Task(args.input, args.prop)
 
     VERIFIER = VERIFIERS[args.verifier]
 
