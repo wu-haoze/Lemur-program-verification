@@ -8,6 +8,7 @@ uautomizer.zip
 sv-benchmarks-*
 tools/uautomizer/witness.graphml
 tools/uautomizer/data
+esbmc*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

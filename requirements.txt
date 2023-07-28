@@ -1,1 +1,4 @@
 pycparser
+transformers
+fire
+openai
