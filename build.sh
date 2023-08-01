@@ -7,6 +7,9 @@ then
     wget https://gitlab.com/sosy-lab/benchmarking/sv-benchmarks/-/archive/svcomp23/sv-benchmarks-svcomp23.zip
     rm -rf sv-benchmarks-svcomp23
     unzip sv-benchmarks-svcomp23.zip
+    cd sv-benchmarks-svcomp23/c/
+    while read p ; do for file in $p; do echo $(realpath $file); done; done < ../../ReachSafety.txt  > ../../benchmark_set_reach_safety
+    cd ../../
 fi
 cd ../
 

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-filename=$(realpath $1)
+if [ -d /barrett/scratch/haozewu/vmware/GPT_MC ]
+then
+    python3 /barrett/scratch/haozewu/vmware/GPT_MC/src/run.py $@
+else
+    python3 ./src/run.py $@
+fi
 
-shift
-python3 ./src/run.py $filename $@

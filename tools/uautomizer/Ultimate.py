@@ -22,7 +22,7 @@ version = '2329fc70'
 toolname = 'Automizer'
 # fmt: on
 
-write_ultimate_output_to_file = True
+write_ultimate_output_to_file = False
 output_file_name = "Ultimate.log"
 error_path_file_name = "UltimateCounterExample.errorpath"
 ultimatedir = os.path.dirname(os.path.realpath(__file__))
