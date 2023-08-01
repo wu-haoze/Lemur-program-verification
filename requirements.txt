@@ -1,5 +1,3 @@
 pycparser
-transformers
-fire
 openai
 tiktoken
