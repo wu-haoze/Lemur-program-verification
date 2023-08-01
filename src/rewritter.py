@@ -1,19 +1,13 @@
 import utils
 import re
-#from pycparser import c_parser, c_generator, c_ast
+from pycparser import c_parser, c_generator, c_ast
 
 class RewritingVisitor(c_ast.NodeVisitor):
     def __init__(self):
         self.to_remove = []
 
-    def visit_FuncCall(self, node):
-        if node.name.name == "__VERIFIER_assert":
-            node.name.name = "assert"
-        if node.args:
-            self.visit(node.args)
-
     def visit_FuncDef(self, node):
-        if node.decl.name in ["__VERIFIER_assert", "reach_error"]:
+        if node.decl.name in ["__VERIFIER_assert", "reach_error", "assume_abort_if_not", "assume"]:
             self.to_remove.append(node)
 
 
@@ -30,18 +24,22 @@ class Rewritter:
         self.remove_verifier_nondet()
         self.remove_comments()
         self.remove_externs()
-        parser = c_parser.CParser()
-        ast = parser.parse(self.new_code)
+        #print(self.new_code)
+        #parser = c_parser.CParser()
+        #with open("test.c", 'w') as out_file:
+        #    out_file.write(self.new_code)
 
-        visitor = RewritingVisitor()
-        visitor.visit(ast)
-        for node in visitor.to_remove:
-            ast.ext.remove(node)
 
-        generator = c_generator.CGenerator()
-        code = generator.visit(ast)
-        print(code)
+        #ast = parser.parse(self.new_code)
 
+        #visitor = RewritingVisitor()
+        #visitor.visit(ast)
+        #for node in visitor.to_remove:
+        #    ast.ext.remove(node)
+        #generator = c_generator.CGenerator()
+        #self.new_code = generator.visit(ast)
+        #self.new_code = self.new_code.replace("__VERIFIER_assert", "assert")
+        #print(self.new_code)
 
 
     def nondet_type(self, type_str : str):
@@ -59,7 +57,7 @@ class Rewritter:
 
     def remove_verifier_nondet(self):
         tokens = self.get_tokens_with_verifier_nondet(self.new_code)
-        print("Found nodet tokens", tokens)
+        #print("Found nodet tokens", tokens)
         for token in tokens:
             pattern = token + "()"
             replacement = self.nondet_type(token.split("__VERIFIER_nondet_")[1]) + " rand()"
