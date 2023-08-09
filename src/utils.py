@@ -5,7 +5,7 @@ import subprocess
 def parse_args():
     parser = argparse.ArgumentParser(description="GPT4MC.")
     parser.add_argument("input", help="Path to the yaml file.")
-    parser.add_argument("-v", "--verifier", type=str, default="uautomizer", choices=["uautomizer", "cbmc", "esbmc"], help="Verifier uautomizer/cbmc/esbmc.")
+    parser.add_argument("-v", "--verifier", type=str, default="uautomizer", choices=["uautomizer", "cbmc", "esbmc", "veriabs"], help="Verifier uautomizer/cbmc/esbmc/veriabs.")
     parser.add_argument("--prop", type=str, default="reach", choices=["term", "reach"], help="Property type term/reach.")
     parser.add_argument("--bitprecise", action="store_true", help="Use bit-precise analysis directly.")
     return parser.parse_args()
@@ -42,3 +42,7 @@ def run_subprocess(command):
 
     # Wait for the process to finish
     process.wait()
+
+def run_subprocess_and_get_output(command):
+    p = subprocess.run( command.split(), capture_output=True )
+    return p.stdout.decode(), p.stderr.decode()
