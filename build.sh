@@ -27,5 +27,17 @@ then
     rm -rf cbmc
     unzip cbmc.zip
 fi
+if [ ! -f sl2.zip ]
+then
+    wget https://gitlab.com/sosy-lab/sv-comp/archives-2023/raw/svcomp23/2023/2ls.zip
+    rm -rf sl2
+    unzip sl2.zip
+fi
+if [ ! -f uautomizer.zip ]
+then
+    wget https://gitlab.com/sosy-lab/sv-comp/archives-2023/raw/svcomp23/2023/uautomizer.zip
+    rm -rf uautomizer
+    unzip uautomizer.zip
+fi
 
 cd ../

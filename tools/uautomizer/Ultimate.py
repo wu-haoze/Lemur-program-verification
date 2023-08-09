@@ -22,7 +22,7 @@ version = '2329fc70'
 toolname = 'Automizer'
 # fmt: on
 
-write_ultimate_output_to_file = False
+write_ultimate_output_to_file = True
 output_file_name = "Ultimate.log"
 error_path_file_name = "UltimateCounterExample.errorpath"
 ultimatedir = os.path.dirname(os.path.realpath(__file__))
@@ -736,11 +736,6 @@ def parse_args():
         nargs=1,
         help="Specify a filename for the generated witness; default is witness.graphml",
     )
-    parser.add_argument(
-        "--bitprecise",
-        action="store_true",
-        help="Directly use bitprecise analysis",
-    )
 
     args, extras = parser.parse_known_args()
 
@@ -813,7 +808,6 @@ def parse_args():
             args.full_output,
             args.validate,
             extras,
-            args.bitprecise,
         )
     else:
         return (
@@ -823,7 +817,6 @@ def parse_args():
             args.full_output,
             args.validate,
             extras,
-            args.bitprecise,
         )
 
 
@@ -903,14 +896,13 @@ def main():
         verbose,
         validate_witness,
         extras,
-        bitprecise,
     ) = parse_args()
     prop = _PropParser(property_file)
 
     toolchain_file = get_toolchain_path(prop, validate_witness)
     settings_search_string = create_settings_search_string(prop, architecture)
     try:
-        settings_file = get_settings_path(bitprecise, settings_search_string)
+        settings_file = get_settings_path(False, settings_search_string)
     except _AbortButPrint:
         # just abort, there is nothing to print left
         sys.exit(ExitCode.FAIL_NO_SETTINGS_FILE_FOUND)

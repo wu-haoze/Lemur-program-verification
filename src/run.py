@@ -7,8 +7,9 @@ import rewritter
 PATH_DIR = abspath(os.path.dirname(__file__))
 VERIFIERS = {"uautomizer": join(PATH_DIR, "../tools/uautomizer/Ultimate.py"),
              "cbmc": join(PATH_DIR, "../tools/cbmc/cbmc"),
-             "esbmc": join(PATH_DIR, "../tools/esbmc/esbmc-wrapper.py"),
-             "veriabs": join(PATH_DIR, "../tools/veriabs/scripts/veriabs")}
+             "2ls": join(PATH_DIR, "../tools/2ls/2ls"),
+             "esbmc": join(PATH_DIR, "../tools/esbmc/esbmc-wrapper.py")
+             }
 SV_BENCHMARK_DIR = join(PATH_DIR, "../benchmarks/sv-benchmarks-main/")
 
 if __name__ == "__main__":
@@ -23,14 +24,12 @@ if __name__ == "__main__":
     os.chdir(dirname(VERIFIER))
     if args.verifier == "cbmc":
         command = f"{VERIFIER} --propertyfile {task.property} --{task.arch.split('bit')[0]} {task.source_code}"
+    if args.verifier == "2ls":
+        command = f"{VERIFIER} --propertyfile {task.property} --{task.arch.split('bit')[0]} {task.source_code}"
     if args.verifier == "esbmc":
         command = f"python3 -u {VERIFIER} -p {task.property} -s kinduction --arch {task.arch.split('bit')[0]} {task.source_code}"
     elif args.verifier == "uautomizer":
         command = f"python3 -u {VERIFIER} --spec {task.property} --file {task.source_code} --architecture {task.arch} --full-output"
-        if args.bitprecise:
-            command += " --bitprecise"
-    elif args.verifier == "veriabs":
-        command = f"{VERIFIER} --sv22 --property-file {task.property} -{task.arch.split('bit')[0]} {task.source_code}"
 
     print(command)
     utils.run_subprocess(command)
