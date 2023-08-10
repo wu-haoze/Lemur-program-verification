@@ -18,8 +18,9 @@ if __name__ == "__main__":
 
     VERIFIER = VERIFIERS[args.verifier]
 
-    r = rewritter.Rewritter(task.source_code, open(task.source_code).read())
-    print(r.new_code)
+    r = rewritter.Rewritter(task.source_code, open(task.source_code).read(), False)
+    r.find_all_assertions()
+    #print(r.new_code)
 
     os.chdir(dirname(VERIFIER))
     if args.verifier == "cbmc":

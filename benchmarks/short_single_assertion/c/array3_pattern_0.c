@@ -20,64 +20,71 @@
  * Array1[index] is incremented each time with index.
  * At mirror image from END of Array2, the element is incremented with -index.
  * Sum1 and sum2 is calculating square of elements of Array1 and Array2
- * Both Sum1 and Sum2 should always be equal. 
+ * Both Sum1 and Sum2 should always be equal.
  * */
 
 extern void abort(void);
-extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "array3_pattern.c", 28, "reach_error"); }
+extern void __assert_fail(const char *, const char *, unsigned int,
+                          const char *) __attribute__((__nothrow__, __leaf__))
+__attribute__((__noreturn__));
+void reach_error() {
+  __assert_fail("0", "array3_pattern.c", 28, "reach_error");
+}
 extern void abort(void);
 void assume_abort_if_not(int cond) {
-  if(!cond) {abort();}
+  if (!cond) {
+    abort();
+  }
 }
-void __VERIFIER_assert(int cond) { if(!(cond)) { ERROR: {reach_error();abort();} } }
-extern int __VERIFIER_nondet_int() ;
-extern short __VERIFIER_nondet_short() ;
-
-signed long long ARR_SIZE ;
-
-signed long long square(signed long long x)
-{
-	return x*x ;
+void __VERIFIER_assert(int cond) {
+  if (!(cond)) {
+  ERROR : {
+    reach_error();
+    abort();
+  }
+  }
 }
+extern int __VERIFIER_nondet_int();
+extern short __VERIFIER_nondet_short();
 
-int main()
-{
-	ARR_SIZE = (signed long long)__VERIFIER_nondet_short() ;
-	assume_abort_if_not(ARR_SIZE > 0) ;
+signed long long ARR_SIZE;
 
-	int array1[ARR_SIZE] ;
-	int array2[ARR_SIZE] ;
-	int count = 0, num = -1 ;
-       	signed long long sum1 = 0, sum2 = 0 ;
-	int temp ;
-	short index ;
+signed long long square(signed long long x) { return x * x; }
 
-	for(count=0;count<ARR_SIZE;count++)
-	{
-		array1[count] = 0 ;
-		array2[count] = 0 ;
-	}
+int main() {
+  ARR_SIZE = (signed long long)__VERIFIER_nondet_short();
+  assume_abort_if_not(ARR_SIZE > 0);
 
-	while(1)
-        {
+  int array1[ARR_SIZE];
+  int array2[ARR_SIZE];
+  int count = 0, num = -1;
+  signed long long sum1 = 0, sum2 = 0;
+  int temp;
+  short index;
 
-		index = __VERIFIER_nondet_short() ;
-		assume_abort_if_not(index>=0 && index < ARR_SIZE) ;
-		
-		array1[index] = array1[index] + num*(num*index) ;
-		array2[ARR_SIZE-1-index] = array2[ARR_SIZE-1-index] + (num * index) ;
+  for (count = 0; count < ARR_SIZE; count++) {
+    array1[count] = 0;
+    array2[count] = 0;
+  }
 
-		temp = __VERIFIER_nondet_int() ;
-		if(temp == 0) break ;
-	}
+  while (1) {
 
-	for(count=0;count<ARR_SIZE;count++)
-	{
-		sum1 = sum1 + square(array1[count]) ;
-		sum2 = sum2 + square(array2[count]) ;
-	}
+    index = __VERIFIER_nondet_short();
+    assume_abort_if_not(index >= 0 && index < ARR_SIZE);
 
-	__VERIFIER_assert(sum1 == sum2) ;
-	return 0 ;
+    array1[index] = array1[index] + num * (num * index);
+    array2[ARR_SIZE - 1 - index] = array2[ARR_SIZE - 1 - index] + (num * index);
+
+    temp = __VERIFIER_nondet_int();
+    if (temp == 0)
+      break;
+  }
+
+  for (count = 0; count < ARR_SIZE; count++) {
+    sum1 = sum1 + square(array1[count]);
+    sum2 = sum2 + square(array2[count]);
+  }
+
+  __VERIFIER_assert(sum1 == sum2);
+  return 0;
 }

@@ -1,5 +1,7 @@
 extern void abort(void);
-extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
+extern void __assert_fail(const char *, const char *, unsigned int,
+                          const char *) __attribute__((__nothrow__, __leaf__))
+__attribute__((__noreturn__));
 void reach_error() { __assert_fail("0", "test25-1.c", 3, "reach_error"); }
 extern int __VERIFIER_nondet_int();
 
@@ -11,13 +13,9 @@ struct cont {
   struct dummy *array;
 };
 
-int check(struct cont *pc, int i)
-{
-  return pc->array[1].b == i;
-}
+int check(struct cont *pc, int i) { return pc->array[1].b == i; }
 
-int main()
-{
+int main() {
   struct cont cont;
   struct dummy array[10];
   int i, *pa;
@@ -32,7 +30,7 @@ int main()
     cont.array = &array[i];
     pa = &cont.array[0].b;
     if (cont.array[0].b > 0) {
-      i =  array[i].b - 10;
+      i = array[i].b - 10;
       while (i < *pa) {
         ++i;
       }
@@ -44,6 +42,9 @@ int main()
 
   return 0;
 
-  ERROR: {{}            abort();}
+ERROR : {
+  reach_error();
+  abort();
+}
   return 1;
 }

@@ -1,18 +1,25 @@
 extern void abort(void);
-extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "verisec_sendmail_tTflag_arr_one_loop.c", 3, "reach_error"); }
+extern void __assert_fail(const char *, const char *, unsigned int,
+                          const char *) __attribute__((__nothrow__, __leaf__))
+__attribute__((__noreturn__));
+void reach_error() {
+  __assert_fail("0", "verisec_sendmail_tTflag_arr_one_loop.c", 3,
+                "reach_error");
+}
 
 extern char __VERIFIER_nondet_char();
 
 void __VERIFIER_assert(int cond) {
   if (!(cond)) {
-    ERROR: {reach_error();abort();}
+  ERROR : {
+    reach_error();
+    abort();
+  }
   }
   return;
 }
 
-int main (void)
-{
+int main(void) {
   char in[11]; // = "3277192070";
   char *s;
   unsigned char c;
@@ -25,14 +32,13 @@ int main (void)
   s = in;
   i = 0;
   c = in[idx_in];
-  while (('0' <= c) && (c <= '9'))
-  {
+  while (('0' <= c) && (c <= '9')) {
     j = c - '0';
     i = i * 10U + j;
     idx_in++;
     c = in[idx_in];
   }
   /* BAD */
-  __VERIFIER_assert (i >= 0);
+  __VERIFIER_assert(i >= 0);
   return 0;
 }

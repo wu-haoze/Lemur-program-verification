@@ -28,7 +28,17 @@ class Rewritter:
             #self.replace_reach_error_with_assertion()
             #print(self.new_code)
 
+    def find_all_loops(self):
+        with open("tmp.c", 'w') as out_file:
+            out_file.write(self.new_code)
+        command = f"clang -cc1 -ast-dump tmp.c"
+        output, err = utils.run_subprocess_and_get_output(command)
+        num_loops = output.count("ForStmt") + output.count("WhileStmt") + \
+            output.count("DoStmt")
+        return num_loops
+
     def find_all_assertions(self):
+        self.clang_format()
         substring_to_replace = []
 
         matches = list(re.finditer("__VERIFIER_assert", self.new_code))
@@ -41,13 +51,13 @@ class Rewritter:
             substring_to_replace.append((match.start(), i + 1));
 
         if len(matches) == 0:
-            for match in list(re.finditer("reach_error", self.new_code))[1:]:
+            for match in list(re.finditer(re.escape("reach_error"), self.new_code))[1:]:
                 for i in range(match.start(), len(self.new_code)):
                     if self.new_code[i] == ";":
                         break
-                print("Reach error:", match.start(), i + 1)
-                print(self.new_code[match.start(): i + 1])
-                substring_to_replace.append((match.start(), i + 1));
+                if "reach_error();" == self.new_code[match.start(): i + 1]:
+                    print(self.new_code[match.start(): i + 1])
+                    substring_to_replace.append((match.start(), i + 1));
 
         programs = []
         for i, (start, end) in enumerate(substring_to_replace):
@@ -57,9 +67,7 @@ class Rewritter:
                     prev_len = len(program)
                     replacement = "{}" + "".join((end_ - start_ - 2) * [" "])
                     program = program[:start_] + replacement + program[end_:]
-                    if len(program) != prev_len:
-                        print(f"{prev_len}, {len(program)}")
-                        exit(0)
+                    assert(len(program) == prev_len)
             programs.append(program)
         return programs
 

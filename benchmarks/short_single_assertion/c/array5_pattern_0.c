@@ -23,76 +23,85 @@
  * Sum of both array should be always zero.
  *
  * Changelog --> 22 November 2019
- * Variable count is reset on reaching 200. One can have any other integer value as well
- * to reset count. It is an additional challenge for Tools/solvers using supervised learning
- * based techniques for algorithm selection. 200 is the max unrolling for most of the reachsafe
- * programs to reach property violation. Presence of 200 as part of statement assignment 
- * inside loop can be picked up by algorithm selector to deploy only falsification/correctness proving
+ * Variable count is reset on reaching 200. One can have any other integer value
+ * as well to reset count. It is an additional challenge for Tools/solvers using
+ * supervised learning based techniques for algorithm selection. 200 is the max
+ * unrolling for most of the reachsafe programs to reach property violation.
+ * Presence of 200 as part of statement assignment inside loop can be picked up
+ * by algorithm selector to deploy only falsification/correctness proving
  * techniques.
  * */
 
 extern void abort(void);
-extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "array5_pattern.c", 36, "reach_error"); }
+extern void __assert_fail(const char *, const char *, unsigned int,
+                          const char *) __attribute__((__nothrow__, __leaf__))
+__attribute__((__noreturn__));
+void reach_error() {
+  __assert_fail("0", "array5_pattern.c", 36, "reach_error");
+}
 extern void abort(void);
 void assume_abort_if_not(int cond) {
-  if(!cond) {abort();}
+  if (!cond) {
+    abort();
+  }
 }
-void __VERIFIER_assert(int cond) { if(!(cond)) { ERROR: {reach_error();abort();} } }
-extern int __VERIFIER_nondet_int() ;
-extern short __VERIFIER_nondet_short() ;
+void __VERIFIER_assert(int cond) {
+  if (!(cond)) {
+  ERROR : {
+    reach_error();
+    abort();
+  }
+  }
+}
+extern int __VERIFIER_nondet_int();
+extern short __VERIFIER_nondet_short();
 
-signed long long ARR_SIZE ;
+signed long long ARR_SIZE;
 
-int main()
-{
-	ARR_SIZE = (signed long long)__VERIFIER_nondet_short() ;
-	assume_abort_if_not(ARR_SIZE > 0) ;
+int main() {
+  ARR_SIZE = (signed long long)__VERIFIER_nondet_short();
+  assume_abort_if_not(ARR_SIZE > 0);
 
-	int array1[ARR_SIZE] ;
-	int array2[ARR_SIZE] ;
-	int count = 0, num = -1 ;
-       	signed long long sum = 0 ;
-	int temp ;
-	short index ;
+  int array1[ARR_SIZE];
+  int array2[ARR_SIZE];
+  int count = 0, num = -1;
+  signed long long sum = 0;
+  int temp;
+  short index;
 
-	for(count=0;count<ARR_SIZE;count++)
-	{
-		array1[count] = 0 ;
-		array2[count] = 0 ;
-	}
+  for (count = 0; count < ARR_SIZE; count++) {
+    array1[count] = 0;
+    array2[count] = 0;
+  }
 
-	count = 1 ;
+  count = 1;
 
-	while(1)
-        {
-		
-		index = __VERIFIER_nondet_short() ;	
-		assume_abort_if_not(index>=0 && index < ARR_SIZE) ;
-		
+  while (1) {
 
-		if(index % 2 == 0){
-			array1[index] = num * (num * count) ;
-			array2[index] = num * count ;
-		}
-		else{
-			array1[index] = num * count ;
-			array2[index] = num * (num * count) ;
-		}
+    index = __VERIFIER_nondet_short();
+    assume_abort_if_not(index >= 0 && index < ARR_SIZE);
 
-		if(count == 200)
-			count = 0 ;	
-		count++ ;
+    if (index % 2 == 0) {
+      array1[index] = num * (num * count);
+      array2[index] = num * count;
+    } else {
+      array1[index] = num * count;
+      array2[index] = num * (num * count);
+    }
 
-		temp = __VERIFIER_nondet_int() ;
-		if(temp == 0) break ;
-	}
+    if (count == 200)
+      count = 0;
+    count++;
 
-	for(count=0;count<ARR_SIZE;count++)
-	{
-		sum = sum  + array1[count] + array2[count];
-	}
+    temp = __VERIFIER_nondet_int();
+    if (temp == 0)
+      break;
+  }
 
-	__VERIFIER_assert(sum == 0) ;
-	return 0 ;
+  for (count = 0; count < ARR_SIZE; count++) {
+    sum = sum + array1[count] + array2[count];
+  }
+
+  __VERIFIER_assert(sum == 0);
+  return 0;
 }

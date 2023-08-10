@@ -17,58 +17,68 @@
  * In while(1) loop, any index is selected non-deterministically.
  * Array1[index] is initialized with index.
  * At mirror image from END of Array2, the element is initialized with -index.
- * Sum of both array should be always zero. 
+ * Sum of both array should be always zero.
  * */
 
 extern void abort(void);
-extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "array1_pattern.c", 25, "reach_error"); }
+extern void __assert_fail(const char *, const char *, unsigned int,
+                          const char *) __attribute__((__nothrow__, __leaf__))
+__attribute__((__noreturn__));
+void reach_error() {
+  __assert_fail("0", "array1_pattern.c", 25, "reach_error");
+}
 extern void abort(void);
 void assume_abort_if_not(int cond) {
-  if(!cond) {abort();}
+  if (!cond) {
+    abort();
+  }
 }
-void __VERIFIER_assert(int cond) { if(!(cond)) { ERROR: {reach_error();abort();} } }
-extern int __VERIFIER_nondet_int() ;
-extern short __VERIFIER_nondet_short() ;
+void __VERIFIER_assert(int cond) {
+  if (!(cond)) {
+  ERROR : {
+    reach_error();
+    abort();
+  }
+  }
+}
+extern int __VERIFIER_nondet_int();
+extern short __VERIFIER_nondet_short();
 
-signed long long ARR_SIZE ;
+signed long long ARR_SIZE;
 
-int main()
-{
-	ARR_SIZE = __VERIFIER_nondet_short() ;
-	assume_abort_if_not(ARR_SIZE > 0) ;
+int main() {
+  ARR_SIZE = __VERIFIER_nondet_short();
+  assume_abort_if_not(ARR_SIZE > 0);
 
-	int array1[ARR_SIZE] ;
-	int array2[ARR_SIZE] ;
-	int count = 0, num = -1 ;
-	int temp ;
-	short index ;
-	signed long long sum = 0 ;
+  int array1[ARR_SIZE];
+  int array2[ARR_SIZE];
+  int count = 0, num = -1;
+  int temp;
+  short index;
+  signed long long sum = 0;
 
-	for(count=0;count<ARR_SIZE;count++)
-	{
-		array1[count] = 0 ;
-		array2[count] = 0 ;
-	}
+  for (count = 0; count < ARR_SIZE; count++) {
+    array1[count] = 0;
+    array2[count] = 0;
+  }
 
-	while(1)
-        {
+  while (1) {
 
-		index = __VERIFIER_nondet_short() ;
-		assume_abort_if_not(index>=0 && index < ARR_SIZE) ;
-		
-		array1[index] = num*(num*index) ;
-		array2[ARR_SIZE-1-index] = num * index ;
+    index = __VERIFIER_nondet_short();
+    assume_abort_if_not(index >= 0 && index < ARR_SIZE);
 
-		temp = __VERIFIER_nondet_int() ;
-		if(temp == 0) break ;
-	}
+    array1[index] = num * (num * index);
+    array2[ARR_SIZE - 1 - index] = num * index;
 
-	for(count=0;count<ARR_SIZE;count++)
-	{
-		sum = sum+ array1[count] + array2[count] ;
-	}
+    temp = __VERIFIER_nondet_int();
+    if (temp == 0)
+      break;
+  }
 
-	__VERIFIER_assert(sum == 0) ;
-	return 0 ;
+  for (count = 0; count < ARR_SIZE; count++) {
+    sum = sum + array1[count] + array2[count];
+  }
+
+  __VERIFIER_assert(sum == 0);
+  return 0;
 }

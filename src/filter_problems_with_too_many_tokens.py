@@ -42,11 +42,15 @@ with open("benchmarks/benchmark_set_reach_safety") as in_file:
                 print(f"{index},{yml_file},{num_tokens}")
                 source_code = open(code_path).read().strip()
                 r = Rewritter(code_path, source_code, False)
+                num_loops = r.find_all_loops()
+                if num_loops > 2:
+                    with open("many_loops.txt", 'a') as out_file:
+                        out_file.write(data["input_files"] + "\n")
+
                 programs = r.find_all_assertions()
                 for i, program in enumerate(programs):
                     name = data['input_files'][:-2] + f"_{i}" + data['input_files'][-2:]
                     yml_name = os.path.basename(yml_file)[:-4] + f"_{i}" + ".yml"
-                    print(yml_name)
                     new_data = copy(data)
                     new_data["input_files"] = name
                     with open(f"/home/haozewu/GPT_MC/benchmarks/short_single_assertion/c/{yml_name}", 'w') as f:

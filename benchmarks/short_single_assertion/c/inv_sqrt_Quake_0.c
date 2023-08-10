@@ -1,5 +1,7 @@
 extern void abort(void);
-extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
+extern void __assert_fail(const char *, const char *, unsigned int,
+                          const char *) __attribute__((__nothrow__, __leaf__))
+__attribute__((__noreturn__));
 void reach_error() { __assert_fail("0", "inv_sqrt_Quake.c", 3, "reach_error"); }
 /* Inverse square root computation by Newton's method, from Quake sources.
    See also "Fast Inverse Square root" by Chris Lomont.
@@ -8,23 +10,32 @@ void reach_error() { __assert_fail("0", "inv_sqrt_Quake.c", 3, "reach_error"); }
 extern float __VERIFIER_nondet_float(void);
 extern void abort(void);
 void assume_abort_if_not(int cond) {
-  if(!cond) {abort();}
+  if (!cond) {
+    abort();
+  }
 }
-void __VERIFIER_assert(int cond) { if (!(cond)) { ERROR: {reach_error();abort();} } return; }
+void __VERIFIER_assert(int cond) {
+  if (!(cond)) {
+  ERROR : {
+    reach_error();
+    abort();
+  }
+  }
+  return;
+}
 
 union float_int {
   float f;
   int i;
 };
 
-float InvSqrt(float x)
-{
-  float xhalf = 0.5f*x;
+float InvSqrt(float x) {
+  float xhalf = 0.5f * x;
   union float_int i;
   i.f = x;
-  i.i = 0x5f3759df - (i.i>>1);
+  i.i = 0x5f3759df - (i.i >> 1);
   x = i.f;
-  x = x*(1.5f-xhalf*x*x);
+  x = x * (1.5f - xhalf * x * x);
   return x;
 }
 
@@ -40,10 +51,9 @@ float InvSqrt(float x)
 }
 */
 
-int main()
-{
-  float a,r;
- 
+int main() {
+  float a, r;
+
   a = __VERIFIER_nondet_float();
   assume_abort_if_not(a >= 0.1f && a <= 100.f);
 

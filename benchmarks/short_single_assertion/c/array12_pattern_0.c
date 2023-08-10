@@ -19,60 +19,70 @@
  * All elements are initialized with 0.
  * In while(1) loop,  two indices are selected non-deterministically.
  * Array[index1][index2] is initialized with num.
- * Mirror element accross main diagonal i.e. Array[index2][index1] is initialized
- * with num^2 .
- * Sum of array should never exceed rowsize/columnsize. 
+ * Mirror element accross main diagonal i.e. Array[index2][index1] is
+ * initialized with num^2 . Sum of array should never exceed rowsize/columnsize.
  * */
 
 extern void abort(void);
-extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "array12_pattern.c", 29, "reach_error"); }
+extern void __assert_fail(const char *, const char *, unsigned int,
+                          const char *) __attribute__((__nothrow__, __leaf__))
+__attribute__((__noreturn__));
+void reach_error() {
+  __assert_fail("0", "array12_pattern.c", 29, "reach_error");
+}
 extern void abort(void);
 void assume_abort_if_not(int cond) {
-  if(!cond) {abort();}
+  if (!cond) {
+    abort();
+  }
 }
-void __VERIFIER_assert(int cond) { if(!(cond)) { ERROR: {reach_error();abort();} } }
-extern int __VERIFIER_nondet_int() ;
-extern short __VERIFIER_nondet_short() ;
+void __VERIFIER_assert(int cond) {
+  if (!(cond)) {
+  ERROR : {
+    reach_error();
+    abort();
+  }
+  }
+}
+extern int __VERIFIER_nondet_int();
+extern short __VERIFIER_nondet_short();
 
-signed long long ARR_SIZE ;
+signed long long ARR_SIZE;
 
-int main()
-{
-	ARR_SIZE = (signed long long)__VERIFIER_nondet_short() ;
-	assume_abort_if_not(ARR_SIZE > 0) ;
+int main() {
+  ARR_SIZE = (signed long long)__VERIFIER_nondet_short();
+  assume_abort_if_not(ARR_SIZE > 0);
 
-	int array[ARR_SIZE][ARR_SIZE] ;
-	
-	int row = 0, column = 0, num = -1 ; 
-	signed long long sum = 0 ;
-	int temp ;
-	short index1,index2 ;
+  int array[ARR_SIZE][ARR_SIZE];
 
-	for(row=0;row<ARR_SIZE;row++)
-		for(column=0;column<ARR_SIZE;column++)
-			array[row][column] = 0 ;
+  int row = 0, column = 0, num = -1;
+  signed long long sum = 0;
+  int temp;
+  short index1, index2;
 
-	while(1)
-        {
-		
-		index1 = __VERIFIER_nondet_short() ;
-		index2 = __VERIFIER_nondet_short() ;
-		assume_abort_if_not(index1>=0 && index1 < ARR_SIZE) ;
-		assume_abort_if_not(index2>=0 && index2 < ARR_SIZE) ;
+  for (row = 0; row < ARR_SIZE; row++)
+    for (column = 0; column < ARR_SIZE; column++)
+      array[row][column] = 0;
 
-		array[index1][index2] = num * num * num ;
-		array[index2][index1] = num * num ;
-		
+  while (1) {
 
-		temp = __VERIFIER_nondet_int() ;
-		if(temp == 0) break ;
-	}
+    index1 = __VERIFIER_nondet_short();
+    index2 = __VERIFIER_nondet_short();
+    assume_abort_if_not(index1 >= 0 && index1 < ARR_SIZE);
+    assume_abort_if_not(index2 >= 0 && index2 < ARR_SIZE);
 
-	for(row=0;row<ARR_SIZE;row++)
-		for(column=0;column<ARR_SIZE;column++)
-			sum = sum + array[row][column] ;
+    array[index1][index2] = num * num * num;
+    array[index2][index1] = num * num;
 
-	__VERIFIER_assert(sum >= 0 && sum <= ARR_SIZE) ;
-	return 0 ;
+    temp = __VERIFIER_nondet_int();
+    if (temp == 0)
+      break;
+  }
+
+  for (row = 0; row < ARR_SIZE; row++)
+    for (column = 0; column < ARR_SIZE; column++)
+      sum = sum + array[row][column];
+
+  __VERIFIER_assert(sum >= 0 && sum <= ARR_SIZE);
+  return 0;
 }
