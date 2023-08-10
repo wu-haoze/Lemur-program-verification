@@ -31,7 +31,7 @@ int main()
       y = y +4U*__VERIFIER_nondet_uint();
       z = z +8U*__VERIFIER_nondet_uint();
 
-      {}
+      __VERIFIER_assert(x+y+z!=1U);
     }
     return 0;
 }

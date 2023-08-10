@@ -1,5 +1,5 @@
 format_version: '2.0'
-input_files: apache-get-tag.i.v+nlh-reducer_0_1_2_3_4_5_6_7_8_9_10_11_12_13_14_15_16_17_18_19_20_21_22_23_24_25_26.c
+input_files: apache-get-tag.i.v+nlh-reducer_26.c
 options:
   data_model: ILP32
   language: C

@@ -37,7 +37,7 @@ int main()
  }
  for(i = 0; i < 1000000; i++)
  {
-  {}
+  __VERIFIER_assert(c[i].n == a[i].n + b[i].n);
  }
  return 0;
 }

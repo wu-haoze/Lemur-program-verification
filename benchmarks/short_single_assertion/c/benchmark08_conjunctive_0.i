@@ -24,6 +24,6 @@ int main() {
     sum=sum+i;
     i++;
   }
-  {}
+  __VERIFIER_assert(sum>=0);
   return 0;
 }

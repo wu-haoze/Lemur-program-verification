@@ -34,7 +34,7 @@ int main()
 		//assert
 		for(i=0; i<SIZE; i++)
 		{
-			{}
+			__VERIFIER_assert(a[i] == i*i);
 		}
 	}
 	return 1;

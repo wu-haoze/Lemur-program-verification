@@ -52,6 +52,6 @@ int main()
 		}
 	}
 
-	{}
+	__VERIFIER_assert(sum[0] == 4*N);
 	return 1;
 }

@@ -43,7 +43,7 @@ int main(){
   int j = 0;
   n = i;
   while (1) {
-    {}
+    __VERIFIER_assert(k >= 0);
     k = k -1;
     i = i - 1;
     j = j + 1;

@@ -26,6 +26,6 @@ int main()
     c2=__VERIFIER_nondet_bool();
   }
 
-  {}
+  __VERIFIER_assert(x1==0 || x2==0 || x3==0);
   return 0;
 }

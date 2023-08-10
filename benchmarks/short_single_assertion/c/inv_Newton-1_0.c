@@ -50,6 +50,6 @@ int main()
 
   r = inv(a);
 
-  {}
+  __VERIFIER_assert(r >= 0 && r <= 0.06);
   return 0;
 }

@@ -42,14 +42,14 @@ int main()
 	  z = (__VERIFIER_LA_iterations0 * 1L) + z__VERIFIER_LA_old_tmp0;
 	}
 	// END CONSTANTEXTRAPOLATION
-    	{}
+    	__VERIFIER_assert(!(z % 4));
 	y++;
     }
-    __VERIFIER_assert(!(y % 2));
+    {}                          
 
     x++;
   }
-  __VERIFIER_assert(!(x % 2));
+  {}                          
  return 0;
 
 }

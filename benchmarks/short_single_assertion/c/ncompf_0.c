@@ -49,7 +49,7 @@ int main()
 
 	for(i=0; i<N; i++)
 	{
-		{}
+		__VERIFIER_assert(c[i] == N + i*i*i);
 	}
 	return 1;
 }

@@ -25,7 +25,7 @@ int main() {
     c = 0;
 
     while (counter++<50) {
-        {}
+        __VERIFIER_assert(6*x - 2*y*y*y - 3*y*y - y == 0);
 
         if (!(c < k))
             break;
@@ -34,6 +34,6 @@ int main() {
         y = y + 1;
         x = y * y + x;
     }
-    __VERIFIER_assert(6*x - 2*y*y*y - 3*y*y - y == 0);
+    {}                                                
     return 0;
 }

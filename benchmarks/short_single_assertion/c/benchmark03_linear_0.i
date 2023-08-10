@@ -30,6 +30,6 @@ int main() {
     j+=y;
     if (flag) j+=1;
   }
-  {}
+  __VERIFIER_assert(j>=i);
   return 0;
 }

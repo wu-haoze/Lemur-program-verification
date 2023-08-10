@@ -29,7 +29,7 @@ int main( ) {
   }
   int x;
   for ( x = 0 ; x < 100000 ; x++ ) {
-    {}
+    __VERIFIER_assert( a1[x] == a3[x] );
   }
   return 0;
 }

@@ -30,6 +30,6 @@ int main() {
     }
   if ((y < (100)) & (x < (100))) abort();
   }
-  {}
+  __VERIFIER_assert(x == 100 || y == 100);
   return 0;
 }

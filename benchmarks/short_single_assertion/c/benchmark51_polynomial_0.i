@@ -23,6 +23,6 @@ int main() {
     if (x == 0) { x ++;
     } else x--;
   }
-  {}
+  __VERIFIER_assert((x>=0) && (x<=50));
   return 0;
 }

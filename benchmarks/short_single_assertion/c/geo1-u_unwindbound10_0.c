@@ -31,7 +31,7 @@ int main() {
     c = 1;
 
     while (counter++<10) {
-        {}
+        __VERIFIER_assert(x*z - x - y + 1 == 0);
 
         if (!(c < k)) 
             break;
@@ -44,6 +44,6 @@ int main() {
 
     x = x * (z - 1);
 
-    __VERIFIER_assert(1 + x - y == 0);
+    {}                                
     return 0;
 }

@@ -24,6 +24,6 @@ int main() {
     else x--;} if(x>0) y++;
     else x--;
   }
-  {}
+  __VERIFIER_assert(x*y>=0);
   return 0;
 }

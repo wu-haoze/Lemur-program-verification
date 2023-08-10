@@ -24,6 +24,6 @@ int main()
   if (y >= 0) y = x / 10.;
   else y = x*x + 2.;
 
-  {}
+  __VERIFIER_assert(y >= 0. && y <= 105.);
   return 0;
 }

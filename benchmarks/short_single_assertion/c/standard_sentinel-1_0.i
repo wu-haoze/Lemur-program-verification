@@ -28,7 +28,7 @@ int main ( ) {
     while( a[ i ] != marker ) {
       i = i + 1;
     }
-    {}
+    __VERIFIER_assert( i <= pos );
   }
   return 0;
 }

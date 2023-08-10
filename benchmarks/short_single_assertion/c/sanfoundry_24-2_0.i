@@ -13,10 +13,10 @@ void reach_error() { ((void) sizeof ((0) ? 1 : 0), __extension__ ({ if (0) ; els
 void __VERIFIER_assert(int cond) { if(!(cond)) { ERROR: {reach_error();abort();} } }
 extern int __VERIFIER_nondet_int(void);
 void printEven( int i ) {
-  {}
+  __VERIFIER_assert( ( i % 2 ) == 0 );
 }
 void printOdd( int i ) {
-  __VERIFIER_assert( ( i % 2 ) != 0 );
+  {}                                  
 }
 int main()
 {

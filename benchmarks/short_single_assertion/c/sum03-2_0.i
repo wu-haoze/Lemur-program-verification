@@ -24,6 +24,6 @@ int main() {
   while(1) {
     sn = sn + (2);
     x++;
-    {}
+    __VERIFIER_assert(sn==x*(2) || sn == 0);
   }
 }

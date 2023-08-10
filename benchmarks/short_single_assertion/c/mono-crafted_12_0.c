@@ -12,6 +12,6 @@ unsigned int z=0;
 			z=z+2;
 		x++;
 	}
-  {}
+  __VERIFIER_assert(!(z%2));
   return 0;
 }

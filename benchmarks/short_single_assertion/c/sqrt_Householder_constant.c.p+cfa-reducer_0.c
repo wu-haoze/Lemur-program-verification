@@ -94,11 +94,9 @@ double __return_125;
  {
  int __tmp_2;
  __tmp_2 = main____CPAchecker_TMP_0;
- int {}
- __VERIFIER_assert__cond = __tmp_2;
- if (__VERIFIER_assert__cond == 0)
- {
- {reach_error();}
+ int __VERIFIER_assert__cond;
+ {}                                
+ if ({}                                               }
  return __return_main;
  }
  else 

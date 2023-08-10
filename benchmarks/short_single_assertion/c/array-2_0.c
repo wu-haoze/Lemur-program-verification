@@ -25,7 +25,7 @@ int main()
           menor = array[j];                          
     }                       
     
-    {}    
+    __VERIFIER_assert(array[0]>menor);    
 
     return 0;
 }

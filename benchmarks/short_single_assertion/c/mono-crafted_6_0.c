@@ -20,6 +20,6 @@ int main()
 			y++;
 		}
 	}
-	 {}
+	 __VERIFIER_assert(x==1000000);
 	return 0;
 }

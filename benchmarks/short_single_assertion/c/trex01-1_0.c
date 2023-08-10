@@ -17,7 +17,7 @@ void f(int d) {
     return;
   L1:
   while (z < k) { z = 2 * z; }
-  {}
+  __VERIFIER_assert(z>=2);
   L2:
   while (x > 0 && y > 0) {
     _Bool c = __VERIFIER_nondet_bool();

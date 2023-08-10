@@ -78,6 +78,6 @@ int main()
 		sum2 = sum2 + square(array2[count]) ;
 	}
 
-	{}
+	__VERIFIER_assert(sum1 == sum2) ;
 	return 0 ;
 }

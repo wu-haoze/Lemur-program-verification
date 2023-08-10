@@ -39,11 +39,9 @@ int __return_136;
  {
  int __tmp_1;
  __tmp_1 = main____CPAchecker_TMP_0;
- int {}
- __VERIFIER_assert__cond = __tmp_1;
- if (__VERIFIER_assert__cond == 0)
- {
- {reach_error();}
+ int __VERIFIER_assert__cond;
+ {}                                
+ if ({}                                               }
  return __return_main;
  }
  else 
@@ -70,11 +68,9 @@ int __return_136;
  {
  int __tmp_2;
  __tmp_2 = main____CPAchecker_TMP_0;
- int __VERIFIER_assert__cond;
- __VERIFIER_assert__cond = __tmp_2;
- if (__VERIFIER_assert__cond == 0)
- {
- {reach_error();}
+ int {}                      
+ {}                                
+ if ({}                                               }
  return __return_main;
  }
  else 
@@ -106,11 +102,9 @@ int __return_136;
  {
  int __tmp_3;
  __tmp_3 = (main__array[main__index1]) == (main__array[main__index2]);
- int __VERIFIER_assert__cond;
- __VERIFIER_assert__cond = __tmp_3;
- if (__VERIFIER_assert__cond == 0)
- {
- {reach_error();}
+ int {}                      
+ {}                                
+ if ({}                                               }
  return __return_main;
  }
  else 
@@ -164,11 +158,9 @@ int __return_136;
  {
  int __tmp_4;
  __tmp_4 = (main__array[main__index1]) == (main__array[main__index2]);
- int __VERIFIER_assert__cond;
- __VERIFIER_assert__cond = __tmp_4;
- if (__VERIFIER_assert__cond == 0)
- {
- {reach_error();}
+ int {}                      
+ {}                                
+ if ({}                                               }
  return __return_main;
  }
  else 

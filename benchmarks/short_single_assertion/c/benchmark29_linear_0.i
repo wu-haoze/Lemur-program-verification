@@ -22,6 +22,6 @@ int main() {
   while (x<y) {
     x=x+100;
   }
-  {}
+  __VERIFIER_assert(x >= y && x <= y + 99);
   return 0;
 }

@@ -52,7 +52,7 @@ int main()
 
 	for(i=0; i<N; i++)
 	{
-		{}
+		__VERIFIER_assert(a[i] == N + 1);
 	}
 	return 1;
 }

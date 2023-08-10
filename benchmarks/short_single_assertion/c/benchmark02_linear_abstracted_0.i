@@ -26,6 +26,6 @@ int main() {
   i = __VERIFIER_nondet_int();
   }
   if (i < n) abort();
-  {}
+  __VERIFIER_assert(l>=1);
   return 0;
 }

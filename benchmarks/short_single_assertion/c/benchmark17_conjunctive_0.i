@@ -24,6 +24,6 @@ int main() {
     i++;
     k++;
   }
-  {}
+  __VERIFIER_assert(k>=n);
   return 0;
 }

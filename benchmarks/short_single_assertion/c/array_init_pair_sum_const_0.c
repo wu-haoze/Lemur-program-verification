@@ -24,6 +24,6 @@ int main()
   }
 
   for(i=1;i<N;i++)
-    {}
+    __VERIFIER_assert(c[i] >= 3);
   return 0;
 }

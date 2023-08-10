@@ -30,7 +30,7 @@ int main( ) {
   }
   i = 0;
   while ( src[i] != 0 ) {
-    {}
+    __VERIFIER_assert( dst[i] == src[i] );
     i = i + 1;
   }
   return 0;

@@ -41,14 +41,14 @@ int main()
 	if (z < (268435455)) abort();
 	}
 	// END NAIVELOOPABSTRACTION
-    	{}
+    	__VERIFIER_assert(z % 4);
 	y++;
     }
-    __VERIFIER_assert(y % 2);
+    {}                       
 
     x++;
   }
-  __VERIFIER_assert(x % 2);
+  {}                       
   return 0;
 
 }

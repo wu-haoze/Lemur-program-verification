@@ -27,6 +27,6 @@ int main() {
     if(flag) k+=4000;
     else k+=2000;
   }
-  {}
+  __VERIFIER_assert(k>n);
   return 0;
 }

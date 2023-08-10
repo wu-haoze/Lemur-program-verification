@@ -34,6 +34,6 @@ int main() {
         if (y < 0) break;
         x++;
     }
-    {}
+    __VERIFIER_assert(x == 100);
     return 0;
 }

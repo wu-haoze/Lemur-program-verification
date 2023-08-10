@@ -38,6 +38,6 @@ int main()
   if ((x3 > (0)) & ((x2 > (0)) & (x1 > (0)))) abort();
   // END HAVOCABSTRACTION
 
-  {}
+  __VERIFIER_assert(x1==0 || x2==0 || x3==0);
   return 0;
 }

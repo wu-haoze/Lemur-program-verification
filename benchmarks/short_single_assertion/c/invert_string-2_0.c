@@ -31,7 +31,7 @@ int main() {
 
     j = MAX-1;
     for (i=0; i<MAX; i++) {
-      {}
+      __VERIFIER_assert(str1[i] == str2[j]);
 	  j--;
     }
 }

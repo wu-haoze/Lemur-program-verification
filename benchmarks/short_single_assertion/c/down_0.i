@@ -32,7 +32,7 @@ int main() {
   }
   int j = n;
   while( j > 0 ) {
-      {}
+      __VERIFIER_assert(k > 0);
       j--;
       k--;
   }

@@ -30,7 +30,7 @@ int main() {
     c = 1;
 
     while (1) {
-        {}
+        __VERIFIER_assert(z*x - x + a - a*z*y == 0);
 
         if (!(c < k))
             break;
@@ -39,6 +39,6 @@ int main() {
         x = x * z + a;
         y = y * z;
     }
-    __VERIFIER_assert(z*x - x + a - a*z*y == 0);
+    {}                                          
     return x;
 }

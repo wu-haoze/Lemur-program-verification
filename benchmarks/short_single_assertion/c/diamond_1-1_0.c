@@ -22,5 +22,5 @@ int main(void) {
     }
   }
 
-  {}
+  __VERIFIER_assert((x % 2) == (y % 2));
 }

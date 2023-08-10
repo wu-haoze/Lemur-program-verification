@@ -43,6 +43,6 @@ int main()
 		}
 	}
 
-	{}
+	__VERIFIER_assert(sum[0] == N);
 	return 1;
 }

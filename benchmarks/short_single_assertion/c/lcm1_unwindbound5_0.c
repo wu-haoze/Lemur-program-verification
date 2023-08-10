@@ -37,12 +37,12 @@ int main() {
     v = 0;
 
     while (counter++<5) {
-        {}
+        __VERIFIER_assert(x*u + y*v == a*b);
         if (!(x != y))
             break;
 
         while (counter++<5) {
-	    __VERIFIER_assert(x*u + y*v == a*b);
+	    {}                                  
             if (!(x > y))
                 break;
             x = x - y;
@@ -50,7 +50,7 @@ int main() {
         }
 
         while (counter++<5) {
-	    __VERIFIER_assert(x*u + y*v == a*b);
+	    {}                                  
             if (!(x < y))
                 break;
             y = y - x;
@@ -58,8 +58,8 @@ int main() {
         }
     }
 
-    __VERIFIER_assert(u*y + v*y == a*b);
-    __VERIFIER_assert(x == y);
+    {}                                  
+    {}                        
 
     //x == gcd(a,b)
     //u + v == lcm(a,b)

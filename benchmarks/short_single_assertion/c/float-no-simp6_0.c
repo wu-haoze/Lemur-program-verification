@@ -1,6 +1,6 @@
 extern void abort(void);
 extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "float-no-simp6.c", 3, "{} }
+void reach_error() { __assert_fail("0", "float-no-simp6.c", 3, "reach_error"); }
 
 void multiply(void)
 {
@@ -22,7 +22,7 @@ void multiply(void)
 
   float res = f1 * f2;
 
-  if(!(res == 0x1.0p-126f)) {reach_error();abort();}
+  if(!(res == 0x1.0p-126f)) {{}            abort();}
 }
 
 void divide(void)
@@ -32,7 +32,7 @@ void divide(void)
 
   float res = f2 / f1;
 
-  if(!(res == 0x1.0p-126f)) {reach_error();abort();}
+  if(!(res == 0x1.0p-126f)) {{}            abort();}
 }
 
 void cast(void)
@@ -41,7 +41,7 @@ void cast(void)
 
   float f = (float)d;
 
-  if(!(f == 0x1.0p-126f)) {reach_error();abort();}
+  if(!(f == 0x1.0p-126f)) {{}            abort();}
 }
 
 int main()

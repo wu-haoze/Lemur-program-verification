@@ -25,6 +25,6 @@ int main() {
     i = j - i;
     j = j - i;}
   }
-  {}
+  __VERIFIER_assert(j == i);
   return 0;
 }

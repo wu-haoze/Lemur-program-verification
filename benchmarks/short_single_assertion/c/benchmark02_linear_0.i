@@ -24,6 +24,6 @@ int main() {
   while (i < n) {
     i++;
   }
-  {}
+  __VERIFIER_assert(l>=1);
   return 0;
 }

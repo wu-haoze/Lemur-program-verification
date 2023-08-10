@@ -55,7 +55,7 @@ int main(void)
     }
     i++;
   }
-  {}
+  __VERIFIER_assert(cont_aux==cont);
 
   return 0;
 }

@@ -21,6 +21,6 @@ int main() {
   while (i * i < 100) {
     i = i + 1;
   }
-  {}
+  __VERIFIER_assert(i == 10);
   return 0;
 }

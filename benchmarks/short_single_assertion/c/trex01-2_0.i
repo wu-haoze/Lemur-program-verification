@@ -28,7 +28,7 @@ void f(int d) {
   if (!(k <= 1073741823))
     return;
   while (z < k) { z = 2 * z; }
-  {}
+  __VERIFIER_assert(z>=1);
   L2:
   if (!(x <= 1000000 && x >= -1000000)) return;
   if (!(y <= 1000000 && y >= -1000000)) return;

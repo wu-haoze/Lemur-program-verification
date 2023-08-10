@@ -73,6 +73,6 @@ int main()
 		sum = sum  + array1[count] + array2[count];
 	}
 
-	{}
+	__VERIFIER_assert(4 * sum <= (ARR_SIZE-1)*(ARR_SIZE+1)) ;
 	return 0 ;
 }

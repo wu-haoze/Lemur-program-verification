@@ -22,6 +22,6 @@ int main() {
     if(x==1) x=2;
     else if (x==2) x=1;
   }
-  {}
+  __VERIFIER_assert(x<=8);
   return 0;
 }

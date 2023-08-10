@@ -19,5 +19,5 @@ int main()
     x--;
     y++;
   }
-  {}
+  __VERIFIER_assert(y!=n);
 }

@@ -28,7 +28,7 @@ int main()
       y = y +2*__VERIFIER_nondet_int();
 
 
-      {}
+      __VERIFIER_assert (y!=0);
 	
     }
     return 0;

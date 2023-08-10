@@ -32,7 +32,7 @@ int main() {
     z = 0;
 
     while (1) {
-        {}
+        __VERIFIER_assert(z + x * y == (long long) a * b);
         if (!(y != 0))
             break;
 
@@ -43,7 +43,7 @@ int main() {
         x = 2 * x;
         y = y / 2;
     }
-    __VERIFIER_assert(z == (long long) a * b);
+    {}                                        
     
     return 0;
 }

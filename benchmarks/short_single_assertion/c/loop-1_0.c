@@ -17,6 +17,6 @@ int main ()
     z = z + 1.f;
   }
 
-  {}
+  __VERIFIER_assert(z >= 0.f && z <= 1e8);
   return 0;
 }

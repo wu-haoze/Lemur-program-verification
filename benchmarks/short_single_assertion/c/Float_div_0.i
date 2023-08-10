@@ -26,6 +26,6 @@ int main()
     x1 = x/2.5f;
   }
 
-  {}
+  __VERIFIER_assert(x == 0);
   return 0;
 }

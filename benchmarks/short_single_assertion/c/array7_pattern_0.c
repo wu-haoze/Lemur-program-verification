@@ -76,6 +76,6 @@ int main()
 		sum = sum  + array1[count] + array2[count];
 	}
 
-	{}
+	__VERIFIER_assert(sum == 0) ;
 	return 0 ;
 }

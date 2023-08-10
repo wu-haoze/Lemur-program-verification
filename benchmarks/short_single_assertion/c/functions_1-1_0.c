@@ -20,5 +20,5 @@ int main(void) {
     x = f(x);
   }
 
-  {}
+  __VERIFIER_assert(!(x % 2));
 }

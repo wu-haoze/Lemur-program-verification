@@ -13,6 +13,6 @@ int main()
 			z--;
 		x++;
 	}
-	{}
+	__VERIFIER_assert(z==0);
 	return 0;
 }

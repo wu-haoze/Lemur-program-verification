@@ -49,6 +49,6 @@ int main()
 
   r = InvSqrt(a);
 
-  {}
+  __VERIFIER_assert(r >= 0.f && r <= 10.);
   return 0;
 }

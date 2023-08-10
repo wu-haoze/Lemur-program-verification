@@ -31,6 +31,6 @@ int main()
   a = __VERIFIER_nondet_int();
 
   r = cast(a);
-  {}
+  __VERIFIER_assert(r == a);
   return 0;
 }

@@ -23,6 +23,6 @@ int main() {
   while (__VERIFIER_nondet_bool()) {
     x++;y++;z-=2;
   }
-  {}
+  __VERIFIER_assert(x == y && x >= 0 && x+y+z==0);
   return 0;
 }

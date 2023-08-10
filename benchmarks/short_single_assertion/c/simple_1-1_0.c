@@ -16,5 +16,5 @@ int main(void) {
     x += 2;
   }
 
-  {}
+  __VERIFIER_assert(x % 2);
 }

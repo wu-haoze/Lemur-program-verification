@@ -36,11 +36,9 @@ int __return_60;
  {
  int __tmp_1;
  __tmp_1 = main__i <= main__pos;
- int {}
- __VERIFIER_assert__cond = __tmp_1;
- if (__VERIFIER_assert__cond == 0)
- {
- {reach_error();}
+ int __VERIFIER_assert__cond;
+ {}                                
+ if ({}                                               }
  return __return_main;
  }
  else 

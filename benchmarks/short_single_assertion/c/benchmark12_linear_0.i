@@ -23,6 +23,6 @@ int main() {
   while (__VERIFIER_nondet_bool()) {
     if(x>0) y=y+x;
   }
-  {}
+  __VERIFIER_assert(y>=t);
   return 0;
 }

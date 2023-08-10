@@ -41,6 +41,6 @@ int main()
 			sum[0] = sum[0] + a[i];
 		}
 	}
-	{}
+	__VERIFIER_assert(sum[0] <= N);
 	return 1;
 }

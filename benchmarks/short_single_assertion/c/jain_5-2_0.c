@@ -31,7 +31,7 @@ int main()
       y = y +4U;
       
       
-      {}
+      __VERIFIER_assert(x!=30U);
     }
     return 0;
 }

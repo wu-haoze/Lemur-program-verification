@@ -13,7 +13,7 @@ int main()
   x = __VERIFIER_nondet_double();
 
   if (x >= -1e307 && x <= 1e307) {
-    {}
+    __VERIFIER_assert(x==x);
   }
   return 0;
 }

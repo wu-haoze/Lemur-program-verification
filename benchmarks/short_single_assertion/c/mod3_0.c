@@ -30,6 +30,6 @@ int main(){
     }
   }
   if(y == 0)
-    {}
+    __VERIFIER_assert(x % 3 == 0);
   return 0;
 }

@@ -41,7 +41,7 @@ int main()
   assume_abort_if_not(index2 < 100000);
 
   while (index1 < index2) {
-    {}
+    __VERIFIER_assert((index1 < 100000) && (index2 < 100000));
     assume_abort_if_not(array[index1] == array[index2]);
     index1++;
     index2--;
@@ -50,7 +50,7 @@ int main()
 
   if (loop_entered) {
     while (index2 < index1) {
-      __VERIFIER_assert(array[index1] == array[index2]);
+      {}                                                
       index2++;
       index1--;
     }

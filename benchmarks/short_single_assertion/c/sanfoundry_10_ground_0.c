@@ -42,7 +42,7 @@ int main()
     if ( found ) {
       int x;
       for ( x = 0 ; x < pos ; x++ ) {
-        {}
+        __VERIFIER_assert(  vectorx[x] != element  );
       }
     }
   return 0;

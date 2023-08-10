@@ -28,6 +28,6 @@ int main() {
     }
   if (x < y) abort();
   }
-  {}
+  __VERIFIER_assert(x==y);
   return 0;
 }

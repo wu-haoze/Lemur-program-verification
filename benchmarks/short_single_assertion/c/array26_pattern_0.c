@@ -70,6 +70,6 @@ int main()
 		for(column=0;column<ARR_SIZE;column++)
 			sum = sum + array[row][column] ;
 
-	{}
+	__VERIFIER_assert(sum == 0 || sum == 1) ;
 	return 0 ;
 }

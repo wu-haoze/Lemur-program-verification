@@ -44,5 +44,5 @@ int main()
     x=x-d;
   }
 
-  {}
+  __VERIFIER_assert(x<=0);
 }

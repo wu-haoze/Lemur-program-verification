@@ -22,6 +22,6 @@ int main()
   }
 
   for(int k=1;k<i;k++)
-    {}
+    __VERIFIER_assert(a[k]>=0);
   return 0;
 }

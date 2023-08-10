@@ -33,7 +33,7 @@ int main() {
     r = ((long long) R * R) - A;
 
     while (1) {
-        {}
+        __VERIFIER_assert(4*(A+r) == u*u - v*v - 2*u + 2*v);
         if (!(r != 0)) break;
 
         if (r > 0) {
@@ -46,6 +46,6 @@ int main() {
     }
 
     //return  (u - v) / 2;
-    __VERIFIER_assert(((long long) 4*A) == u*u - v*v  - 2*u + 2*v);
+    {}                                                             
     return 0;
 }

@@ -56,7 +56,7 @@ int main()
 		{
 			sum = sum - a[i];
 		}
-		{}
+		__VERIFIER_assert(sum == 0);
 	}
 	return 1;
 }

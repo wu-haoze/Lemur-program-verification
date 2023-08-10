@@ -31,7 +31,7 @@ int main() {
  i = i + 1;
  j = j + k;
  k = k - 1;
- {}
+ __VERIFIER_assert(1 <= i + k && i + k <= 2 && i >= 1);
     }
     return 0;
 }

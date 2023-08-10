@@ -50,6 +50,6 @@ int main()
 		sum[0] = sum[0] + a[i];
 	}
 
-	{}
+	__VERIFIER_assert(sum[0] == N*(N+1));
 	return 1;
 }

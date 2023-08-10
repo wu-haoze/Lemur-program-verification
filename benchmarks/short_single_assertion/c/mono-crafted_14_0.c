@@ -19,7 +19,7 @@ int main(){
 		z++;
 		y=y-2;
 	}
-	{}
-	__VERIFIER_assert(x%2==0);
+	__VERIFIER_assert(z%2==0);
+	{}                        
 	return 0;
 }

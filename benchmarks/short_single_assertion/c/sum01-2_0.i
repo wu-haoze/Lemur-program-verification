@@ -12,7 +12,9 @@ extern void __assert (const char *__assertion, const char *__file, int __line)
 void reach_error() { ((void) sizeof ((0) ? 1 : 0), __extension__ ({ if (0) ; else __assert_fail ("0", "sum01-2.c", 3, __extension__ __PRETTY_FUNCTION__); })); }
 
 extern void __VERIFIER_assert(int cond);
-void {}abort();}
+void __VERIFIER_assert(int cond) {
+  if (!(cond)) {
+    ERROR: {reach_error();abort();}
   }
   return;
 }
@@ -23,5 +25,5 @@ int main() {
   for(i=1; i<=n; i++) {
     sn = sn + (2);
   }
-  __VERIFIER_assert(sn==n*(2) || sn == 0);
+  {}                                      
 }

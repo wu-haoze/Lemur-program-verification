@@ -41,17 +41,17 @@ int main( ) {
     }
     for ( x = 0 ; x < i ; x++ ) {
       for ( y = x + 1 ; y < i ; y++ ) {
-        {}
+        __VERIFIER_assert( a[x] <= a[y] );
       }
     }
     for ( x = 0 ; x < 100000 ; x++ ) {
-      __VERIFIER_assert( a[x] >= a[i] );
+      {}                                
     }
     i = i+1;
   }
   for ( x = 0 ; x < 100000 ; x++ ) {
     for ( y = x + 1 ; y < 100000 ; y++ ) {
-      __VERIFIER_assert( a[x] <= a[y] );
+      {}                                
     }
   }
   return 0;

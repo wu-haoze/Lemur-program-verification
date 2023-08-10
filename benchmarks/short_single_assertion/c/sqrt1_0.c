@@ -26,9 +26,9 @@ int main() {
     t = 1;
 
     while (1) {
-        {}
-        __VERIFIER_assert(s == (a + 1) * (a + 1));
-	__VERIFIER_assert(t*t - 4*s + 2*t + 1 == 0);
+        __VERIFIER_assert(t == 2*a + 1);
+        {}                                        
+	{}                                          
         // the above 2 should be equiv to 
 
         if (!(s <= n))
@@ -39,9 +39,9 @@ int main() {
         s = s + t;
     }
     
-    __VERIFIER_assert(t == 2 * a + 1);
-    __VERIFIER_assert(s == (a + 1) * (a + 1));
-    __VERIFIER_assert(t*t - 4*s + 2*t + 1 == 0);
+    {}                                
+    {}                                        
+    {}                                          
 
     return 0;
 }

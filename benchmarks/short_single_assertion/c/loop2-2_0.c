@@ -46,6 +46,6 @@ int main()
 		if(temp == 0) break ;
 	}
 
-	{}
+	__VERIFIER_assert( oddExp >= evenExp ) ;
 	return 0 ;
 }

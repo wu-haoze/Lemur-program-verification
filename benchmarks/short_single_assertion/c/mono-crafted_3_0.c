@@ -20,6 +20,6 @@ int main()
 		z++;
 		y=y-2;
 	}
-	{}
+	__VERIFIER_assert(x==z);
 	return 0;
 }

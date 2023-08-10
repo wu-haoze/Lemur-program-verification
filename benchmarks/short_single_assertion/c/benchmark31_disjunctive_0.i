@@ -26,6 +26,6 @@ int main() {
       x=x+y; y++;
     }
   }
-  {}
+  __VERIFIER_assert(y>=0);
   return 0;
 }

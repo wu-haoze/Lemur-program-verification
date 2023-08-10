@@ -25,6 +25,6 @@ int main() {
     high = high - 1;
     mid = mid - 1;
   }
-  {}
+  __VERIFIER_assert(low == high);
   return 0;
 }

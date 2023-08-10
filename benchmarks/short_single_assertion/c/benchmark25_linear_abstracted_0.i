@@ -27,6 +27,6 @@ int main() {
     }
   if (x < (10)) abort();
   }
-  {}
+  __VERIFIER_assert(x==10);
   return 0;
 }

@@ -18,6 +18,6 @@ int main(){
 		y--;
 		x--;
 	}
-	{}
+	__VERIFIER_assert((x%2==0));
 	return 0;
 }

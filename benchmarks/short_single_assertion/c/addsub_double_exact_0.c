@@ -13,6 +13,6 @@ int main()
   y = x + 1;
   z = x - 1;
   r = y - z;  
-  {}
+  __VERIFIER_assert(r == 2.);
   return 0;
 }

@@ -39,7 +39,7 @@ int main()
     tmp = index;
   }
 
-  {}
+  __VERIFIER_assert(tmp < 10000 && array[tmp] == tmp);
 
 
 }

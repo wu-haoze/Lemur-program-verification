@@ -24,14 +24,14 @@ int main()
 	while (z <0x0fffffff) {
 	  z++;
 	}
-    	{}
+    	__VERIFIER_assert(!(z % 4));
 	y++;
     }
-    __VERIFIER_assert(!(y % 2));
+    {}                          
 
     x++;
   }
-  __VERIFIER_assert(!(x % 2));
+  {}                          
  return 0;
 
 }

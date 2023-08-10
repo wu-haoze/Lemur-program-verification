@@ -21,6 +21,6 @@ int main() {
   while (x<100 && x>=0) {
     x++;
   }
-  {}
+  __VERIFIER_assert(x>=100);
   return 0;
 }

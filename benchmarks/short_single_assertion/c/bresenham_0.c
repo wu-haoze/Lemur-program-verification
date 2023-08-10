@@ -28,7 +28,7 @@ int main() {
     x = 0;
 
     while (1) {
-	{}
+	__VERIFIER_assert(2*Y*x - 2*X*y - X + 2*Y - v == 0);
         if (!(x <= X))
             break;
         // out[x] = y
@@ -41,7 +41,7 @@ int main() {
         }
         x++;
     }
-    __VERIFIER_assert(2*Y*x - 2*x*y - X + 2*Y - v + 2*y == 0);
+    {}                                                        
 
     return 0;
 }

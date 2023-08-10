@@ -32,6 +32,6 @@ int main() {
         }
         if (x < (100)) abort();
     }
-    {}
+    __VERIFIER_assert(y<=0 || (y>0 && x>=100));
     return 0;
 }

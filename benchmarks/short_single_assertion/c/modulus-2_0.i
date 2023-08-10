@@ -62,7 +62,7 @@ int main()
         if (m == d) {
             m = 0;
         }
-        {}
+        __VERIFIER_assert(m == n % d);
     }
     return 0;
 }

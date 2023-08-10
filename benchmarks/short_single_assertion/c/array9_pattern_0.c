@@ -75,6 +75,6 @@ int main()
 		sum = sum  + array1[count] + array2[count];
 	}
 
-	{}
+	__VERIFIER_assert(3 * sum <= ARR_SIZE+2) ;
 	return 0 ;
 }

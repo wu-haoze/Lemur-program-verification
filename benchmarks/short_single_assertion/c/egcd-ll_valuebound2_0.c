@@ -33,9 +33,9 @@ int main() {
     s = 1;
 
     while (1) {
-        {}
-        __VERIFIER_assert(a == y * r + x * p);
-        __VERIFIER_assert(b == x * q + y * s);
+        __VERIFIER_assert(1 == p * s - r * q);
+        {}                                    
+        {}                                    
 
         if (!(a != b))
             break;
@@ -51,9 +51,9 @@ int main() {
         }
     }
     
-    __VERIFIER_assert(a - b == 0);    
-    __VERIFIER_assert(p*x + r*y - b == 0);
-    __VERIFIER_assert(q*r - p*s + 1 == 0);
-    __VERIFIER_assert(q*x + s*y - b == 0);
+    {}                                
+    {}                                    
+    {}                                    
+    {}                                    
     return 0;
 }

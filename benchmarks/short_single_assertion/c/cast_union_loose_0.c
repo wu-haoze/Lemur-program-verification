@@ -36,6 +36,6 @@ int main()
   assume_abort_if_not(a >= -10000 && a <= 10000);
 
   r = cast(a);
-  {}
+  __VERIFIER_assert(r >= -10000. && r <= 10000.);
   return 0;
 }

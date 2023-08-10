@@ -30,7 +30,7 @@ int main()
       y = y +2*__VERIFIER_nondet_int();
 
 
-      {}
+      __VERIFIER_assert(x+y!=1);
     }
     return 0;
 }

@@ -50,11 +50,9 @@ int __return_65;
  {
  int __tmp_1;
  __tmp_1 = main__y > 0;
- int {}
- __VERIFIER_assert__cond = __tmp_1;
- if (__VERIFIER_assert__cond == 0)
- {
- {reach_error();}
+ int __VERIFIER_assert__cond;
+ {}                                
+ if ({}                                               }
  return __return_main;
  }
  else 

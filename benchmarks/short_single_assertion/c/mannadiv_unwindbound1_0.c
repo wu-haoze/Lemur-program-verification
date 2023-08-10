@@ -34,7 +34,7 @@ int main() {
     y3 = x1;
 
     while (counter++<1) {
-        {}
+        __VERIFIER_assert(y1*x2 + y2 + y3 == x1);
 
         if (!(y3 != 0)) break;
 
@@ -47,6 +47,6 @@ int main() {
             y3 = y3 - 1;
         }
     }
-    __VERIFIER_assert(y1*x2 + y2 == x1);
+    {}                                  
     return 0;
 }

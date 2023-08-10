@@ -56,5 +56,5 @@ int main()
   if (x > (0)) abort();
   // END HAVOCABSTRACTION
 
-  {}
+  __VERIFIER_assert(x<=0);
 }

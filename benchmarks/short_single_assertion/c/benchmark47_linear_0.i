@@ -25,6 +25,6 @@ int main() {
     if (y < 0) y = y - 10;
     else y = y + 3;
   }
-  {}
+  __VERIFIER_assert(x >= y && x <= y + 16);
   return 0;
 }

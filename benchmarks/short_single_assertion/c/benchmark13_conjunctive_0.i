@@ -24,6 +24,6 @@ int main() {
     i++;
     j=j+1;
   }
-  {}
+  __VERIFIER_assert(j==i);
   return 0;
 }

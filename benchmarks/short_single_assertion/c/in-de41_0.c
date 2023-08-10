@@ -38,6 +38,6 @@ int main()
     y++;
   }
 
-  {}
+  __VERIFIER_assert(y==n);
   return 0;
 }

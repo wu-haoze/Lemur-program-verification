@@ -38,6 +38,6 @@ int main()
     z++;
   }
 
-  {}
+  __VERIFIER_assert(z==2*n);
   return 0;
 }

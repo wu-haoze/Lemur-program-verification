@@ -24,6 +24,6 @@ int main() {
     i=i+1;
     if (i<=0) break;
   }
-  {}
+  __VERIFIER_assert(c>=0);
   return 0;
 }

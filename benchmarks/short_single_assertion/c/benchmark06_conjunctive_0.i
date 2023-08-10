@@ -26,6 +26,6 @@ int main() {
   while (__VERIFIER_nondet_bool()) {
     if(j==i) {x++;y--;} else {y++;x--;} j++;
   }
-  {}
+  __VERIFIER_assert(x+y==k);
   return 0;
 }

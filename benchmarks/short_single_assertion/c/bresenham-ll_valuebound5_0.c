@@ -32,7 +32,7 @@ int main() {
     while (1) {
         yx = (long long) Y*x;
         xy = (long long) X*y;
-	{}
+	__VERIFIER_assert( 2*yx - 2*xy - X + (long long) 2*Y - v == 0);
         if (!(x <= X))
             break;
         // out[x] = y
@@ -47,7 +47,7 @@ int main() {
     }
     xy = (long long) x*y;
     yx = (long long) Y*x;
-    __VERIFIER_assert(2*yx - 2*xy - X + (long long) 2*Y - v + 2*y == 0);
+    {}                                                                  
 
     return 0;
 }

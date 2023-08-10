@@ -23,6 +23,6 @@ int main() {
   while (i < n) {
     i++;k++;
   }
-  {}
+  __VERIFIER_assert((i == k) && (k == n));
   return 0;
 }

@@ -50,6 +50,6 @@ int main()
 		sum[0] = sum[0] + b[i];
 	}
 
-	{}
+	__VERIFIER_assert(sum[0] <= 2*N);
 	return 1;
 }

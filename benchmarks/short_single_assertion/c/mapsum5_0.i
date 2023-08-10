@@ -51,7 +51,7 @@ int main ()
     ret5 = mapsum(x);
 
     if(ret != ret2 || ret !=ret5){
-      {{}}
+      {reach_error();}
     }
   }
   return 1;

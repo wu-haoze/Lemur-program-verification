@@ -11,5 +11,5 @@ unsigned int z=5000000;
 			z--;
 		x++;
 	}
-  {}
+  __VERIFIER_assert(z!=0);
 }

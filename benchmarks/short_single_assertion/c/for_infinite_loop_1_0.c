@@ -22,7 +22,7 @@ int main() {
   if (!(n>0)) return 0;
   for(i=0; 1; i++)
   {
-    {}
+    __VERIFIER_assert(x==0);
   }
-  __VERIFIER_assert(x==0);
+  {}                      
 }

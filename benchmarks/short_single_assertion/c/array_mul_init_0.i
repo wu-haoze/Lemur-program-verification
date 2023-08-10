@@ -34,6 +34,6 @@ int main()
  }
  for (i=0; i< 100000; i++)
  {
-  {}
+  __VERIFIER_assert(a[i] == b[i] || b[i] == a[i] * a[i]);
  }
 }

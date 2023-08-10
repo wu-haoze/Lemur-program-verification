@@ -48,10 +48,10 @@ int main()
     }
     int x;
     for( x = 0 ; x < 100000 ; x++ ) {
-      {}
+      __VERIFIER_assert( array[ x ] <= largest1 );
     }
     for( x = 0 ; x < 100000 ; x++ ) {
-      __VERIFIER_assert( array[x] <= largest2 || array[x] == largest1 );
+      {}                                                                
     }
   return 0;
 }

@@ -23,6 +23,6 @@ int main() {
     j+=2;
     i++;
   }
-  {}
+  __VERIFIER_assert(j==200);
   return 0;
 }

@@ -64,6 +64,6 @@ int main()
     } else {
         parity2 = (char)1;
     }
-    {}
+    __VERIFIER_assert(parity1 == parity2);
     return 0;
 }

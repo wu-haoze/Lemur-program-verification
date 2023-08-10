@@ -29,7 +29,7 @@ int main()
  }
  for(i = 0; i < 100000; i++)
  {
-  {}
+  __VERIFIER_assert(a[i].n >= 100);
  }
  return 0;
 }

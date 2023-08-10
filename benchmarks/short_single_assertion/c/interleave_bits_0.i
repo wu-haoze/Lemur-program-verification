@@ -63,5 +63,5 @@ int main()
 
     zz = xx | (yy << 1U);
 
-    {}
+    __VERIFIER_assert(z == zz);
 }

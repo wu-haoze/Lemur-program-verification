@@ -23,6 +23,6 @@ int main() {
     xa--;
     ya++;
   }
-  {}
+  __VERIFIER_assert(ya >= 0);
   return 0;
 }

@@ -13,6 +13,6 @@ int main(void) {
   while (__VERIFIER_nondet_int()) {
     x += 2;
   }
-  {}
+  __VERIFIER_assert(x % 2);
   return 0;
 }

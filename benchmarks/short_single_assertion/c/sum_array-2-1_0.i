@@ -41,5 +41,5 @@ int main()
   for(i=0;i<M;i++)
      C[i]=A[i]+B[i];
   for(i=0;i<M;i++)
-     {}
+     __VERIFIER_assert(C[i]==A[i]+B[i]);
 }

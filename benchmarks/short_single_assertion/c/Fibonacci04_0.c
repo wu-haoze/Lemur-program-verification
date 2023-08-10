@@ -1,6 +1,6 @@
 extern void abort(void);
 extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "Fibonacci04.c", 3, "{} }
+void reach_error() { __assert_fail("0", "Fibonacci04.c", 3, "reach_error"); }
 
 /*
  * Recursive computation of fibonacci numbers.
@@ -32,6 +32,6 @@ int main() {
     if (x != 5 || result == 3) {
         return 0;
     } else {
-        ERROR: {reach_error();abort();}
+        ERROR: {{}            abort();}
     }
 }

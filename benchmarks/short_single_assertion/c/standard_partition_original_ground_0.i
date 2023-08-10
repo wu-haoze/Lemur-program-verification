@@ -39,10 +39,10 @@ int main( ) {
   }
   int x;
   for ( x = 0 ; x < b ; x++ ) {
-    {}
+    __VERIFIER_assert( bb[ x ] >= 0 );
   }
   for ( x = 0 ; x < c ; x++ ) {
-    __VERIFIER_assert( cc[ x ] < 0 );
+    {}                               
   }
   return 0;
 }

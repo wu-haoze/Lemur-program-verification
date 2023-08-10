@@ -10,7 +10,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "nested_6.c", 13, "{} }
+void reach_error() { __assert_fail("0", "nested_6.c", 13, "reach_error"); }
 
 int main() {
 	int a = 6;
@@ -34,7 +34,7 @@ int main() {
 		}
 	}
 	if(!(a == 6 && b == 6 && c == 6 && d == 6 && e == 6 && f == 6)) {
-		reach_error();
+		{}            
 	}
 	return 1;
 }

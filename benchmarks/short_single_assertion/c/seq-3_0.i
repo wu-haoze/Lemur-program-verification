@@ -40,7 +40,7 @@ int main() {
   }
   int j1 = 0;
   while( j1 < n0 + n1 ) {
-      {}
+      __VERIFIER_assert(k > 0);
       j1++;
       k--;
   }

@@ -12,6 +12,6 @@ int main()
   float x;
   x = __VERIFIER_nondet_float();  
 
-  {}
+  __VERIFIER_assert(x==x);
   return 0;
 }

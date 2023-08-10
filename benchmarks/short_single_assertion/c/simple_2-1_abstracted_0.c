@@ -30,5 +30,5 @@ int main(void) {
   if (x < (268435455)) abort();
   // END HAVOCABSTRACTION
 
-  {}
+  __VERIFIER_assert(x >= 0x0fffffff);
 }

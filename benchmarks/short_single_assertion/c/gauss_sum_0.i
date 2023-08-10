@@ -29,6 +29,6 @@ int main() {
     for(i = 1; i <= n; i++) {
         sum = sum + i;
     }
-    {}
+    __VERIFIER_assert(2*sum == n*(n+1));
     return 0;
 }

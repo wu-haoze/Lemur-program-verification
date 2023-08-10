@@ -33,7 +33,7 @@ int main() {
         y--;
     }
     if (i == j) {
-        {}
+        __VERIFIER_assert(y == 0);
     }
     return 0;
 }

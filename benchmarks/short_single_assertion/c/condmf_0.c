@@ -46,7 +46,7 @@ int main()
 
 	for (i = 0; i < N; i++)
 	{
-		{}
+		__VERIFIER_assert(a[i] % 2 == N % 2);
 	}
 	return 1;
 }

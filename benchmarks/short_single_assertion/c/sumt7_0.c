@@ -35,7 +35,7 @@ int main() {
 	  else 
 	    k = k+1;
     l = l+1;
-    {}
+    __VERIFIER_assert((i+j+k+v1+v2+v3+v4) == l);
   }
   return 0;
 }

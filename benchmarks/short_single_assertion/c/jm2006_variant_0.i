@@ -36,7 +36,7 @@ int main() {
         z ++;
     }
     if (i == j) {
-        {}
+        __VERIFIER_assert(y == -z);
     }
     return 0;
 }

@@ -14,6 +14,6 @@ int main()
     x = (x * 10) - (int) x * 10;
   }
 
-  {}
+  __VERIFIER_assert(res > 67050);
   return 0;
 }

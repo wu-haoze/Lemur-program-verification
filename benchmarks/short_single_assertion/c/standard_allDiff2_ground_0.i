@@ -35,7 +35,7 @@ int main( ) {
     int y;
     for ( x = 0 ; x < 100000 ; x++ ) {
       for ( y = x+1 ; y < 100000 ; y++ ) {
-        {}
+        __VERIFIER_assert( a[x] != a[y] );
       }
     }
   }

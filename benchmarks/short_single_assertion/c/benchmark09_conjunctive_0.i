@@ -24,6 +24,6 @@ int main() {
     y--;
     if (x<0 || y<0) break;
   }
-  {}
+  __VERIFIER_assert(y==0);
   return 0;
 }

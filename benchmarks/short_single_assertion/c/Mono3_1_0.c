@@ -14,5 +14,5 @@ int main(void) {
     }
 	x++;
   }
-  {}
+  __VERIFIER_assert(y!=0) ;
 }

@@ -41,7 +41,7 @@ int main()
     if ((z > (100)) & (x < (100))) abort();
     // END HAVOCABSTRACTION                       
 
-    {}
+    __VERIFIER_assert(x>=100 || z<=100);
 
     return 0;
 }

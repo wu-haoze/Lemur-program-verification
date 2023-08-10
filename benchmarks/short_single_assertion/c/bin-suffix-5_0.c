@@ -13,6 +13,6 @@ int main(void) {
   while (__VERIFIER_nondet_int()) {
     x += 8;
   }
-  {}
+  __VERIFIER_assert((x & 5) == 5);
   return 0;
 }

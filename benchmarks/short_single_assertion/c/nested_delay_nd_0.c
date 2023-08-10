@@ -41,7 +41,7 @@ int main()
 			b = 1;
 		}
 			
-		{}
+		__VERIFIER_assert(a==b && c==SIZE);
 	}
 	return 0;
 }

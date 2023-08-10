@@ -6,6 +6,7 @@ import utils
 from os.path import dirname, join
 from rewritter import Rewritter
 import yaml
+from copy import copy
 
 enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
@@ -46,9 +47,10 @@ with open("benchmarks/benchmark_set_reach_safety") as in_file:
                     name = data['input_files'][:-2] + f"_{i}" + data['input_files'][-2:]
                     yml_name = os.path.basename(yml_file)[:-4] + f"_{i}" + ".yml"
                     print(yml_name)
-                    data["input_files"] = name
+                    new_data = copy(data)
+                    new_data["input_files"] = name
                     with open(f"/home/haozewu/GPT_MC/benchmarks/short_single_assertion/c/{yml_name}", 'w') as f:
-                        yaml.dump(data, f)
+                        yaml.dump(new_data, f)
                     with open(f"/home/haozewu/GPT_MC/benchmarks/short_single_assertion/c/{name}", 'w') as out_file:
                         out_file.write(program)
 

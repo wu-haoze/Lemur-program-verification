@@ -1,6 +1,6 @@
 extern void abort(void);
 extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "heavy-1.c", 3, "{} }
+void reach_error() { __assert_fail("0", "heavy-1.c", 3, "reach_error"); }
 
 /* Licensed under the GPLv2 */
 
@@ -18,6 +18,6 @@ int main(int argc, char **argv)
 		goto ERROR;
 
 	return array[100];
-ERROR: {reach_error();abort();}
+ERROR: {{}            abort();}
 	return 1;
 }

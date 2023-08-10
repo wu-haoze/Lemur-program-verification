@@ -53,6 +53,6 @@ int main()
 		}
 	}
 
-	{}
+	__VERIFIER_assert(sum[0] == 6*N);
 	return 1;
 }

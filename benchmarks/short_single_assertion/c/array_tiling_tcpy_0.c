@@ -23,6 +23,6 @@ int main()
   }
 
   for(i=0;i<2*S;i++)
-    {}
+    __VERIFIER_assert(acopy[i] == a[i]);
   return 0;
 }

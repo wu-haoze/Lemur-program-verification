@@ -1,6 +1,6 @@
 extern void abort(void);
 extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "gcd02.c", 3, "{} }
+void reach_error() { __assert_fail("0", "gcd02.c", 3, "reach_error"); }
 
 /*
  * Recursive implementation of the greatest common denominator
@@ -17,7 +17,7 @@ extern int __VERIFIER_nondet_int(void);
 int gcd(int y1, int y2) {
     if (y1 <= 0 || y2 <= 0) {
         // No non-positive input allowed
-        ERROR: {reach_error();abort();}
+        ERROR: {{}            abort();}
     }
     if (y1 == y2) {
         return y1;
@@ -51,7 +51,7 @@ int main() {
     if (m > 0 && n > 0) {
         int z = gcd(m, n);
         if (divides(z, m) == 0) {
-            ERROR: {reach_error();abort();}
+            ERROR: {{}            abort();}
         } else {
             return 0;
         }

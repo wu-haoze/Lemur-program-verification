@@ -36,6 +36,6 @@ int main()
 		if(temp ==0 ) break ;
 	}
 
-	{}
+	__VERIFIER_assert( result >= exp ) ;
 	return 0 ;
 }

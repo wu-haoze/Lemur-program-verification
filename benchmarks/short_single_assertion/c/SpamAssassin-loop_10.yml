@@ -1,5 +1,5 @@
 format_version: '2.0'
-input_files: SpamAssassin-loop_0_1_2_3_4_5_6_7_8_9_10.i
+input_files: SpamAssassin-loop_10.i
 options:
   data_model: ILP32
   language: C

@@ -33,5 +33,5 @@ int main() {
   // Compute Gauss sum without overflow
   unsigned long long nl = n;
   unsigned long long gauss = (nl*(nl+1U))/2U;
-  {}
+  __VERIFIER_assert(sn==gauss || sn == 0);
 }

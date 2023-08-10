@@ -33,6 +33,6 @@ int main (void)
     c = in[idx_in];
   }
   /* BAD */
-  {}
+  __VERIFIER_assert (i >= 0);
   return 0;
 }

@@ -26,6 +26,6 @@ int main()
     z--;
   }
 
-  {}
+  __VERIFIER_assert(x==n);
   return 0;
 }

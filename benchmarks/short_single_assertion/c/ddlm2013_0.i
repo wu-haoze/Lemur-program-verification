@@ -43,7 +43,7 @@ int main() {
         }
     }
     if (flag) {
-        {}
+        __VERIFIER_assert(a == b);
     }
     return 0;
 }

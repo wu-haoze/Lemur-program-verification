@@ -38,7 +38,7 @@ int main() {
         b = 2 * b;
     }
     while (counter++<20) {
-        {}
+        __VERIFIER_assert(A == q * b + r);
         if (!(b != B)) break;
         q = 2 * q;
         b = b / 2;
@@ -47,6 +47,6 @@ int main() {
             r = r - b;
         }
     }
-    __VERIFIER_assert(A == q * b + r);
+    {}                                
     return 0;
 }

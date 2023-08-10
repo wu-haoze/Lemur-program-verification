@@ -42,7 +42,7 @@ int main( ) {
   }
   int x;
   for ( x = 0 ; x < b ; x++ ) {
-    {}
+    __VERIFIER_assert( bb[ x ] >= 0 );
   }
   return 0;
 }

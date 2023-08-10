@@ -1,5 +1,5 @@
 format_version: '2.0'
-input_files: hard_0_1_2_3_4_5_6.c
+input_files: hard_6.c
 options:
   data_model: ILP32
   language: C

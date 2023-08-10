@@ -22,7 +22,7 @@ int main()
     i = i + 1;
     j = j + 2;
     k = k + 3;
-    {}
+    __VERIFIER_assert((k == 3*i) && (j == 2*i));
   }
 
 }

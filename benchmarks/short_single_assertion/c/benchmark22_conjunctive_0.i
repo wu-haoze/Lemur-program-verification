@@ -23,6 +23,6 @@ int main() {
     x=x+y;
     y++;
   }
-  {}
+  __VERIFIER_assert(x >= y);
   return 0;
 }

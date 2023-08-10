@@ -1,5 +1,5 @@
 format_version: '2.0'
-input_files: id2_b3_o5_0_1.c
+input_files: id2_b3_o5_1.c
 options:
   data_model: ILP32
   language: C

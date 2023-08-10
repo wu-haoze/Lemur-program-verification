@@ -46,6 +46,6 @@ int main() {
   while( k < n ) {
     k = k+1;
   }
-  {}
+  __VERIFIER_assert((i+j+k)/3 <= SIZE);
   return 0;
 }

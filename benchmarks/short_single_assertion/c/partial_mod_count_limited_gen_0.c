@@ -23,7 +23,7 @@ assume_abort_if_not(0 < lim && lim < N/R);
   }
   for(i=0;i<N;i++){
     if (a[i]==0) j++;
-     {}
+     __VERIFIER_assert(j <= ((N*(R-1))/(R*R)));
   }
   return 0;
 }

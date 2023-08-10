@@ -37,6 +37,6 @@ int main(void) {
     j++;
   }
   if(j >= 100) goto STUCK;
-  {}
+  __VERIFIER_assert( i < 200 );
   return 0;
 }

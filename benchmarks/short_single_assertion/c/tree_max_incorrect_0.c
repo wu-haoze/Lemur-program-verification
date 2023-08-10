@@ -41,7 +41,7 @@ int max(struct node *n) {
 
 void check(struct node *n, int a) {
     if(n) {
-        {}
+        __VERIFIER_assert(n->data <= a);
 
         if(__VERIFIER_nondet_bool()) {
             check(n->left, a);

@@ -28,6 +28,6 @@ int main() {
         x = x + y;
         y = y + 1;
     }
-    {}
+    __VERIFIER_assert(x >= y);
     return 0;
 }

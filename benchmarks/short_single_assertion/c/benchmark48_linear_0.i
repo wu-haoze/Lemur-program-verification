@@ -23,6 +23,6 @@ int main() {
   while (i<j) {
     k=k+1;i=i+1;
   }
-  {}
+  __VERIFIER_assert(k > j - i);
   return 0;
 }

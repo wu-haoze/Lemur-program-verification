@@ -28,5 +28,5 @@ int main(void) {
       break;
     }
   }
-  {}
+  __VERIFIER_assert(i <= 1024);
 }

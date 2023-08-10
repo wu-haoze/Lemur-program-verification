@@ -30,9 +30,9 @@ int main() {
     r = 1;
 
     while (1) {
-	{}
-        __VERIFIER_assert(((4*r*r*r - 6*r*r + 3*r) + (int)(4*x - 4*a)) == 1);
-	__VERIFIER_assert((int)(8*r*s - 24*a + 16*r - 12*s + 24*x - 3 == 0));
+	__VERIFIER_assert((int)(4*s) - 12*r*r == 1);
+        {}                                                                   
+	{}                                                                   
         if (!(x - s > 0.0))
             break;
 
@@ -41,9 +41,9 @@ int main() {
         r = r + 1;
     }
 
-    __VERIFIER_assert((int)(4*s) - 12*r*r == 1);
-    __VERIFIER_assert(((4*r*r*r - 6*r*r + 3*r) + (int)(4*x - 4*a)) == 1);
-    __VERIFIER_assert((int)(8*r*s - 24*a + 16*r - 12*s + 24*x - 3 == 0));
+    {}                                          
+    {}                                                                   
+    {}                                                                   
 
     return 0;
 }

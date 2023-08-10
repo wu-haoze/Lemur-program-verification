@@ -21,6 +21,6 @@ int main()
     a[i]=a[i]-(i*i);
 
   for(i=0;i<S;i++)
-    {}
+    __VERIFIER_assert(a[i]==-1);
   return 0;
 }

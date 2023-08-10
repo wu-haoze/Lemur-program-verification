@@ -16,6 +16,6 @@ int main()
     i++;
   }
 
-  {}
+  __VERIFIER_assert(res > 67050);
   return 0;
 }

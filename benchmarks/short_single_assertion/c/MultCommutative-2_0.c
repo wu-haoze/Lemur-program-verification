@@ -1,6 +1,6 @@
 extern void abort(void);
 extern void __assert_fail(const char *, const char *, unsigned int, const char *) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
-void reach_error() { __assert_fail("0", "MultCommutative-2.c", 3, "{} }
+void reach_error() { __assert_fail("0", "MultCommutative-2.c", 3, "reach_error"); }
 
 /*
  * Recursive implementation multiplication by repeated addition
@@ -36,7 +36,7 @@ int main() {
     int res1 = mult(m, n);
     int res2 = mult(n, m);
     if (res1 != res2 && m > 0 && n > 0) {
-        ERROR: {reach_error();abort();}
+        ERROR: {{}            abort();}
     } else {
         return 0;
     }

@@ -26,6 +26,6 @@ int main()
     sum=sum+(a[i]-b[N-i-1]);
   }
 
-  {}
+  __VERIFIER_assert(sum == 0);
   return 0;
 }

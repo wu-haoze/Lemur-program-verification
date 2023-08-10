@@ -26,6 +26,6 @@ int main() {
     z++;
     z++;
   }
-  {}
+  __VERIFIER_assert(z<=0);
   return 0;
 }

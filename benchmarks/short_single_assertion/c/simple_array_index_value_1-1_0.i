@@ -29,9 +29,9 @@ int main()
 
   for (index = 0; index < 1000; index++) {
     if (index % 2 == 0) {
-      {}
+      __VERIFIER_assert(array[index] == 0);
     } else {
-      __VERIFIER_assert(array[index] != 0);
+      {}                                   
     }
   }
 

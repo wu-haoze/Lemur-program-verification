@@ -51,7 +51,15 @@ class Rewritter:
 
         programs = []
         for i, (start, end) in enumerate(substring_to_replace):
-            program = self.new_code[: start] + "{}" + self.new_code[end: ];
+            program = self.new_code
+            for i_, (start_, end_) in enumerate(substring_to_replace):
+                if i != i_:
+                    prev_len = len(program)
+                    replacement = "{}" + "".join((end_ - start_ - 2) * [" "])
+                    program = program[:start_] + replacement + program[end_:]
+                    if len(program) != prev_len:
+                        print(f"{prev_len}, {len(program)}")
+                        exit(0)
             programs.append(program)
         return programs
 

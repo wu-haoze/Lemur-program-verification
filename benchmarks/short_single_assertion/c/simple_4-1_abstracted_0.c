@@ -34,5 +34,5 @@ int main(void) {
   }
   // END CONSTANTEXTRAPOLATION
 
-  {}
+  __VERIFIER_assert(!(x % 2));
 }

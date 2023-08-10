@@ -33,10 +33,10 @@ int main ( ) {
   }
   int x;
   for ( x = 0 ; x < j ; x++ ) {
-    {}
+    __VERIFIER_assert( C[x] <= x + i - j );
   }
   for ( x = 0 ; x < j ; x++ ) {
-    __VERIFIER_assert( C[x] >= x );
+    {}                             
   }
   return 0;
 }

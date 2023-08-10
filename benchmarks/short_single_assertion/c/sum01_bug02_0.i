@@ -29,5 +29,5 @@ int main() {
     sn = sn + (2);
     j--;
   }
-  {}
+  __VERIFIER_assert(sn==((long long) n)*(2) || sn == 0);
 }

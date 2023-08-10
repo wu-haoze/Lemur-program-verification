@@ -30,7 +30,7 @@ int main( ) {
   }
   int x;
   for ( x = 0 ; x < i ; x++ ) {
-    {}
+    __VERIFIER_assert( dst[x] == src[x] );
   }
   return 0;
 }

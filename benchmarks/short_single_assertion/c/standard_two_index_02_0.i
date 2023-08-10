@@ -34,7 +34,7 @@ int main()
   j = 0;
   while( i < 100000 )
   {
- {}
+ __VERIFIER_assert( a[j] == b[2*j+1] );
         i = i+2;
         j = j+1;
   }

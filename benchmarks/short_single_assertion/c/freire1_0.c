@@ -29,7 +29,7 @@ int main() {
     r = 0;
 
     while (1) {
-        {}
+        __VERIFIER_assert((int)(r*r - a - r + 2*x) == 0);
 
         if (!(x > r))
             break;
@@ -37,6 +37,6 @@ int main() {
         r = r + 1;
     }
 
-    __VERIFIER_assert((int)(r*r - a - r + 2*x) == 0);
+    {}                                               
     return 0;
 }

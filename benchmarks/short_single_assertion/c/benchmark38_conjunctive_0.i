@@ -22,6 +22,6 @@ int main() {
   while (__VERIFIER_nondet_bool()) {
     x+=4;y++;
   }
-  {}
+  __VERIFIER_assert(x == 4*y && x >= 0);
   return 0;
 }

@@ -34,7 +34,7 @@ int main()
         }
     }                       
 
-    {}
+    __VERIFIER_assert(x>=100 || z<=100);
 
     return 0;
 }

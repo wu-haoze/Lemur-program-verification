@@ -24,6 +24,6 @@ int main() {
     x++;
     if (x>y) y++;
   }
-  {}
+  __VERIFIER_assert(y==n);
   return 0;
 }

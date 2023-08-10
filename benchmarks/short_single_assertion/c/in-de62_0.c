@@ -50,6 +50,6 @@ int main()
     x--;
   }
 
-  {}
+  __VERIFIER_assert(x==0);
   return 0;
 }

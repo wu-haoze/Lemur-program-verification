@@ -59,6 +59,6 @@ int main()
 		for(column=0;column<ARR_SIZE;column++)
 			sum = sum + array[row][column] ;
 
-	{}
+	__VERIFIER_assert(3*sum == (ARR_SIZE*(ARR_SIZE-1)*(ARR_SIZE+1))) ;
 	return 0 ;
 }

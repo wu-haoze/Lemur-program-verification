@@ -62,11 +62,9 @@ int __return_96;
  {
  int __tmp_1;
  __tmp_1 = (2 * main__sum) == (main__n * (main__n + 1));
- int {}
- __VERIFIER_assert__cond = __tmp_1;
- if (__VERIFIER_assert__cond == 0)
- {
- {reach_error();}
+ int __VERIFIER_assert__cond;
+ {}                                
+ if ({}                                               }
  return __return_main;
  }
  else 

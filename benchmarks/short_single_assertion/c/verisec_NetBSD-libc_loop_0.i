@@ -28,7 +28,7 @@ int glob2 (Char *pathbuf, Char *pathlim)
 
   for (p = pathbuf; p <= pathlim; p++) {
 
-    {}
+    __VERIFIER_assert(p<=tmp);
     *p = 1;
   }
 

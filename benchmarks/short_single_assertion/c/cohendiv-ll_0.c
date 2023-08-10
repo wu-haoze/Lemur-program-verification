@@ -34,8 +34,8 @@ int main() {
     b = 0;
 
     while (1) {
-	{}
-	__VERIFIER_assert(x == q*y + r);
+	__VERIFIER_assert(b == y*a);
+	{}                              
     
 	if (!(r >= y))
 	    break;
@@ -43,14 +43,14 @@ int main() {
 	b = y;
 
 	while (1) {            
-	    __VERIFIER_assert(b == y*a);
-	    __VERIFIER_assert(x == q*y + r);
-	    __VERIFIER_assert(r >= 0);
+	    {}                          
+	    {}                              
+	    {}                        
 
 	    if (!(r >= 2 * b))
 		break;
 	    
-	    __VERIFIER_assert(r >= 2 * y * a);
+	    {}                                
 	    
 	    a = 2 * a;
 	    b = 2 * b;
@@ -59,6 +59,6 @@ int main() {
 	q = q + a;
     }
     
-    __VERIFIER_assert(x == q*y + r);
+    {}                              
     return 0;
 }

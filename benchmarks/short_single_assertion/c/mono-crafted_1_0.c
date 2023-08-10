@@ -19,6 +19,6 @@ int main()
 		y--;
 		x--;
 	}
-	{}
+	__VERIFIER_assert(x==z);
 	return 0;
 }
