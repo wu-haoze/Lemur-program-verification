@@ -241,21 +241,21 @@ nested3-1.c rm
 nested3-2.c rm
 nested5-1.c rm
 nested5-2.c rm
-deep-nested.c
-nested_6.c
-fermat1.c
-lcm1.c
-lcm1_unwindbound100.c
-lcm1_unwindbound10.c
-lcm1_unwindbound1.c
-lcm1_unwindbound20.c
-lcm1_unwindbound2.c
-lcm1_unwindbound50.c
-lcm1_unwindbound5.c
-lcm1_valuebound100.c
-lcm1_valuebound10.c
-lcm1_valuebound1.c
-lcm1_valuebound20.c
-lcm1_valuebound2.c
-lcm1_valuebound50.c
-lcm1_valuebound5.c
+deep-nested.c rm
+nested_6.c rm
+fermat1.c rm
+lcm1.c rm
+lcm1_unwindbound100.c rm
+lcm1_unwindbound10.c rm
+lcm1_unwindbound1.c rm
+lcm1_unwindbound20.c rm
+lcm1_unwindbound2.c rm
+lcm1_unwindbound50.c rm
+lcm1_unwindbound5.c rm
+lcm1_valuebound100.c rm
+lcm1_valuebound10.c rm
+lcm1_valuebound1.c rm
+lcm1_valuebound20.c rm
+lcm1_valuebound2.c rm
+lcm1_valuebound50.c rm
+lcm1_valuebound5.c rm
