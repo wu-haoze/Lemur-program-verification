@@ -16,13 +16,7 @@ int main()
   
   for (i=0;i<N;i++) {
     a[i] = i;
-  }
-
-  for (i=0;i<N;i++) {
     b[N-i-1]=i;
-  }
-
-  for (i=0;i<N;i++) {
     sum=sum+(a[i]-b[N-i-1]);
   }
 

@@ -28,11 +28,10 @@ int main()
        matriz[j][k] = __VERIFIER_nondet_int();
        
        if(matriz[j][k]>maior)
-          maior = matriz[j][k];                          
+          maior = matriz[j][k];
+
+       __VERIFIER_assert(matriz[j][k]<maior);
     }                       
-    
-  for(j=0;j<N_COL;j++)
-    for(k=0;k<N_LIN;k++)
-      __VERIFIER_assert(matriz[j][k]<maior);    
+
 }
 

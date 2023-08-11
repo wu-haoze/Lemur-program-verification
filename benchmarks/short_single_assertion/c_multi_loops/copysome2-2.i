@@ -25,14 +25,12 @@ int main( ) {
     a3[i] = __VERIFIER_nondet_int();
   }
   for ( i = 0 ; i < 200000 ; i++ ) {
-      if (i != z)
+    if (i != z) {
          a2[i] = a1[i];
-  }
-  for ( i = 0 ; i < 200000 ; i++ ) {
-      if (i != z)
           a3[i] = a2[i];
-      else
-          a3[i] = a1[i];
+    }
+    else
+      a3[i] = a1[i];
   }
   int x;
   for ( x = 0 ; x < 200000 ; x++ ) {

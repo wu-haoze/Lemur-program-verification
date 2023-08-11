@@ -23,9 +23,6 @@ int main()
     assume_abort_if_not(x>y);
     a[i]=x;
     b[i]=y;
-  }
-
-  for(i=0;i<N;i++){
     c[i]=a[i]-b[i];
   }
 

@@ -23,11 +23,7 @@ int main( ) {
 	{
 	  a[i] = __VERIFIER_nondet_int();
 		b[i] = __VERIFIER_nondet_int();
-	}
-	i = 0;
-  while (i < 100000) {
-    c[i] = a[i] - b[i];
-    i = i + 1;
+        c[i] = a[i] - b[i];
   }
   int x;
   for ( x = 0 ; x < 100000 ; x++ ) {

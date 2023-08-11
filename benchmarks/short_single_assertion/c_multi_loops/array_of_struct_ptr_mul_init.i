@@ -25,18 +25,14 @@ int main()
  {
   a[i].p = i;
   a[i].q = i ;
- }
- for (i = 0; i < 100000; i++)
- {
+
   if ( __VERIFIER_nondet_short())
   {
    k = __VERIFIER_nondet_uchar();
    a[i].p = k;
    a[i].q = k * k ;
   }
- }
- for (i = 0; i < 100000; i++)
- {
+
   __VERIFIER_assert(a[i].p == a[i].q || a[i].q == a[i].p * a[i].p);
  }
  return 0;

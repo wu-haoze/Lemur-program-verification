@@ -32,19 +32,12 @@ int main()
 	for(i=0; i<N; i++)
 	{
 		a[i] = 1;
-	}
 
-	for(i=0; i<N; i++)
-	{
 		if(a[i] == 1) {
 			a[i] = a[i] + 4;
 		} else {
 			a[i] = a[i] - 1;
 		}
-	}
-
-	for(i=0; i<N; i++)
-	{
 		sum[0] = sum[0] + a[i];
 	}
 

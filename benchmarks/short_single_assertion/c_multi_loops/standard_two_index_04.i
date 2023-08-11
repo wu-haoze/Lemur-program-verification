@@ -28,13 +28,6 @@ int main( )
   while( i < 100000 )
   {
  a[j] = b[i];
-        i = i+4;
-        j = j+1;
-  }
-  i = 1;
-  j = 0;
-  while( i < 100000 )
-  {
  __VERIFIER_assert( a[j] == b[4*j+1] );
         i = i+4;
         j = j+1;

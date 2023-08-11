@@ -27,9 +27,8 @@ int main() {
          i = i - 1;
       }
       v[i+1] = key;	        
-  }      
-  for (k=1;k<SIZE;k++)
-    __VERIFIER_assert(v[k-1]<=v[k]);  
+
+    __VERIFIER_assert(v[j-1]<=v[j]);
    return 0;
 }
 

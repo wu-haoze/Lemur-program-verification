@@ -20,9 +20,6 @@ int main()
     assume_abort_if_not(x > -100000 && x < 100000);
     a[i]=x;
     b[i]=-x;
-  }
-
-  for(i=0;i<N;i++){
     c[i]=a[i]+b[i];
   }
 

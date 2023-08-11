@@ -22,225 +22,225 @@ standard_partial_init_ground.i mod
 standard_partition_ground-1.i mod
 standard_partition_ground-2.i mod
 standard_partition_original_ground.i rm
-standard_strcpy_ground-2.i 
-standard_strcpy_original-1.i
-standard_two_index_01.i
-standard_two_index_02.i
-standard_two_index_03.i
-standard_two_index_04.i
-standard_two_index_05.i
-standard_two_index_06.i
-standard_two_index_07.i
-standard_two_index_08.i
-standard_two_index_09.i
-standard_vararg_ground.i
-standard_vector_difference_ground.i
-array_mul_init.i
-array_of_struct_ptr_mul_init.i
-avg05-1.i
-avg10-2.i
-avg20-2.i
-avg40-2.i
-avg60-1.i
-sep10-2.i
-sep20-1.i
-sep40-1.i
-sep60-2.i
-sum05-2.i
-sum10-1.i
-sum20-2.i
-sum40-2.i
-sum60-2.i
-poly2.c
-copysome1-1.i
-copysome1-2.i
-copysome2-1.i
-copysome2-2.i
-mapavg1.i
-mapavg2.i
-mapavg3.i
-mapavg4.i
-mapavg5.i
-mapsum1.i
-mapsum2.i
-mapsum3.i
-mapsum4.i
-mapsum5.i
-zero_sum1.c
-zero_sum2.c
-zero_sum3.c
-zero_sum4.c
-zero_sum_const1.c
-zero_sum_const2.c
-zero_sum_const3.c
-zero_sum_const_m2.c
-zero_sum_const_m3.c
-zero_sum_m2.c
-zero_sum_m3.c
-zero_sum_m4.c
-transpose-u.c
-array10_pattern.c
-array11_pattern.c
-array12_pattern.c
-array13_pattern.c
-array1_pattern.c
-array25_pattern.c
-array26_pattern.c
-array27_pattern.c
-array28_pattern.c
-array29_pattern.c
-array2_pattern.c
-array30_pattern.c
-array3_pattern.c
-array5_pattern.c
-array6_pattern.c
-array7_pattern.c
-array8_pattern.c
-array9_pattern.c
-array_init_both_ends_multiple_sum.c
-array_init_pair_sum_const.c
-array_init_pair_symmetr2.c
-array_init_pair_symmetr.c
-array_min_and_copy_shift_sum_add.c
-array_tiling_poly6.c
-motivex.i
-sum_multi_array.i
-condaf.c
-conda.c
-condgf.c
-condg.c
-condmf.c
-condm.c
-eqn1f.c
-eqn1.c
-eqn2f.c
-eqn2.c
-eqn3f.c
-eqn3.c
-eqn4f.c
-eqn4.c
-eqn5f.c
-eqn5.c
-ifeqn1f.c
-ifeqn1.c
-ifeqn2f.c
-ifeqn2.c
-ifeqn3f.c
-ifeqn3.c
-ifeqn4f.c
-ifeqn4.c
-ifeqn5f.c
-ifeqn5.c
-indp1f.c
-indp2f.c
-indp2.c
-indp3f.c
-indp3.c
-indp4f.c
-indp4.c
-indp5f.c
-indp5.c
-modnf.c
-modn.c
-modpf.c
-modp.c
-modsf.c
-mods.c
-ncompf.c
-ncomp.c
-nsqmf.c
-nsqm-iff.c
-nsqm-if.c
-nsqm.c
-pcompf.c
-pcomp.c
-res1f.c
-res1of.c
-res1o.c
-res1.c
-res2f.c
-res2of.c
-res2o.c
-res2.c
-s12iff.c
-s12if.c
-s1liff.c
-s1lif.c
-s22iff.c
-s22if.c
-s2liff.c
-s2lif.c
-s32iff.c
-s32if.c
-s3liff.c
-s3lif.c
-s42iff.c
-s42if.c
-s4liff.c
-s4lif.c
-s52iff.c
-s52if.c
-s5liff.c
-s5lif.c
-sina1f.c
-sina1.c
-sina2f.c
-sina2.c
-sina3f.c
-sina3.c
-sina4f.c
-sina4.c
-sina5f.c
-sina5.c
-sqmf.c
-sqm-iff.c
-sqm-if.c
-sqm.c
-ss1f.c
-ss1.c
-ss2f.c
-ss2.c
-ss3f.c
-ss3.c
-ss4f.c
-ss4.c
-ssinaf.c
-ssina.c
-double_req_bl_1011a.c
-double_req_bl_1011b.c
-float_req_bl_1011a.c
-float_req_bl_1011b.c
-float_req_bl_1012a.c
-float_req_bl_1012b.c
-float_req_bl_1381.c
-ex3_forlist.i
-heavy-1.c
-insertion_sort-1-2.c
-insertion_sort-2-2.c
-invert_string-1.c
-invert_string-2.c
-invert_string-3.c
-matrix-2-2.c
-string-2.i
-sum_array-2-1.i
-sum_array-2-2.i
-vogal-1.i
-vogal-2.i
-simple_array_index_value_4.i
-fragtest_simple.i
-seq-3.i
-in-de31.c
-in-de32.c
-in-de41.c
-in-de42.c
-in-de51.c
-in-de52.c
-in-de61.c
-in-de62.c
-nested3-1.c
-nested3-2.c
-nested5-1.c
-nested5-2.c
+standard_strcpy_ground-2.i rm
+standard_strcpy_original-1.i rm
+standard_two_index_01.i mod
+standard_two_index_02.i mod
+standard_two_index_03.i mod
+standard_two_index_04.i mod
+standard_two_index_05.i mod
+standard_two_index_06.i mod
+standard_two_index_07.i mod
+standard_two_index_08.i mod
+standard_two_index_09.i mod
+standard_vararg_ground.i rm
+standard_vector_difference_ground.i mod
+array_mul_init.i mod 
+array_of_struct_ptr_mul_init.i mod
+avg05-1.i rm
+avg10-2.i rm
+avg20-2.i rm
+avg40-2.i rm
+avg60-1.i rm
+sep10-2.i rm
+sep20-1.i rm
+sep40-1.i rm
+sep60-2.i rm
+sum05-2.i rm
+sum10-1.i rm
+sum20-2.i rm
+sum40-2.i rm
+sum60-2.i rm
+poly2.c mod
+copysome1-1.i rm
+copysome1-2.i rm
+copysome2-1.i mod
+copysome2-2.i mod
+mapavg1.i rm
+mapavg2.i rm
+mapavg3.i rm
+mapavg4.i rm
+mapavg5.i rm
+mapsum1.i rm
+mapsum2.i rm
+mapsum3.i rm
+mapsum4.i rm
+mapsum5.i rm
+zero_sum1.c mod
+zero_sum2.c mod
+zero_sum3.c mod
+zero_sum4.c mod
+zero_sum_const1.c mod
+zero_sum_const2.c mod
+zero_sum_const3.c mod
+zero_sum_const_m2.c mod
+zero_sum_const_m3.c mod
+zero_sum_m2.c mod
+zero_sum_m3.c mod
+zero_sum_m4.c mod
+transpose-u.c rm
+array10_pattern.c rm
+array11_pattern.c rm
+array12_pattern.c rm
+array13_pattern.c rm
+array1_pattern.c rm
+array25_pattern.c rm
+array26_pattern.c rm
+array27_pattern.c rm
+array28_pattern.c rm
+array29_pattern.c rm
+array2_pattern.c rm
+array30_pattern.c rm
+array3_pattern.c rm
+array5_pattern.c rm
+array6_pattern.c rm
+array7_pattern.c rm
+array8_pattern.c rm
+array9_pattern.c rm
+array_init_both_ends_multiple_sum.c mod
+array_init_pair_sum_const.c mod
+array_init_pair_symmetr2.c mod
+array_init_pair_symmetr.c mod
+array_min_and_copy_shift_sum_add.c mod
+array_tiling_poly6.c mod
+motivex.i mod
+sum_multi_array.i mod
+condaf.c mod
+conda.c mod
+condgf.c mod
+condg.c mod
+condmf.c mod
+condm.c mod
+eqn1f.c mod
+eqn1.c mod
+eqn2f.c mod
+eqn2.c mod
+eqn3f.c mod
+eqn3.c mod
+eqn4f.c mod
+eqn4.c mod
+eqn5f.c mod
+eqn5.c mod
+ifeqn1f.c mod
+ifeqn1.c mod
+ifeqn2f.c mod
+ifeqn2.c mod
+ifeqn3f.c mod
+ifeqn3.c mod
+ifeqn4f.c mod
+ifeqn4.c mod
+ifeqn5f.c mod
+ifeqn5.c mod
+indp1f.c mod
+indp2f.c mod
+indp2.c mod
+indp3f.c mod
+indp3.c mod
+indp4f.c mod
+indp4.c mod
+indp5f.c mod
+indp5.c mod
+modnf.c mod
+modn.c mod
+modpf.c mod
+modp.c mod
+modsf.c mod
+mods.c mod
+ncompf.c mod
+ncomp.c mod
+nsqmf.c mod
+nsqm-iff.c mod
+nsqm-if.c mod
+nsqm.c mod
+pcompf.c mod
+pcomp.c mod
+res1f.c mod
+res1of.c mod
+res1o.c mod
+res1.c mod
+res2f.c mod
+res2of.c mod
+res2o.c mod
+res2.c mod
+s12iff.c mod
+s12if.c mod
+s1liff.c mod
+s1lif.c mod
+s22iff.c mod
+s22if.c mod
+s2liff.c mod
+s2lif.c mod
+s32iff.c mod
+s32if.c mod
+s3liff.c mod
+s3lif.c mod
+s42iff.c mod
+s42if.c mod
+s4liff.c mod
+s4lif.c mod
+s52iff.c mod
+s52if.c md
+s5liff.c mod
+s5lif.c mod
+sina1f.c mod
+sina1.c mod
+sina2f.c mod
+sina2.c mod
+sina3f.c omd
+sina3.c mod
+sina4f.c mod
+sina4.c mod
+sina5f.c mod
+sina5.c mod
+sqmf.c mod
+sqm-iff.c mod
+sqm-if.c mod
+sqm.c mod
+ss1f.c mod
+ss1.c mod
+ss2f.c mod
+ss2.c mod
+ss3f.c mod
+ss3.c mod
+ss4f.c mod
+ss4.c mod
+ssinaf.c mod
+ssina.c mod
+double_req_bl_1011a.c rm
+double_req_bl_1011b.c rm
+float_req_bl_1011a.c rm
+float_req_bl_1011b.c rm
+float_req_bl_1012a.c rm
+float_req_bl_1012b.c rm
+float_req_bl_1381.c rm
+ex3_forlist.i rm
+heavy-1.c rm
+insertion_sort-1-2.c mod
+insertion_sort-2-2.c mod
+invert_string-1.c rm
+invert_string-2.c rm
+invert_string-3.c rm
+matrix-2-2.c mod
+string-2.i rm
+sum_array-2-1.i mod
+sum_array-2-2.i mod
+vogal-1.i rm
+vogal-2.i rm
+simple_array_index_value_4.i rm
+fragtest_simple.i rm
+seq-3.i rm
+in-de31.c rm
+in-de32.c rm
+in-de41.c rm
+in-de42.c rm
+in-de51.c rm
+in-de52.c rm
+in-de61.c rm
+in-de62.c rm
+nested3-1.c rm
+nested3-2.c rm
+nested5-1.c rm
+nested5-2.c rm
 deep-nested.c
 nested_6.c
 fermat1.c

@@ -26,9 +26,6 @@ int main()
 
   for(i=0;i<N;i++) {
     b[i] = a[i]-j;
-  }
-
-  for(i=0;i<N;i++) {
     k = k+b[i]+i;
   }
       

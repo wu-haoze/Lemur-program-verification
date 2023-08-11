@@ -14,14 +14,11 @@ int main()
   long long i;
   long long a[S];
 
-  for(i=0;i<S;i++)
+  for(i=0;i<S;i++) {
     a[i]=((i-1)*(i+1));
-
-  for(i=0;i<S;i++)
     a[i]=a[i]-(i*i);
-
-  for(i=0;i<S;i++)
     __VERIFIER_assert(a[i]==-1);
+  }
   return 0;
 }
 

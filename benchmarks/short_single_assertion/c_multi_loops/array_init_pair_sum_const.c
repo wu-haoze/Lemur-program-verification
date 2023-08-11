@@ -17,9 +17,6 @@ int main()
   for(i=0;i<N;i++) {
     a[i]=1;
     b[i]=2;
-  }
-
-  for(i=0;i<N;i++){
     c[i]=a[i]+b[i];
   }
 

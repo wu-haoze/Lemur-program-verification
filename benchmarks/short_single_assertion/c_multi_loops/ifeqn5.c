@@ -35,19 +35,11 @@ int main()
 		} else {
 			a[i] = a[i-1] + 10;
 		}
-	}
-
-	for(i=0; i<N; i++)
-	{
 		if(i==0) {
 			b[0] = 1;
 		} else {
 			b[i] = b[i-1] + a[i-1];
 		}
-	}
-
-	for(i=0; i<N; i++)
-	{
 		__VERIFIER_assert(b[i] == 5*i*i + 5*i + 1);
 	}
 	return 1;

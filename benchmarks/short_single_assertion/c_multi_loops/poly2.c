@@ -24,10 +24,6 @@ int main()
 		for(i=0; i<SIZE; i++)
 		{
 			a[i] = i*i + 2;
-		}
-
-		for(i=0; i<SIZE; i++)
-		{
 			a[i] = a[i] - 2;
 		}
 

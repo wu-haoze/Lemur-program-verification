@@ -22,18 +22,12 @@ int main()
  {
   a[i] = i;
   b[i] = i ;
- }
- for (i=0; i< 100000; i++)
- {
+
   if(__VERIFIER_nondet_short())
   {
    k = __VERIFIER_nondet_short();
    a[i] = k;
    b[i] = k * k ;
+   __VERIFIER_assert(a[i] == b[i] || b[i] == a[i] * a[i]);
   }
- }
- for (i=0; i< 100000; i++)
- {
-  __VERIFIER_assert(a[i] == b[i] || b[i] == a[i] * a[i]);
- }
 }

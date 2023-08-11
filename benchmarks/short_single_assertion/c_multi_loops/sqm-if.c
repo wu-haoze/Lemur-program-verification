@@ -35,19 +35,11 @@ int main()
 		} else {
 			b[i] = b[i-1] + 2;
 		}
-	}
-
-	for(i=0; i<N; i++)
-	{
 		if(i==0) {
 			a[0] = 1;
 		} else {
 			a[i] = a[i-1] + b[i-1] + 2;
 		}
-	}
-
-	for(i=0; i<N; i++)
-	{
 		__VERIFIER_assert(a[i] == (i+1)*(i+1));
 	}
 	return 1;

@@ -32,24 +32,12 @@ int main()
 	for(i=0; i<N; i++)
 	{
 		a[i] = 1;
-	}
-
-	for(i=0; i<N; i++)
-	{
 		sum[0] = sum[0] + a[i];
-	}
-
-	for(i=0; i<N; i++)
-	{
 		if(sum[0] == N) {
 			a[i] = a[i] - 1;
 		} else {
 			a[i] = a[i] + 1;
 		}
-	}
-
-	for(i=0; i<N; i++)
-	{
 		__VERIFIER_assert(a[i] == 0);
 	}
 	return 1;

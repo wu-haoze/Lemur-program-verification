@@ -27,20 +27,12 @@ int main()
 		for(i = 0; i < SIZE; i++ )
 		{
 			sum = sum + a[i];
-		}
-
-		for(i = 0; i < SIZE; i++)
-		{
 			sum = sum - a[i];
 		}
 
 		for(i = 0; i < SIZE; i++ )
 		{
 			sum = sum + a[i];
-		}
-
-		for(i = 0; i < SIZE; i++)
-		{
 			sum = sum - a[i];
 		}
 

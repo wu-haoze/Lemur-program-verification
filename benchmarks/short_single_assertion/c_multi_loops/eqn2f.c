@@ -34,15 +34,7 @@ int main()
 	for(i=1; i<N; i++)
 	{
 		a[i] = a[i-1] + 4;
-	}
-
-	for(i=1; i<N; i++)
-	{
 		b[i] = b[i-1] + a[i-1];
-	}
-
-	for(i=0; i<N; i++)
-	{
 		__VERIFIER_assert(b[i] == 2*i*i + 2*i + 1);
 	}
 	return 1;

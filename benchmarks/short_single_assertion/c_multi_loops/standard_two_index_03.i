@@ -27,13 +27,6 @@ int main( )
   while( i < 10000 )
   {
  a[j] = b[i];
-        i = i+3;
-        j = j+1;
-  }
-  i = 1;
-  j = 0;
-  while( i < 10000 )
-  {
  __VERIFIER_assert( a[j] == b[3*j+1] );
         i = i+3;
         j = j+1;

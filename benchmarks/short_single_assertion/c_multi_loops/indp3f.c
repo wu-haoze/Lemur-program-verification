@@ -30,25 +30,9 @@ int main()
 	for(i=0;i<N;i++)
 	{
 		a[i]=((i-1)*(i-1));
-	}
-
-	for(i=0;i<N;i++)
-	{
 		a[i]=a[i]+i;
-	}
-
-	for(i=0;i<N;i++)
-	{
 		a[i]=a[i]+i;
-	}
-
-	for(i=0;i<N;i++)
-	{
 		a[i]=a[i]-1;
-	}
-
-	for(i=0;i<N;i++)
-	{
 		__VERIFIER_assert(a[i]==i*i + 1);
 	}
 

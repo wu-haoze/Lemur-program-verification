@@ -35,20 +35,8 @@ int main()
 	for(i=1; i<N; i++)
 	{
 		a[i] = a[i-1] + 6;
-	}
-
-	for(i=1; i<N; i++)
-	{
 		b[i] = b[i-1] + a[i-1];
-	}
-
-	for(i=1; i<N; i++)
-	{
 		c[i] = c[i-1] + b[i-1];
-	}
-
-	for(i=0; i<N; i++)
-	{
 		__VERIFIER_assert(c[i] == N + i*i*i);
 	}
 	return 1;

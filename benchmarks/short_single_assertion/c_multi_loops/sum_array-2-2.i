@@ -34,14 +34,12 @@ int main()
     A[i] = __VERIFIER_nondet_int();
     if (!(A[i] <= 1000000)) return 0;
     if (!(A[i] >= -1000000)) return 0;
-  }
-  for(i=0;i<M;i++) {
+
     B[i] = __VERIFIER_nondet_int();
     if(!(B[i] <= 1000000)) return 0;
     if(!(B[i] >= -1000000)) return 0;
-  }
-  for(i=0;i<M;i++)
+
      C[i]=A[i]+B[i];
-  for(i=0;i<M;i++)
      __VERIFIER_assert(C[i]==A[i]+B[i]);
+  }
 }
