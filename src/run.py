@@ -2,7 +2,7 @@ import os
 from os.path import join, dirname, abspath
 from task import Task
 import utils
-import rewritter
+from verifier import Verifier
 
 PATH_DIR = abspath(os.path.dirname(__file__))
 VERIFIERS = {"uautomizer": join(PATH_DIR, "../tools/uautomizer/Ultimate.py"),
@@ -18,19 +18,18 @@ if __name__ == "__main__":
 
     VERIFIER = VERIFIERS[args.verifier]
 
-    r = rewritter.Rewritter(task.source_code, open(task.source_code).read(), False)
-    r.find_all_assertions()
-    #print(r.new_code)
-
-    os.chdir(dirname(VERIFIER))
     if args.verifier == "cbmc":
         command = f"{VERIFIER} --propertyfile {task.property} --{task.arch.split('bit')[0]} {task.source_code}"
-    if args.verifier == "2ls":
+    elif args.verifier == "2ls":
         command = f"{VERIFIER} --propertyfile {task.property} --{task.arch.split('bit')[0]} {task.source_code}"
-    if args.verifier == "esbmc":
+    elif args.verifier == "esbmc":
         command = f"python3 -u {VERIFIER} -p {task.property} -s kinduction --arch {task.arch.split('bit')[0]} {task.source_code}"
     elif args.verifier == "uautomizer":
         command = f"python3 -u {VERIFIER} --spec {task.property} --file {task.source_code} --architecture {task.arch} --full-output"
-
-    print(command)
-    utils.run_subprocess(command)
+    else:
+        command = ""
+    if args.learn:
+        v = Verifier(task, VERIFIER, args)
+    else:
+        os.chdir(dirname(VERIFIER))
+        utils.run_subprocess(command)
