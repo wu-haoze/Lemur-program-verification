@@ -16,6 +16,9 @@ def parse_args():
     parser.add_argument("--prop", type=str, default="reach", choices=["term", "reach"], help="Property type term/reach.")
     parser.add_argument("--learn", action="store_true",help="Use GPT?")
     parser.add_argument("-w", "--working-dir", type=str, default="./data/", help="Working directory")
+    parser.add_argument("--verbosity", type=int, default=1, help="Verbosity")
+    parser.add_argument("--seed", type=int, default=1, help="Seed")
+
     return parser.parse_args()
 
 def load_yaml_file(file_path):

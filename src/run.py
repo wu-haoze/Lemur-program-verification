@@ -3,6 +3,9 @@ from os.path import join, dirname, abspath
 from task import Task
 import utils
 from verifier import Verifier
+import random
+
+
 
 PATH_DIR = abspath(os.path.dirname(__file__))
 VERIFIERS = {"uautomizer": join(PATH_DIR, "../tools/uautomizer/Ultimate.py"),
@@ -14,6 +17,9 @@ SV_BENCHMARK_DIR = join(PATH_DIR, "../benchmarks/sv-benchmarks-main/")
 
 if __name__ == "__main__":
     args = utils.parse_args()
+
+    random.seed(args.seed)
+
     task = Task(args.input, args.prop)
 
     VERIFIER = VERIFIERS[args.verifier]
@@ -30,6 +36,7 @@ if __name__ == "__main__":
         command = ""
     if args.learn:
         v = Verifier(task, VERIFIER, args)
+        v.verify()
     else:
         os.chdir(dirname(VERIFIER))
         utils.run_subprocess(command)

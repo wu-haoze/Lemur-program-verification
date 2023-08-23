@@ -22,6 +22,7 @@ class Rewritter:
             self.remove_externs()
 
             self.new_code = self.new_code.replace("__VERIFIER_assert", "assert")
+            self.new_code = self.new_code.replace("assume_abort_if_not", "assume")
             self.remove_verifier_nondet()
             self.clang_format()
             self.remove_empty_lines()
