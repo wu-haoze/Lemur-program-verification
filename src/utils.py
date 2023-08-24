@@ -13,13 +13,15 @@ def parse_args():
     parser.add_argument("-v", "--verifier", type=str, default="esbmc",
                         choices=["uautomizer", "cbmc", "esbmc", "2ls", "seahorn"],
                         help="Verifier uautomizer/cbmc/esbmc/2ls/seahorn.")
-    parser.add_argument("--prop", type=str, default="reach", choices=["term", "reach"], help="Property type term/reach.")
-    parser.add_argument("--learn", action="store_true",help="Use GPT?")
+    parser.add_argument("--prop", type=str, default="reach", choices=["term", "reach"],
+                        help="Property type term/reach.")
+    parser.add_argument("--learn", action="store_true", help="Use GPT?")
     parser.add_argument("-w", "--working-dir", type=str, default="./data/", help="Working directory")
     parser.add_argument("--verbosity", type=int, default=1, help="Verbosity")
     parser.add_argument("--seed", type=int, default=1, help="Seed")
 
     return parser.parse_args()
+
 
 def load_yaml_file(file_path):
     try:
@@ -33,7 +35,10 @@ def load_yaml_file(file_path):
         print(f"Error: Failed to parse YAML file '{file_path}': {e}")
         return None
 
-def run_subprocess(command):
+
+def run_subprocess(command, live_output: bool = True):
+    stdout = []
+    stderr = []
     process = subprocess.Popen(
         command,
         stdout=subprocess.PIPE,
@@ -45,18 +50,25 @@ def run_subprocess(command):
 
     # Loop to read and print the output line by line in real-time
     for line in process.stdout:
-        print(line, end='')
+        if live_output:
+            print(line, end='')
+        stdout.append(line)
 
     # Make sure to capture any remaining output
     for line in process.stderr:
-        print(line, end='')
+        if live_output:
+            print(line, end='')
+        stderr.append(line)
 
     # Wait for the process to finish
     process.wait()
+    return stdout, stderr
+
 
 def run_subprocess_and_get_output(command):
-    p = subprocess.run( command.split(), capture_output=True )
+    p = subprocess.run(command.split(), capture_output=True)
     return p.stdout.decode(), p.stderr.decode()
+
 
 def create_working_dir(working_dir: str, c_filename: str, property: str):
     now = datetime.datetime.now()

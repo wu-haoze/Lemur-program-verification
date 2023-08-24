@@ -1,5 +1,8 @@
+from typing import Dict
+
 import utils
 import re
+import gloal_configurations as GC
 
 class Rewritter:
     """
@@ -14,7 +17,6 @@ class Rewritter:
             self.remove_comments()
             self.remove_re_pattern(r'__attribute__\s*\(\(.*?\)\)')
 
-
             self.remove_function("void reach_error(")
             self.remove_function("void __VERIFIER_assert(")
             self.remove_function("void assume_abort_if_not")
@@ -23,11 +25,20 @@ class Rewritter:
 
             self.new_code = self.new_code.replace("__VERIFIER_assert", "assert")
             self.new_code = self.new_code.replace("assume_abort_if_not", "assume")
-            self.remove_verifier_nondet()
             self.clang_format()
             self.remove_empty_lines()
             #self.replace_reach_error_with_assertion()
-            #print(self.new_code)
+
+            self.new_code_to_verify = self.new_code
+            self.new_code_to_verify_lines = self.new_code.split("\n")
+            self.remove_verifier_nondet()
+            self.new_code_lines = self.new_code.split("\n")
+
+            self.replacement: Dict[str, str] = {}
+            assert(len(self.new_code_to_verify_lines) == len(self.new_code_lines))
+            for i in range(len(self.new_code_lines)):
+                if self.new_code_lines[i] != self.new_code_to_verify_lines[i]:
+                    self.replacement[self.new_code_to_verify_lines[i]] = self.new_code_lines[i]
 
     def find_all_loops(self):
         with open("tmp.c", 'w') as out_file:
@@ -141,7 +152,8 @@ class Rewritter:
     def clang_format(self):
         with open("tmp.c", 'w') as out_file:
             out_file.write(self.new_code)
-        command = "clang-format --style=LLVM ./tmp.c"
+        command = f"clang-format-15 --style=file:{GC.PATH_TO_CLANG_FORMAT} ./tmp.c"
+        print(command)
         output, err = utils.run_subprocess_and_get_output(command)
         self.new_code = output
 

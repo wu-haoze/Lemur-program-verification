@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sudo apt install clang-format-15
+
 mkdir benchmarks
 cd benchmarks
 if [ ! -f sv-benchmarks-svcomp23.zip ]
