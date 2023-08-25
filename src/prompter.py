@@ -1,6 +1,8 @@
+from typing import List, Set
+
 import openai
 import os
-from program import Program
+from program import Program, AssertionPointAttributes
 from predicate import Predicate
 from time import perf_counter
 import json
@@ -61,20 +63,14 @@ class Prompter:
                 json.dump(result, out_file)
             return result
 
-    def suggest_predicate(self, goal: Predicate, simulate=True):
+    def suggest_predicate(self, goal: Predicate, num_assertions: int, attempts: int,  simulate=True):
         messages = []
-        message = self.create_message(f"You understand C program well. Your answer should be 'assert(...);'", system=True)
+        message = self.create_message(f"You understand C program well. "
+                                      f"Your answer should be 'assert(...);'", system=True)
         messages.append(message)
 
-        closest_line = 0
-        for assertion_point in self.program.assertion_points:
-            if goal.line_number >= assertion_point > closest_line:
-                closest_line = assertion_point
-
-        content = (f"{self.program.get_program_with_assertion(goal, [], forGPT=True)}"
-                   f"List 3 different loop invariants as C assert statements right after line {closest_line} "
-                   f"that helps prove the assertion. Don't explain.")
-        message = self.create_message(content, system=False)
+        line_number, attributes = self.program.decide_assertion_point(goal)
+        message = self.create_message_for_assertion_point(goal, line_number, attributes, num_assertions)
         messages.append(message)
 
         if simulate:
@@ -82,9 +78,9 @@ class Prompter:
         else:
             self.dump_messages(messages)
             raw_result = ""
-            for d in self.prompt(messages, attempts=3)["choices"]:
-                raw_result += d["message"]["content"]
-            print("Raw results:", raw_result)
+            for d in self.prompt(messages, attempts=attempts)["choices"]:
+                raw_result += f"GPT output {d['index'] + 1}:\n{d['message']['content']}\n"
+            print(f"{raw_result}")
             result = re.findall(r'assert\((.*?)\);', raw_result)
             assertions = dict()
             assertion_to_candidate = dict()
@@ -93,12 +89,31 @@ class Prompter:
                     assertions[r] += 1
                 else:
                     assertions[r] = 1
-                    predicate = Predicate(r, closest_line)
+                    predicate = Predicate(r, line_number)
                     assertion_to_candidate[r] = predicate
             sorted_assertions = sorted(assertions.keys(), key=lambda x: assertions[x], reverse=True)
-            print(assertions, assertion_to_candidate, sorted_assertions)
             candidates = [assertion_to_candidate[x] for x in sorted_assertions]
             return candidates
+
+    def create_message_for_assertion_point(self, goal : Predicate, line_number: int,
+                                           attributes: Set[AssertionPointAttributes],
+                                           num_assertions: int):
+        if AssertionPointAttributes.InLoop in attributes:
+            object = "loop invariants"
+        else:
+            object = "invariants"
+
+        if AssertionPointAttributes.BeforeAssertion in attributes:
+            location = f"right before the assertion"
+        elif AssertionPointAttributes.InLoop in attributes:
+            location = f"right after line {line_number}"
+        else:
+            location = f"right before line {line_number + 1}"
+
+        content = (f"{self.program.get_program_with_assertion(goal, [], forGPT=True)}\n"
+                   f"List {num_assertions} different {object} as C assert statements "
+                   f"{location} that helps prove the assertion. Don't explain.")
+        return self.create_message(content, system=False)
 
     @staticmethod
     def dump_messages(messages):

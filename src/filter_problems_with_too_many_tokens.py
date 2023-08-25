@@ -4,7 +4,7 @@ import os
 from task import Task
 import utils
 from os.path import dirname, join
-from rewritter import Rewritter
+from rewriter import Rewriter
 import yaml
 from copy import copy
 
@@ -31,7 +31,7 @@ with open("benchmarks/benchmark_set_reach_safety") as in_file:
             #print("=============== Old  =================")
             #print(source_code)
             #print("=============== New  =================")
-            r = Rewritter(code_path, source_code)
+            r = Rewriter(code_path, source_code)
             #print(r.new_code)
             if len(r.new_code.split()) > MAX_NUM_TOKENS:
                 continue
@@ -41,7 +41,7 @@ with open("benchmarks/benchmark_set_reach_safety") as in_file:
             if num_tokens <= MAX_NUM_TOKENS:
                 print(f"{index},{yml_file},{num_tokens}")
                 source_code = open(code_path).read().strip()
-                r = Rewritter(code_path, source_code, False)
+                r = Rewriter(code_path, source_code, False)
                 num_loops = r.find_all_loops()
                 if num_loops > 2:
                     with open("many_loops.txt", 'a') as out_file:

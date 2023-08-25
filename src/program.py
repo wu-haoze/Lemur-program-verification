@@ -1,24 +1,43 @@
+from enum import Enum
 from typing import List, Set, Dict
 import re
 from predicate import Predicate
 from copy import copy
 
-PATCH = ('void assert(int cond) {\nif (!(cond)) {\nERROR : {\nreach_error();\nabort();\n }\n'
-         '}\n}\nvoid assume(int cond) {\nif (!cond) {\nabort();\n}\n}\n')
+PATCH = ('void assert(int cond) { if (!(cond)) { ERROR : { reach_error(); abort(); } } }\n'
+         'void assume(int cond) { if (!cond) { abort(); } }\n')
+
+
+class AssertionPointAttributes(Enum):
+    BeforeLoop = 1
+    InLoop = 2
+    BeforeAssertion = 3
 
 
 class Program:
-    def __init__(self, code: str, replacement: Dict[str,str]):
+    def __init__(self, lines: List[str], replacement: Dict[str,str]):
         self.lines: List[str] = []
         self.assertion: Predicate = None  # The assertion to add after the corresponding line number
         self.lemmas: List[Predicate] = []  # The lemmas to add after the corresponding line number
-        self.assertion_points: Set[int] = set()  # Potentially adding assertions right after these lines
+        self.assertion_points: Dict[int, Set[AssertionPointAttributes]] = {}  # Potentially adding assertions right after these lines
 
         self.replacement_for_GPT = replacement
 
-        for line in code.split("\n"):
+        last_line_in_loop = False
+        left_bracket = 0
+        for line in lines:
+            if last_line_in_loop and "{" in line:
+                left_bracket += 1
+            if last_line_in_loop and "}" in line:
+                left_bracket -= 1
+                if left_bracket == 0:
+                    last_line_in_loop = False
+
             if line.strip().split("(")[0] == "assert":
-                self.assertion_points.add(len(self.lines) - 1)
+                self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.BeforeAssertion)
+                if last_line_in_loop:
+                    self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.InLoop)
+
                 result = re.search(r'assert\((.*?)\);', line)
                 self.assertion = Predicate(result.group(1), len(self.lines) - 1)
             elif line.strip().split("(")[0] == "assume":
@@ -27,8 +46,19 @@ class Program:
             else:
                 self.lines.append(line)
                 if line.strip().split()[0] in ["for", "do", "while"]:
-                    self.assertion_points.add(len(self.lines) - 2)
-                    self.assertion_points.add(len(self.lines) - 1)
+                    if last_line_in_loop:
+                        self.add_assertion_point(len(self.lines) - 2, AssertionPointAttributes.InLoop)
+                    else:
+                        self.add_assertion_point(len(self.lines) - 2, AssertionPointAttributes.BeforeLoop)
+                    self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.InLoop)
+                    last_line_in_loop = True
+                    assert("{" in line)
+                    left_bracket += 1
+
+    def add_assertion_point(self, line_number: int, attribute: AssertionPointAttributes):
+        if line_number not in self.assertion_points:
+            self.assertion_points[line_number] = set()
+        self.assertion_points[line_number].add(attribute)
 
     @staticmethod
     def assume_predicate(lines: List[str], predicate: Predicate):
@@ -57,12 +87,20 @@ class Program:
 
         for line in lines:
             program += line + "\n"
+        program = program[:-1]
 
         if dump:
             print("----------------------")
             print(program)
             print("----------------------")
         return program
+
+    def decide_assertion_point(self, goal: Predicate):
+        closest_line = 0
+        for assertion_point in self.assertion_points:
+            if goal.line_number >= assertion_point > closest_line:
+                closest_line = assertion_point
+        return closest_line, self.assertion_points[closest_line]
 
     def dump(self):
         print("\nDumping program...")
@@ -79,7 +117,7 @@ class Program:
             print(f"\t{before} => {after}")
 
         print("\nPotential assertion points:")
-        for line_number in self.assertion_points:
-            print(f"After line {line_number}")
+        for line_number, attributes in self.assertion_points.items():
+            print(f"After line {line_number}: {', '.join(map(lambda x: x.name, attributes))}")
 
         print("\nDumping program - done\n")

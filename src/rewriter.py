@@ -3,14 +3,16 @@ from typing import Dict
 import utils
 import re
 import gloal_configurations as GC
+import os
 
-class Rewritter:
+
+class Rewriter:
     """
     Class for remove comments
     remove VERIFIER_nondet_*
     """
-    def __init__(self, filename: str, code : str, rewrite=True):
-        self.code = code.strip()
+    def __init__(self, filename: str, rewrite=True):
+        self.code = open(filename).read().strip()
         self.new_code = self.code
 
         if rewrite:
@@ -29,16 +31,17 @@ class Rewritter:
             self.remove_empty_lines()
             #self.replace_reach_error_with_assertion()
 
-            self.new_code_to_verify = self.new_code
-            self.new_code_to_verify_lines = self.new_code.split("\n")
+            self.lines_to_verify = self.new_code.split("\n")
+
             self.remove_verifier_nondet()
-            self.new_code_lines = self.new_code.split("\n")
+
+            self.lines_for_gpt = self.new_code.split("\n")
 
             self.replacement: Dict[str, str] = {}
-            assert(len(self.new_code_to_verify_lines) == len(self.new_code_lines))
-            for i in range(len(self.new_code_lines)):
-                if self.new_code_lines[i] != self.new_code_to_verify_lines[i]:
-                    self.replacement[self.new_code_to_verify_lines[i]] = self.new_code_lines[i]
+            assert(len(self.lines_for_gpt) == len(self.lines_to_verify))
+            for i in range(len(self.lines_to_verify)):
+                if self.lines_to_verify[i] != self.lines_for_gpt[i]:
+                    self.replacement[self.lines_to_verify[i]] = self.lines_for_gpt[i]
 
     def find_all_loops(self):
         with open("tmp.c", 'w') as out_file:
@@ -153,8 +156,8 @@ class Rewritter:
         with open("tmp.c", 'w') as out_file:
             out_file.write(self.new_code)
         command = f"clang-format-15 --style=file:{GC.PATH_TO_CLANG_FORMAT} ./tmp.c"
-        print(command)
         output, err = utils.run_subprocess_and_get_output(command)
+        os.remove("tmp.c")
         self.new_code = output
 
     def remove_empty_lines(self):

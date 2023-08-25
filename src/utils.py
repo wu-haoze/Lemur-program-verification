@@ -5,7 +5,7 @@ import argparse
 import subprocess
 import os
 from os.path import join, basename, abspath
-from threading import Timer
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="GPT4MC.")
@@ -20,10 +20,13 @@ def parse_args():
     parser.add_argument("--verbosity", type=int, default=1, help="Verbosity")
     parser.add_argument("--seed", type=int, default=1, help="Seed")
     parser.add_argument("--cache", type=str, default=None, help="Use a previous working directory")
+    parser.add_argument("--num-assertions", type=str, default=3, help="Number of assertions")
+    parser.add_argument("--num-attempts", type=str, default=5, help="Number of attempts for GPT")
 
     args = parser.parse_args()
     if args.cache is not None:
         args.cache = abspath(args.cache)
+    print(args)
     return args
 
 
