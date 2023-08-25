@@ -18,13 +18,6 @@ int main() {
     s += v;
     ++i;
   }
-  if (s < v) {
-    {}            
-    return 1;
-  }
-  if (s > 65025) {
-    reach_error();
-    return 1;
-  }
+  assert(s <= 65025);
   return 0;
 }

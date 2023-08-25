@@ -1,0 +1,1 @@
+Differentiate the prompt and assertion points (loop invariant etc)

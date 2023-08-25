@@ -38,7 +38,9 @@ class Program:
     def assert_predicate(lines: List[str], predicate: Predicate):
         lines[predicate.line_number] += f"\nassert({predicate.content});"
 
-    def get_program_with_assertion(self, predicate: Predicate, forGPT: bool):
+    def get_program_with_assertion(self, predicate: Predicate, assumptions:List[Predicate], forGPT: bool, dump=False):
+        program = "" if forGPT else PATCH
+
         lines = copy(self.lines)
         if forGPT:
             for i, line in enumerate(lines):
@@ -48,8 +50,19 @@ class Program:
         for lemma in self.lemmas:
             self.assume_predicate(lines, lemma)
 
+        for assumption in assumptions:
+            self.assume_predicate(lines, assumption)
+
         self.assert_predicate(lines, predicate)
-        return PATCH + "\n".join([lines[i] for i in range(len(self.lines))])
+
+        for line in lines:
+            program += line + "\n"
+
+        if dump:
+            print("----------------------")
+            print(program)
+            print("----------------------")
+        return program
 
     def dump(self):
         print("\nDumping program...")

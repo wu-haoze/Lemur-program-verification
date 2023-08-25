@@ -5,7 +5,7 @@ import argparse
 import subprocess
 import os
 from os.path import join, basename, abspath
-
+from threading import Timer
 
 def parse_args():
     parser = argparse.ArgumentParser(description="GPT4MC.")
@@ -19,8 +19,12 @@ def parse_args():
     parser.add_argument("-w", "--working-dir", type=str, default="./data/", help="Working directory")
     parser.add_argument("--verbosity", type=int, default=1, help="Verbosity")
     parser.add_argument("--seed", type=int, default=1, help="Seed")
+    parser.add_argument("--cache", type=str, default=None, help="Use a previous working directory")
 
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.cache is not None:
+        args.cache = abspath(args.cache)
+    return args
 
 
 def load_yaml_file(file_path):
@@ -36,11 +40,11 @@ def load_yaml_file(file_path):
         return None
 
 
-def run_subprocess(command, live_output: bool = True):
+def run_subprocess(command, live_output: bool = True, timeout: int= 60):
     stdout = []
     stderr = []
     process = subprocess.Popen(
-        command,
+        f"timeout {timeout} " + command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         universal_newlines=True,
@@ -86,3 +90,18 @@ def create_working_dir(working_dir: str, c_filename: str, property: str):
     except:
         print(f"Unable to create working directory: {new_dir}")
         exit(1)
+
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
+def bold(text : str) -> str:
+   return color.BOLD + text + color.END
