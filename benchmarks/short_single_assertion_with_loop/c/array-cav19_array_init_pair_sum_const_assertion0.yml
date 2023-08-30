@@ -1,0 +1,8 @@
+format_version: '2.0'
+input_files: array-cav19_array_init_pair_sum_const_assertion0.c
+options:
+  data_model: ILP32
+  language: C
+properties:
+- expected_verdict: true
+  property_file: ../properties/unreach-call.prp

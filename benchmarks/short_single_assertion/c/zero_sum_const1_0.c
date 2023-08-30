@@ -27,7 +27,7 @@ long SIZE;
 const int MAX = 100000;
 
 int main() {
-  SIZE = __VERIFIER_nondet_long();
+  SIZE = 2;//__VERIFIER_nondet_long();
   if (SIZE > 1 && SIZE < MAX) {
     int i;
     long *a = malloc(sizeof(long) * SIZE);
@@ -40,11 +40,17 @@ int main() {
     for (i = 0; i < SIZE; i++) {
       sum = sum + a[i];
     }
-
+    //assume_abort_if_not(sum == SIZE && a[0] == 1);
     for (i = 0; i < SIZE; i++) {
+      //__VERIFIER_assert(sum == SIZE - i && a[i] == 1);
+      //for (i = 0; i < SIZE; i++) {
+      //assume_abort_if_not(sum <= SIZE - i);
+      //assume_abort_if_not(a[i] == 1);
       sum = sum - a[i];
+      //assume_abort_if_not(sum <= SIZE - i + 1);
+      //assume_abort_if_not(sum >= SIZE - i - 1);
     }
-    __VERIFIER_assert(sum == 0);
+    __VERIFIER_assert(sum == 1);
   }
   return 1;
 }

@@ -1,0 +1,10 @@
+format_version: '2.0'
+input_files: array-fpi_s32iff_assertion0.c
+options:
+  data_model: ILP32
+  language: C
+properties:
+- expected_verdict: false
+  property_file: ../properties/unreach-call.prp
+- property_file: ../properties/coverage-error-call.prp
+- property_file: ../properties/coverage-branches.prp

@@ -1,5 +1,6 @@
 import datetime
 
+import pycparser
 import yaml
 import argparse
 import subprocess
@@ -20,8 +21,10 @@ def parse_args():
     parser.add_argument("--verbosity", type=int, default=1, help="Verbosity")
     parser.add_argument("--seed", type=int, default=1, help="Seed")
     parser.add_argument("--cache", type=str, default=None, help="Use a previous working directory")
-    parser.add_argument("--num-assertions", type=str, default=3, help="Number of assertions")
-    parser.add_argument("--num-attempts", type=str, default=5, help="Number of attempts for GPT")
+    parser.add_argument("--num-assertions", type=int, default=2, help="Number of assertions")
+    parser.add_argument("--num-attempts", type=int, default=3, help="Number of attempts for GPT")
+    parser.add_argument("--simulate", action="store_true", help="Simulate?")
+    parser.add_argument("--per-instance-timeout", type=int, default=60, help="Per-instance timeout")
 
     args = parser.parse_args()
     if args.cache is not None:
@@ -108,3 +111,44 @@ class color:
 
 def bold(text : str) -> str:
    return color.BOLD + text + color.END
+
+def check_equivalence(c1, c2):
+    # parse the statements into ASTs
+    try:
+        ast1 = pycparser.c_parser.CParser().parse("void main() {" + f"assert({c1});" + "}")
+        ast2 = pycparser.c_parser.CParser().parse("void main() {" + f"assert({c2});" + "}")
+
+        # Compare the ASTs recursively
+        return compare_nodes(ast1, ast2)
+    except:
+        return False
+
+def compare_nodes(node1, node2):
+    # Check if both nodes are None
+    if node1 is None and node2 is None:
+        return True
+
+    # Check if one node is None and the other is not
+    if node1 is None or node2 is None:
+        return False
+
+    # Check if both nodes have the same class
+    if type(node1) != type(node2):
+        return False
+
+    # Check if both nodes have the same attributes
+    for attr in node1.attr_names:
+        if getattr(node1, attr) != getattr(node2, attr):
+            return False
+
+    # Check if both nodes have the same number of children
+    if len(node1.children()) != len(node2.children()):
+        return False
+
+    # Compare the children recursively
+    for child1, child2 in zip(node1.children(), node2.children()):
+        if not compare_nodes(child1[1], child2[1]):
+            return False
+
+    # If all checks passed, return True
+    return True

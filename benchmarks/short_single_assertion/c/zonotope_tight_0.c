@@ -28,14 +28,17 @@ int main() {
   double x, y;
 
   x = __VERIFIER_nondet_double();
-  assume_abort_if_not(x >= 0. && x <= 10.);
-
+  assume_abort_if_not(x >= 1. && x <= 10.);
   y = x * x - x;
+  __VERIFIER_assert( y >= 0.);
   if (y >= 0)
     y = x / 10.;
   else
     y = x * x + 2.;
 
-  __VERIFIER_assert(y >= 0. && y <= 4.);
+  //__VERIFIER_assert( y >= 0.);
+  //__VERIFIER_assert( y <= 1.);
+
+  //__VERIFIER_assert(y >= 0. && y <= 4.);
   return 0;
 }

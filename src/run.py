@@ -39,4 +39,4 @@ if __name__ == "__main__":
         v.verify()
     else:
         os.chdir(dirname(VERIFIER))
-        utils.run_subprocess(command)
+        utils.run_subprocess(command, timeout=360000)

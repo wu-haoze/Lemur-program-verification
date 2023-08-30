@@ -1,0 +1,11 @@
+format_version: '2.0'
+input_files: nla-digbench-scaling_geo2-ll_unwindbound5_assertion1.c
+options:
+  data_model: ILP32
+  language: C
+properties:
+- expected_verdict: true
+  property_file: ../properties/unreach-call.prp
+- expected_verdict: true
+  property_file: ../properties/no-overflow.prp
+- property_file: ../properties/coverage-branches.prp

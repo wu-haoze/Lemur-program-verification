@@ -19,8 +19,9 @@ class Rewriter:
             self.remove_comments()
             self.remove_re_pattern(r'__attribute__\s*\(\(.*?\)\)')
 
-            self.remove_function("void reach_error(")
-            self.remove_function("void __VERIFIER_assert(")
+            self.remove_function("void reach_error")
+            self.remove_function("void __VERIFIER_assert")
+            self.remove_function("void assert")
             self.remove_function("void assume_abort_if_not")
             self.remove_function("void assume")
             self.remove_externs()
@@ -51,40 +52,6 @@ class Rewriter:
         num_loops = output.count("ForStmt") + output.count("WhileStmt") + \
             output.count("DoStmt")
         return num_loops
-
-    def find_all_assertions(self):
-        self.clang_format()
-        substring_to_replace = []
-
-        matches = list(re.finditer("__VERIFIER_assert", self.new_code))
-        for match in matches[1:]:
-            for i in range(match.start(), len(self.new_code)):
-                if self.new_code[i] == ";":
-                    break
-            print("Assertion", match.start(), i + 1)
-            print(self.new_code[match.start(): i + 1])
-            substring_to_replace.append((match.start(), i + 1));
-
-        if len(matches) == 0:
-            for match in list(re.finditer(re.escape("reach_error"), self.new_code))[1:]:
-                for i in range(match.start(), len(self.new_code)):
-                    if self.new_code[i] == ";":
-                        break
-                if "reach_error();" == self.new_code[match.start(): i + 1]:
-                    print(self.new_code[match.start(): i + 1])
-                    substring_to_replace.append((match.start(), i + 1));
-
-        programs = []
-        for i, (start, end) in enumerate(substring_to_replace):
-            program = self.new_code
-            for i_, (start_, end_) in enumerate(substring_to_replace):
-                if i != i_:
-                    prev_len = len(program)
-                    replacement = "{}" + "".join((end_ - start_ - 2) * [" "])
-                    program = program[:start_] + replacement + program[end_:]
-                    assert(len(program) == prev_len)
-            programs.append(program)
-        return programs
 
     def remove_re_pattern(self, pattern):
         self.new_code = re.sub(pattern, '', self.new_code)

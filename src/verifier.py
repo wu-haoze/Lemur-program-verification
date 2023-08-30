@@ -9,7 +9,7 @@ from rewriter import Rewriter
 from predicate import Predicate
 from enum import Enum
 import gloal_configurations as GC
-from program import Program
+from program import Program, AssertionPointAttributes
 import random
 from prompter import Prompter
 
@@ -20,6 +20,7 @@ class Result(Enum):
 
 class Verifier:
     def __init__(self, task: Task, verifier: str,  args):
+        self.args = args
         self.working_dir, self.prompt_dir, self.code_dir = \
             create_working_dir(args.working_dir, task.source_code, args.prop)
         os.chdir(self.working_dir)
@@ -34,7 +35,6 @@ class Verifier:
         self.program = Program(r.lines_to_verify, r.replacement)
 
         self.program.dump()
-        exit(0)
 
         self.verifier = verifier
         os.chdir(dirname(self.verifier))
@@ -45,11 +45,16 @@ class Verifier:
         self.query_id = 0
 
     def verify(self):
-        self.verify_goal(self.program.assertion, level=0)
+        assert(len(self.program.assertions) == 1)
+        self.verify_goal(self.program.assertions[0], [], level=0)
 
-    def verify_goal(self, goal, level: int):
-        self.log(1, f"Verifying goal: {goal.content} at line {goal.line_number}", level)
-        r = self.run_verifier(goal, [], timeout=20)
+    def verify_goal(self, goal: Predicate, assumptions: List[Predicate], level: int):
+        if goal.line_number == min(self.program.assertion_points):
+            timeout = 43200
+        else:
+            timeout = self.args.per_instance_timeout
+        self.log(1, f"Verifying goal: {goal.content} after line {goal.line_number} with timeout {timeout}", level)
+        r = self.run_verifier(goal, assumptions, timeout=timeout)
 
         if r == Result.Verified:
             self.log(1, f"Verified", level)
@@ -62,44 +67,58 @@ class Verifier:
             self.log(1, f"Attempt to propose sub-goals...", level)
             proof_goals = self.suggest_proof_goals(goal, level)
             self.log(1, f"Attempt to propose sub-goals - done", level)
-            for proof_goal in proof_goals:
+            for proof_goal_id, proof_goal in enumerate(proof_goals):
+                content = ", ".join([f"{p.content} after line {p.line_number}" for p in proof_goal])
+
                 self.log(1,
-                         f"Checking if {proof_goal.content} after line {proof_goal.line_number} "
-                         f"implies the assertion...", level)
+                         f"Checking if the assertion is implied by {content}...", level)
                 if proof_goal == goal:
                     self.log(1, "Assumption same as goal. Skip", level)
-                elif self.run_verifier(goal, [proof_goal], timeout=20) != Result.Verified:
-                    self.log(1, "No", level)
-                    continue
                 else:
-                    self.log(1, "Yes!", level)
-                    r = self.verify_goal(proof_goal, level + 1)
-                    if r == Result.Verified:
-                        self.add_lemma(proof_goal)
-                        self.log(1, f"Sub-goal proven", level)
-                        self.log(1, "Verified", level)
-                        return Result.Verified
-                    elif r == Result.Falsified:
-                        # We might want to try something smarter here
+                    if self.run_verifier(goal, assumptions + proof_goal,
+                                         timeout=self.args.per_instance_timeout) != Result.Verified:
+                        self.log(1, "No", level)
                         continue
                     else:
-                        continue
+                        all_hold = True
+                        # We need to verify a /\ b /\ c
+                        # Instead we verify ((b /\ c) -> a) and (c -> b) and c
+                        for pred_id, predicate in enumerate(proof_goal):
+                            self.log(1, "Yes!", level)
+                            r = self.verify_goal(predicate, proof_goal[pred_id + 1:], level + 1)
+                            if r == Result.Verified:
+                                continue
+                            elif r == Result.Falsified:
+                                # We might want to try something smarter here
+                                all_hold = False
+                                break
+                            else:
+                                all_hold = False
+                                break
+                        if all_hold:
+                            self.log(1, f"Sub-goal proven", level)
+                            self.log(1, "Verified", level)
+                            return Result.Verified
+                        else:
+                            continue
 
             self.log(1, f"Unknown", level)
             return Result.Unknown
 
-    def suggest_proof_goals(self, goal : Predicate, level : int):
-        predicates = self.prompter.suggest_predicate(goal, self.args.num_assertions, self.args.num_attempts, simulate=False)
+    def suggest_proof_goals(self, goal : Predicate, level : int)->List[List[Predicate]]:
+        predicates = self.prompter.suggest_predicate(goal, self.args.num_assertions, self.args.num_attempts,
+                                                     simulate=self.args.simulate)
         self.log(1, f"Found {len(predicates)} potential sub-goals", level)
 
         for i, predicate in enumerate(predicates):
-            self.log(1, f"Goal {i + 1}: {predicate.content} after line {predicate.line_number}", level)
+            content =  ", ".join([f"{p.content} after line {p.line_number}" for p in predicate])
+            self.log(1, f"Goal {i + 1}: {content}", level)
         return predicates
 
     def add_lemma(self, goal: Predicate):
         self.program.lemmas.append(goal)
 
-    def run_verifier(self, goal: Predicate, assumptions: List[Predicate], timeout:int = 20)-> Result:
+    def run_verifier(self, goal: Predicate, assumptions: List[Predicate], timeout : int)-> Result:
         self.query_id += 1
         p = self.program.get_program_with_assertion(goal, assumptions, False, dump=True)
         filename = join(self.code_dir, f"code_{self.query_id}.c")
@@ -109,6 +128,11 @@ class Verifier:
         command = f"python3 -u {self.verifier} --spec {self.property} --file {filename} --architecture {self.arch} --full-output"
 
         stdout, _ = run_subprocess(command, self.verbosity > 1, timeout)
+
+        command = f"pkill -9 java; pkill -9 z3"
+        run_subprocess(command, self.verbosity > 1, timeout)
+
+
         if stdout[-1] == "TRUE\n":
             return Result.Verified
         elif stdout[-1] == "FALSE\n":
