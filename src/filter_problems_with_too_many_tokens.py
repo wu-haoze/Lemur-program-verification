@@ -12,7 +12,10 @@ from program import Program
 enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
 MAX_NUM_TOKENS = 300
+import re
 
+
+array_access = 0
 index = 1
 with open("benchmarks/benchmark_set_reach_safety") as in_file:
     for line in in_file.readlines():
@@ -33,7 +36,9 @@ with open("benchmarks/benchmark_set_reach_safety") as in_file:
                 continue
 
             for i, assertion in enumerate(program.assertions):
+
                 p = program.get_program_with_assertion(assertion, [], True)
+
                 if len(p.split()) > MAX_NUM_TOKENS * 2:
                     continue
                 num_tokens = len(enc.encode(p))
@@ -51,4 +56,8 @@ with open("benchmarks/benchmark_set_reach_safety") as in_file:
                     p = program.get_program_with_assertion(assertion, [], False)
                     out_file.write(p)
 
+                if contains_array_access(assertion.content):
+                    print(assertion.content)
+                    array_access += 1
                 index += 1
+print(array_access)

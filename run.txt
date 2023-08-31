@@ -1,1 +1,0 @@
-time timeout 3600 ./run.sh benchmarks/short_single_assertion/c/in-de32_0.yml --verbosity=1 -v uautomizer --learn --per-instance-timeout=20 --cache ./data/in-de32_0+reach+12\:47\:12-08-29-2023/
