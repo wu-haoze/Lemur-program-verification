@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source /barrett/scratch/haozewu/vmware/GPT_MC/py3/bin/activate
+
 if [ -d /barrett/scratch/haozewu/vmware/GPT_MC ]
 then
     python3 -u /barrett/scratch/haozewu/vmware/GPT_MC/src/run.py $@

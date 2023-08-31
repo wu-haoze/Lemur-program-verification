@@ -22,8 +22,8 @@ class Task:
                 break
             
         if not (self.property is not None and self.answer is not None):
-            print("No reachability query found!")
-            exit(0)
+            self.property = "../properties/unreach-call.prp"
+            self.answer = "unknown"
         self.property = join(base_dir, self.property)
         assert(self.data["options"]["language"] == "C")
         if "32" in self.data["options"]["data_model"]:
