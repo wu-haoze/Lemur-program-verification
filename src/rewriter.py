@@ -11,7 +11,7 @@ class Rewriter:
     Class for remove comments
     remove VERIFIER_nondet_*
     """
-    def __init__(self, filename: str, rewrite=True):
+    def __init__(self, filename: str, rewrite=True, handle_reach_error=False):
         self.code = open(filename).read().strip()
         self.new_code = self.code
 
@@ -30,7 +30,9 @@ class Rewriter:
             self.new_code = self.new_code.replace("assume_abort_if_not", "assume")
             self.clang_format()
             self.remove_empty_lines()
-            #self.replace_reach_error_with_assertion()
+            self.has_reach_error = False
+            if handle_reach_error:
+                self.replace_reach_error_with_assertion()
 
             self.lines_to_verify = self.new_code.split("\n")
 
@@ -138,7 +140,6 @@ class Rewriter:
         self.new_code = "\n".join(new_lines)
 
 
-
     def remove_comments(self):
         self.clang_format()
 
@@ -159,3 +160,34 @@ class Rewriter:
             else:
                 new_lines.append(line)
         self.new_code = "\n".join(new_lines)
+
+
+    def replace_reach_error_with_assertion(self):
+        c_code = self.new_code
+        indices_object = re.finditer(pattern='reach_error', string=c_code)
+        indices = [index.start() for index in indices_object]
+        indices.reverse()
+
+        replacements = []
+        for function_index in indices:
+            self.has_reach_error = True
+            assertion_start = None
+            assertion_end = None
+            block_end = None
+            # Find the block that defines the function
+            for i in range(function_index, 0, -1):
+                if c_code[i] == ')' and assertion_end is None:
+                    assertion_end = i
+                if c_code[i:i + 3] == "if ":
+                    assert(assertion_start is None and assertion_end is not None)
+                    assertion_start = i + 3
+                    break
+
+            for i in range(function_index, len(c_code)):
+                if c_code[i] == '}':
+                    block_end = i
+            condition = c_code[assertion_start: assertion_end + 1]
+            condition = f"assert(!{condition});"
+            c_code = c_code[:assertion_start - 3] + condition + c_code[block_end + 1:]
+
+        self.new_code = c_code

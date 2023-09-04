@@ -4,7 +4,7 @@ int main() {
 signed char x = __VERIFIER_nondet_char();
 signed char y = __VERIFIER_nondet_char();
 signed char g;
-if (y > 0 && x % y == 0) {
+if (y > (signed char)0) {
 signed char a = x;
 signed char b = y;
 signed char t;
@@ -19,9 +19,8 @@ t = b;
 b = a % b;
 a = t;
 }
-
 g = a;
-assert(g == y);
+assert(y >= g);
 }
 return 0;
 }

@@ -19,7 +19,6 @@ t = b;
 b = a % b;
 a = t;
 }
-
 g = a;
 assert(g == y);
 }

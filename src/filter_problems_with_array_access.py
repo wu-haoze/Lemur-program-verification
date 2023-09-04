@@ -14,7 +14,6 @@ enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
 MAX_NUM_TOKENS = 150
 import re
 
-
 def is_integer(s):
     try:
         int(s)
@@ -22,14 +21,26 @@ def is_integer(s):
     except ValueError:
         return False
 
+def contains_array_write(program):
+    pattern = r"\w+\[\w+\] = (\w+);"
+    # Find all matches of the pattern in the string
+    matches = re.findall(pattern, program)
+    print(matches)
+    for match in matches:
+        if is_integer(match):
+            continue
+        else:
+            return True
+
 
 def contains_array_access(assert_statement):
     # Regular expression to match array access (variable_name[...])
-    array_access_pattern = r'\w+\s*\[[^\]]+\]'
+    array_access_pattern = r'\w+\s*\[(\w+)\]'
 
     # Search for array access pattern within the assert statement
     matches = re.findall(array_access_pattern, assert_statement)
     for match in matches:
+        print("Assert", match)
         if not is_integer(match):
             return True
     return False
@@ -37,7 +48,7 @@ def contains_array_access(assert_statement):
 
 array_access = 0
 index = 1
-with open("benchmarks/benchmark_set_reach_safety_short_single_assertion_with_loop_unsolved") as in_file:
+with open("benchmarks/benchmark_set_reach_safety_short_hard_benchmarks") as in_file:
     for line in in_file.readlines():
         yml_file = line.strip()
         if not os.path.isfile(yml_file):
@@ -57,12 +68,8 @@ with open("benchmarks/benchmark_set_reach_safety_short_single_assertion_with_loo
 
             for i, assertion in enumerate(program.assertions):
 
-                p = program.get_program_with_assertion(assertion, [], True)
-
-                if len(p.split()) > MAX_NUM_TOKENS * 2:
-                    continue
-                num_tokens = len(enc.encode(p))
-                if num_tokens > MAX_NUM_TOKENS:
+                p = program.get_program_with_assertion(assertion, [], False)
+                if contains_array_write(p):
                     continue
                 if contains_array_access(assertion.content):
                     continue
@@ -73,13 +80,13 @@ with open("benchmarks/benchmark_set_reach_safety_short_single_assertion_with_loo
                 yml_name = os.path.basename(yml_file)[:-4] + ".yml"
                 new_data = copy(data)
                 new_data["input_files"] = name
-                print(f"{index},{yml_name},{num_tokens},{assertion.content}")
+                print(f"{index},{yml_name},{assertion.content}")
                 with open(
-                        f"/home/haozewu/GPT_MC/benchmarks/short_single_assertion_with_loop_unsolved_no_array_access/c/{yml_name}",
+                        f"/home/haozewu/GPT_MC/benchmarks/short_hard_benchmarks_no_random_write_to_array/c/{yml_name}",
                         'w') as f:
                     yaml.dump(new_data, f)
                 with open(
-                        f"/home/haozewu/GPT_MC/benchmarks/short_single_assertion_with_loop_unsolved_no_array_access/c/{name}",
+                        f"/home/haozewu/GPT_MC/benchmarks/short_hard_benchmarks_no_random_write_to_array/c/{name}",
                         'w') as out_file:
                     p = program.get_program_with_assertion(assertion, [], False)
                     out_file.write(p)
