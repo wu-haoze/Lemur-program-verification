@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from task import Task
 from utils import create_working_dir, run_subprocess_and_get_output, run_subprocess, bold
@@ -67,16 +67,51 @@ class Verifier:
             self.log(1, f"Attempt to propose sub-goals...", level)
             proof_goals = self.suggest_proof_goals(goal, level)
             self.log(1, f"Attempt to propose sub-goals - done", level)
-            for proof_goal_id, proof_goal in enumerate(proof_goals):
+
+            proof_goal_to_result : List[(List[Predicate], Result)] = []
+
+            attempts = 0
+            while True:
+                if attempts >= GC.MAX_ATTEMPT_AT_A_LEVEL:
+                    break
+                if len(proof_goals) == 0:
+                    self.log(1, "No potential sub-goal left. Adapt failed sub-goal...", level)
+                    proof_goal_to_refine = None
+                    proof_goal_to_strengthen = None
+                    for i, (proof_goal, result) in enumerate(proof_goal_to_result):
+                        if result == Result.Falsified and proof_goal_to_refine is None:
+                            proof_goal_to_refine = i
+                        if result == Result.Unknown and proof_goal_to_strengthen is None:
+                            proof_goal_to_strengthen = i
+                    if proof_goal_to_refine is not None:
+                        i, proof_goal_to_adapt, falsified = proof_goal_to_refine, proof_goal_to_result[proof_goal_to_refine][0][0], True
+                    elif proof_goal_to_strengthen is not None:
+                        i, proof_goal_to_adapt, falsified = proof_goal_to_strengthen, proof_goal_to_result[proof_goal_to_strengthen][0][0], False
+                    self.log(1,
+                             (f"Adapting {proof_goal_to_adapt.content} after line {proof_goal_to_adapt.line_number}, "
+                              f"falsified: {falsified}."),
+                             level)
+                    new_proof_goals = self.adapt_sub_goal(goal, proof_goal_to_adapt, falsified, level)
+                    proof_goals += new_proof_goals
+
+                    proof_goal_to_result = proof_goal_to_result[: i] + proof_goal_to_result[i + 1:]
+
+                proof_goal = proof_goals[0]
+                proof_goals = proof_goals[1:]
+                attempts += 1
+
                 content = ", ".join([f"{p.content} after line {p.line_number}" for p in proof_goal])
 
                 self.log(1,
-                         f"Checking if the assertion is implied by {content}...", level)
+                         (f"Checking if the assertion is implied by {content}. "
+                          f"Attempt {attempts}/{GC.MAX_ATTEMPT_AT_A_LEVEL}"), level)
                 if proof_goal == goal:
                     self.log(1, "Assumption same as goal. Skip", level)
                 else:
-                    if self.run_verifier(goal, assumptions + proof_goal,
-                                         timeout=self.args.per_instance_timeout) != Result.Verified:
+                    r = self.run_verifier(goal, assumptions + proof_goal,
+                                          timeout=self.args.per_instance_timeout)
+                    if r != Result.Verified:
+                        proof_goal_to_result.append((proof_goal, Result.Unknown))
                         self.log(1, "No", level)
                         continue
                     else:
@@ -90,6 +125,7 @@ class Verifier:
                                 continue
                             elif r == Result.Falsified:
                                 # We might want to try something smarter here
+                                proof_goal_to_result.append((proof_goal, Result.Falsified))
                                 all_hold = False
                                 break
                             else:
@@ -102,6 +138,8 @@ class Verifier:
                         else:
                             continue
 
+
+
             self.log(1, f"Unknown", level)
             return Result.Unknown
 
@@ -109,6 +147,19 @@ class Verifier:
         predicates = self.prompter.suggest_predicate(goal, self.args.num_assertions, self.args.num_attempts,
                                                      simulate=self.args.simulate)
         self.log(1, f"Found {len(predicates)} potential sub-goals", level)
+
+        for i, predicate in enumerate(predicates):
+            content =  ", ".join([f"{p.content} after line {p.line_number}" for p in predicate])
+            self.log(1, f"Goal {i + 1}: {content}", level)
+        return predicates
+
+    def adapt_sub_goal(self, goal : Predicate, current_sub_goal : Predicate,
+                       falsified : bool, level : int)->List[List[Predicate]]:
+        predicates = self.prompter.adapt_predicate(goal, current_sub_goal,
+                                                   falsified,
+                                                   self.args.num_attempts,
+                                                   simulate=self.args.simulate)
+        self.log(1, f"Found {len(predicates)} potential adapted sub-goals", level)
 
         for i, predicate in enumerate(predicates):
             content =  ", ".join([f"{p.content} after line {p.line_number}" for p in predicate])

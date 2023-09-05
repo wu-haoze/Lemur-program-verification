@@ -1,15 +1,15 @@
 void assert(int cond) { if (!(cond)) { ERROR : { reach_error(); abort(); } } }
 void assume(int cond) { if (!cond) { abort(); } }
 int main() {
-float x, y, z;
-x = 1.f;
-y = 1e7;
-z = 42.f;
-while (x < y) {
-x = x + 1.f;
-y = y - 1.f;
-z = z + 1.f;
+unsigned int x, y;
+x = 0U;
+y = 4U;
+assume(x % 4 == 0);
+while (1) {
+assume(x % 4 == 0);
+x = x + y;
+y = y + 4U;
+assert(x != 30U);
 }
-assert(z >= 0.f && z <= 1e8);
 return 0;
 }

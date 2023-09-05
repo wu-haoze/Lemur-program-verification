@@ -8,11 +8,13 @@ return 0;
 unsigned char v = 0;
 unsigned int s = 0;
 unsigned int i = 0;
+assume(s <= i * 255);
 while (i < n) {
+assume(s <= i * 255);
 v = __VERIFIER_nondet_uchar();
 s += v;
 ++i;
 }
-assert(s >= v);
+assert(s <= 65025);
 return 0;
 }

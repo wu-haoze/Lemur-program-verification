@@ -8,7 +8,9 @@ return 0;
 unsigned char v = 0;
 unsigned int s = 0;
 unsigned int i = 0;
+assume(s >= 0 && s <= i*0xff);
 while (i < n) {
+assume(s >= 0 && s <= i*0xff);
 v = __VERIFIER_nondet_uchar();
 s += v;
 ++i;

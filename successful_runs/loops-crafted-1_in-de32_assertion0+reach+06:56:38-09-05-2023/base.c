@@ -12,11 +12,10 @@ while (z > 0) {
 x++;
 z--;
 }
-assert(y + z == n);
 while (y > 0) {
+x--;
 y--;
-z++;
 }
-//assert(z == n);
+assert(x == 0);
 return 0;
 }

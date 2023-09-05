@@ -11,6 +11,7 @@ import re
 from os.path import join, isfile
 from copy import copy
 
+replacements = {"UCHAR_MAX": "0xff", "UINT_MAX": "0xffffffff"}
 
 class Prompter:
     def __init__(self, program: Program, prompt_dir: str, cache: str):
@@ -107,6 +108,8 @@ class Prompter:
                 key = None
                 if line_name not in name_to_line_number:
                     continue
+                for k, v in replacements.items():
+                    result = result.replace(k, v)
                 tmp_line_number = name_to_line_number[line_name]
                 if tmp_line_number not in self.line_number_to_predicate:
                     self.line_number_to_predicate[tmp_line_number] = dict()
@@ -129,7 +132,6 @@ class Prompter:
                                        key=lambda x: (self.line_number_to_predicate[line_number][x], -len(x)), reverse=True)
             candidates = []
             for x in sorted_assertions:
-                candidates.append([self.line_number_to_assertion_to_predicate[line_number][x]])
                 if AssertionPointAttributes.BeginningOfLoop in attributes and \
                         ("while " in self.program.lines[line_number] or "do " in self.program.lines[line_number]):
                     # we are adding an assumption to the beginning of the while loop, might as well add it right before
@@ -137,7 +139,71 @@ class Prompter:
                     predicate = copy(self.line_number_to_assertion_to_predicate[line_number][x])
                     predicate.line_number = line_number - 1
                     candidates.append([self.line_number_to_assertion_to_predicate[line_number][x], predicate])
+                else:
+                    candidates.append([self.line_number_to_assertion_to_predicate[line_number][x]])
+            return candidates
 
+    def adapt_predicate(self, goal: Predicate, current_sub_goal: Predicate, falsified : bool,
+                        attempts: int, simulate=True)-> List[List[Predicate]]:
+        messages = []
+        message = self.create_message(f"You understand C program well.", system=True)
+        messages.append(message)
+
+        message = self.create_message_for_adapt(goal, current_sub_goal, falsified)
+        messages.append(message)
+        if simulate:
+            self.dump_messages(messages)
+            exit(0)
+        else:
+            self.dump_messages(messages)
+            raw_result = ""
+            results = []
+            for penalty in [1, 2]:
+                for d in self.prompt(messages, attempts=attempts, penalty=penalty)["choices"]:
+                    raw_result += f"GPT output {d['index'] + 1} with penality {penalty}:\n{d['message']['content']}\n"
+                    tmp_results = []
+                    for line in d['message']['content'].split("\n"):
+                        result = re.findall(r'assert\((.*?)\);', line)
+                        if len(result) > 0:
+                            tmp_results.append(result[0])
+                        else:
+                            continue
+                    results += tmp_results
+
+            raw_result = raw_result[:-1]
+            print(f"{raw_result}")
+
+            # clear the previous proof goal
+            self.line_number_to_predicate[current_sub_goal.line_number] = dict()
+            self.line_number_to_assertion_to_predicate[current_sub_goal.line_number] = dict()
+            for result in results:
+                key = None
+                for a in self.line_number_to_predicate[current_sub_goal.line_number]:
+                    if check_equivalence(a, result):
+                        key = a
+                        break
+                if key is not None:
+                    self.line_number_to_predicate[current_sub_goal.line_number][key] += 1
+                else:
+                    self.line_number_to_predicate[current_sub_goal.line_number][result] = 1
+                    predicate = Predicate(result, current_sub_goal.line_number)
+                    self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][result] = predicate
+            print(self.line_number_to_predicate)
+            print(self.line_number_to_assertion_to_predicate)
+            # Sort based on occurrence, break tie by picking shorter one
+            sorted_assertions = sorted(self.line_number_to_predicate[current_sub_goal.line_number].keys(),
+                                       key=lambda x: (self.line_number_to_predicate[current_sub_goal.line_number][x], -len(x)), reverse=True)
+            candidates = []
+            for x in sorted_assertions:
+                if "while " in self.program.lines[current_sub_goal.line_number] \
+                        or "do " in self.program.lines[current_sub_goal.line_number]:
+                    # we are adding an assumption to the beginning of the while loop, might as well add it right before
+                    # the while loop
+                    predicate = copy(self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x])
+                    predicate.line_number = current_sub_goal.line_number - 1
+                    candidates.append([self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x], predicate])
+                else:
+                    candidates.append([self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x]])
             return candidates
 
     def create_message_for_assertion_point(self, goal : Predicate, line_number: int,
@@ -156,10 +222,10 @@ class Prompter:
             if num_loops == 1:
                 assertion_points[line_number] = "A"
                 content_head = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-                                f"Print a loop invariant as C assertions at line A "
+                                f"Print loop invariants as C assertions at line A "
                                 f"that help prove the assertion. ")
-                content_end = (f"If there are multiple, print them as a single assertion using '&&'. "
-                              f"Don't explain. Your answer should simply be 'assert(...); // line A'")
+                content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
+                               f"Don't explain. Your answer should simply be 'assert(...); // line A'")
                 content = content_head + content_end
             else:
                 for i, line in enumerate(lines):
@@ -167,7 +233,7 @@ class Prompter:
                 content = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
                            f"Print loop invariants as C assertions at lines {', '.join([assertion_points[line] for line in lines])} "
                            f"that help prove the assertion. "
-                           f"Use '&&' or '||' if necessary. "
+                           f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
                            f"Don't explain. Each line of your answer should be 'assert(...); // line name'")
         elif AssertionPointAttributes.BeforeLoop in attributes:
             lines = []
@@ -181,10 +247,39 @@ class Prompter:
                        f"Print facts as C assertions at lines {', '.join([assertion_points[line] for line in lines])} "
                        f"that help prove the assertion. "
                        f"Don't use loop variables at line {assertion_points[line_number]}. "
-                       f"Use '&&' or '||' if necessary. "
+                       f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
                        f"Don't explain. Each line of your answer should be 'assert(...); // line name'")
 
         return self.create_message(content, system=False), assertion_points
+
+    def create_message_for_adapt(self, goal : Predicate, current_subgoal : Predicate, falsified: bool):
+        attributes = self.program.assertion_points[current_subgoal.line_number]
+        assertion_points = {current_subgoal.line_number: "A"}
+        if AssertionPointAttributes.InLoop in attributes:
+            content_head = f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
+            content_head += f"Print loop variants as C assertions at line A that help prove the assertion. "
+            if falsified:
+                content = f"Correct your previous answer '{current_subgoal.content}'. "
+            else:
+                content = f"Strengthen your previous answer '{current_subgoal.content}'. "
+
+            content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
+                           f"Don't explain. Your answer should simply be 'assert(...);'")
+            content = content_head + content + content_end
+        else:
+            content_head = f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
+            content_head += f"Print facts as C assertions at line A that help prove the assertion. "
+            if falsified:
+                content = f"Correct your previous answer '{current_subgoal.content}'. "
+            else:
+                content = f"Strengthen you previous answer '{current_subgoal.content}'. "
+
+            content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
+                           f"Don't explain. Your answer should simply be 'assert(...);'")
+            content = content_head + content + content_end
+        return self.create_message(content, system=False)
+
+
 
     @staticmethod
     def dump_messages(messages):

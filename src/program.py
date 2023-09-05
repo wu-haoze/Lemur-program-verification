@@ -162,8 +162,14 @@ class Program:
                 assert(AssertionPointAttributes.BeforeLoop in self.assertion_points[goal.line_number - 1])
                 closest_line = goal.line_number - 1
             else:
-                print("assertion is not the beginning of the loop, get the line right before the assertion")
-                closest_line = goal.line_number
+                print("assertion is in in the loop, find the beginning of the closest loop")
+                tmp = goal.line_number
+                while tmp >= 0:
+                    tmp -= 1
+                    if (tmp in self.assertion_points and
+                            AssertionPointAttributes.BeginningOfLoop in self.assertion_points[tmp]):
+                        closest_line = tmp
+                        break
         else:
             print("assertion is not in the loop, find the beginning of the closest loop")
             tmp = goal.line_number

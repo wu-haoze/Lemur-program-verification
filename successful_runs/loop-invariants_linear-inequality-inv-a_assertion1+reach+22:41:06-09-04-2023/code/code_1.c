@@ -13,6 +13,6 @@ v = __VERIFIER_nondet_uchar();
 s += v;
 ++i;
 }
-assert(s >= v);
+assert(s <= 65025);
 return 0;
 }

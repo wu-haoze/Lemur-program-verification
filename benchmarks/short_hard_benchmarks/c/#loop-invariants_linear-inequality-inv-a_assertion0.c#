@@ -8,8 +8,9 @@ return 0;
 unsigned char v = 0;
 unsigned int s = 0;
 unsigned int i = 0;
+ assume(v <= 255 && v >= 0);
 while (i < n) {
-v = __VERIFIER_nondet_uchar();
+  assume(v <= 255 && v >= 0);
 s += v;
 ++i;
 }

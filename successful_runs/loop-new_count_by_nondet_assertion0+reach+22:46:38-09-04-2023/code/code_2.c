@@ -4,7 +4,9 @@ int __VERIFIER_nondet_int();
 int main() {
 int i = 0;
 int k = 0;
+assume(i >= 0 && i < 1000000);
 while (i < 1000000) {
+assume(i >= 0 && i < 1000000);
 int j = __VERIFIER_nondet_int();
 if (!(1 <= j && j < 1000000)) {
 return 0;

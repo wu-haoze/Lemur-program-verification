@@ -8,15 +8,16 @@ x--;
 y++;
 }
 z = y;
+assume(x + z == n);
 while (z > 0) {
+assume(x + z == n);
 x++;
 z--;
 }
-assert(y + z == n);
+assert(x == y);
 while (y > 0) {
+x--;
 y--;
-z++;
 }
-//assert(z == n);
 return 0;
 }
