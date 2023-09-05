@@ -120,7 +120,7 @@ class Verifier:
 
     def run_verifier(self, goal: Predicate, assumptions: List[Predicate], timeout : int)-> Result:
         self.query_id += 1
-        p = self.program.get_program_with_assertion(goal, assumptions, False, dump=True)
+        p = self.program.get_program_with_assertion(goal, assumptions, {}, False, dump=True)
         filename = join(self.code_dir, f"code_{self.query_id}.c")
         with open(filename, 'w') as out_file:
             out_file.write(p)

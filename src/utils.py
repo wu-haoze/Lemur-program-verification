@@ -22,7 +22,7 @@ def parse_args():
     parser.add_argument("--seed", type=int, default=1, help="Seed")
     parser.add_argument("--cache", type=str, default=None, help="Use a previous working directory")
     parser.add_argument("--num-assertions", type=int, default=2, help="Number of assertions")
-    parser.add_argument("--num-attempts", type=int, default=3, help="Number of attempts for GPT")
+    parser.add_argument("--num-attempts", type=int, default=4, help="Number of attempts for GPT")
     parser.add_argument("--simulate", action="store_true", help="Simulate?")
     parser.add_argument("--per-instance-timeout", type=int, default=60, help="Per-instance timeout")
 

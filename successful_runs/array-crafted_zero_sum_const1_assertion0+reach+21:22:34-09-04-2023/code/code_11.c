@@ -13,12 +13,13 @@ for (i = 0; i < SIZE; i++) {
 a[i] = 1;
 }
 for (i = 0; i < SIZE; i++) {
+assume(sum == i && a[i] == 1);
 sum = sum + a[i];
 }
+assert(sum == SIZE && a[0] == 1);
 for (i = 0; i < SIZE; i++) {
 sum = sum - a[i];
 }
-assert(sum == 0);
 }
 return 1;
 }

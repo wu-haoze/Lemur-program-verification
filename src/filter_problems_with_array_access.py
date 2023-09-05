@@ -48,7 +48,7 @@ def contains_array_access(assert_statement):
 
 array_access = 0
 index = 1
-with open("benchmarks/benchmark_set_reach_safety_short_hard_benchmarks") as in_file:
+with open("benchmarks/benchmark_set_ssa_unsolved") as in_file:
     for line in in_file.readlines():
         yml_file = line.strip()
         if not os.path.isfile(yml_file):
@@ -63,32 +63,4 @@ with open("benchmarks/benchmark_set_reach_safety_short_hard_benchmarks") as in_f
             r = Rewriter(code_path)
             # print(code_path)
             program = Program(r.lines_to_verify, r.replacement)
-            if program.number_of_loops == 0:
-                continue
-
-            for i, assertion in enumerate(program.assertions):
-
-                p = program.get_program_with_assertion(assertion, [], False)
-                if contains_array_write(p):
-                    continue
-                if contains_array_access(assertion.content):
-                    continue
-                else:
-                    array_access += 1
-
-                name = data['input_files']
-                yml_name = os.path.basename(yml_file)[:-4] + ".yml"
-                new_data = copy(data)
-                new_data["input_files"] = name
-                print(f"{index},{yml_name},{assertion.content}")
-                with open(
-                        f"/home/haozewu/GPT_MC/benchmarks/short_hard_benchmarks_no_random_write_to_array/c/{yml_name}",
-                        'w') as f:
-                    yaml.dump(new_data, f)
-                with open(
-                        f"/home/haozewu/GPT_MC/benchmarks/short_hard_benchmarks_no_random_write_to_array/c/{name}",
-                        'w') as out_file:
-                    p = program.get_program_with_assertion(assertion, [], False)
-                    out_file.write(p)
-
-                index += 1
+            print(f"{line[:-1]},{program.number_of_loops}")

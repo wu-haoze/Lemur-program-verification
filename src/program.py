@@ -43,8 +43,8 @@ class Program:
             if last_line_in_loop and "}" in line:
                 left_bracket -= 1
                 if left_bracket == 0:
-                    self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.EndOfLoop)
-                    self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.InLoop)
+                    #self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.EndOfLoop)
+                    #self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.InLoop)
                     last_line_in_loop = False
 
             if line.strip().split("(")[0] == "assert":
@@ -97,7 +97,9 @@ class Program:
     def assert_predicate(lines: List[str], predicate: Predicate):
         lines[predicate.line_number] += f"\nassert({predicate.content});"
 
-    def get_program_with_assertion(self, predicate: Predicate, assumptions: List[Predicate], forGPT: bool,
+    def get_program_with_assertion(self, predicate: Predicate, assumptions: List[Predicate],
+                                   assertion_points: Dict[int,str],
+                                   forGPT : bool,
                                    dump=False):
         program = "" if forGPT else PATCH
 
@@ -109,6 +111,9 @@ class Program:
 
         for lemma in self.lemmas:
             self.assume_predicate(lines, lemma)
+
+        for line_number, name in assertion_points.items():
+            lines[line_number] += f"\n// Line {name}"
 
         for assumption in assumptions:
             self.assume_predicate(lines, assumption)

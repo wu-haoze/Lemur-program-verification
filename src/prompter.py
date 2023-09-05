@@ -1,4 +1,4 @@
-from typing import List, Set
+from typing import List, Set, Dict
 
 import openai
 import os
@@ -28,7 +28,8 @@ class Prompter:
         #print(models)
         #self.prompt([self.create_message("how are you?")], max_tokens=5, attempts = 1)
 
-
+        self.line_number_to_predicate: Dict[int, Dict[str, int]] = {}
+        self.line_number_to_assertion_to_predicate: Dict[int, Dict[str, Predicate]] = {}
 
     @staticmethod
     def create_message(content: str, system = False):
@@ -51,7 +52,7 @@ class Prompter:
                     #model="gpt-3.5-turbo",
                     model="gpt-4",
                     messages=messages,
-                    temperature=0.5,
+                    temperature=0.8,
                     max_tokens=max_tokens,
                     n = attempts,
                     presence_penalty = penalty,
@@ -74,7 +75,11 @@ class Prompter:
         messages.append(message)
 
         line_number, attributes = self.program.decide_assertion_point(goal)
-        message = self.create_message_for_assertion_point(goal, line_number, attributes, num_assertions)
+        message, assertion_points = self.create_message_for_assertion_point(goal, line_number, attributes, num_assertions)
+        name_to_line_number = {}
+        for k, v in assertion_points.items():
+            name_to_line_number[v] = k
+        name = assertion_points[line_number]
         messages.append(message)
         if simulate:
             self.dump_messages(messages)
@@ -90,85 +95,96 @@ class Prompter:
                     for line in d['message']['content'].split("\n"):
                         result = re.findall(r'assert\((.*?)\);', line)
                         if len(result) > 0:
-                            tmp_results.append(result[0])
+                            tmp_results.append((line[-1], result[0]))
                         else:
                             continue
-                    results += tmp_results[-3:]
+                    results += tmp_results
 
             raw_result = raw_result[:-1]
             print(f"{raw_result}")
-            assertions = dict()
-            assertion_to_candidate = dict()
-            for result in results:
+
+            for line_name, result in results:
                 key = None
-                for a in assertions:
+                if line_name not in name_to_line_number:
+                    continue
+                tmp_line_number = name_to_line_number[line_name]
+                if tmp_line_number not in self.line_number_to_predicate:
+                    self.line_number_to_predicate[tmp_line_number] = dict()
+                    self.line_number_to_assertion_to_predicate[tmp_line_number] = dict()
+
+                for a in self.line_number_to_predicate[tmp_line_number]:
                     if check_equivalence(a, result):
                         key = a
                         break
                 if key is not None:
-                    assertions[key] += 1
+                    self.line_number_to_predicate[tmp_line_number][key] += 1
                 else:
-                    assertions[result] = 1
-                    predicate = Predicate(result, line_number)
-                    assertion_to_candidate[result] = predicate
-            print(assertions)
+                    self.line_number_to_predicate[tmp_line_number][result] = 1
+                    predicate = Predicate(result, tmp_line_number)
+                    self.line_number_to_assertion_to_predicate[tmp_line_number][result] = predicate
+            print(self.line_number_to_predicate)
+            print(self.line_number_to_assertion_to_predicate)
             # Sort based on occurrence, break tie by picking shorter one
-            sorted_assertions = sorted(assertions.keys(), key=lambda x: (assertions[x], -len(x)), reverse=True)
+            sorted_assertions = sorted(self.line_number_to_predicate[line_number].keys(),
+                                       key=lambda x: (self.line_number_to_predicate[line_number][x], -len(x)), reverse=True)
             candidates = []
             for x in sorted_assertions:
-                candidates.append([assertion_to_candidate[x]])
+                candidates.append([self.line_number_to_assertion_to_predicate[line_number][x]])
                 if AssertionPointAttributes.BeginningOfLoop in attributes and \
                         ("while " in self.program.lines[line_number] or "do " in self.program.lines[line_number]):
                     # we are adding an assumption to the beginning of the while loop, might as well add it right before
                     # the while loop
-                    predicate = copy(assertion_to_candidate[x])
+                    predicate = copy(self.line_number_to_assertion_to_predicate[line_number][x])
                     predicate.line_number = line_number - 1
-                    candidates.append([assertion_to_candidate[x], predicate])
+                    candidates.append([self.line_number_to_assertion_to_predicate[line_number][x], predicate])
+
             return candidates
 
     def create_message_for_assertion_point(self, goal : Predicate, line_number: int,
                                            attributes: Set[AssertionPointAttributes],
                                            num_assertions: int):
-
+        assertion_points = {}
+        name = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"]
         if AssertionPointAttributes.InLoop in attributes:
             lines = []
             num_loops = 0
             for assertion_point, items in self.program.assertion_points.items():
                 if assertion_point <= line_number and AssertionPointAttributes.InLoop in items:
-                    lines.append(assertion_point + 1)
+                    lines.append(assertion_point)
                     if AssertionPointAttributes.BeginningOfLoop in items:
                         num_loops += 1
             if num_loops == 1:
-                if AssertionPointAttributes.BeforeAssertion in attributes:
-                    content_head = (f"{self.program.get_program_with_assertion(goal, [], forGPT=True)}\n"
-                                   f"Print {num_assertions} loop invariants right before the assertion "
-                                   f"that help prove it. ")
-                else:
-                    content_head = (f"{self.program.get_program_with_assertion(goal, [], forGPT=True)}\n"
-                                    f"Print {num_assertions} loop invariants right after line {line_number + 1} "
-                                    f"that help prove the assertion. ")
+                assertion_points[line_number] = "A"
+                content_head = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
+                                f"Print a loop invariant as C assertions at line A "
+                                f"that help prove the assertion. ")
                 content_end = (f"If there are multiple, print them as a single assertion using '&&'. "
-                              f"Don't explain. Your answer should simply be 'line {line_number + 1}: assert(...);'")
+                              f"Don't explain. Your answer should simply be 'assert(...); // line A'")
                 content = content_head + content_end
             else:
-                content = (f"{self.program.get_program_with_assertion(goal, [], forGPT=True)}\n"
-                           f"Print all loop invariants after lines {', '.join(map(str, lines))} about x "
+                for i, line in enumerate(lines):
+                    assertion_points[line] = name[i]
+                content = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
+                           f"Print loop invariants as C assertions at lines {', '.join([assertion_points[line] for line in lines])} "
                            f"that help prove the assertion. "
-                           f"If there are multiple, print them as a single assertion using '&&'. "
-                           f"Don't explain. Your answer should simply be 'line number: assert(...);'")
+                           f"Use '&&' or '||' if necessary. "
+                           f"Don't explain. Each line of your answer should be 'assert(...); // line name'")
         elif AssertionPointAttributes.BeforeLoop in attributes:
             lines = []
             for assertion_point, items in self.program.assertion_points.items():
                 if assertion_point < line_number and AssertionPointAttributes.InLoop in items:
-                    lines.append(assertion_point + 1)
-            lines.append(line_number + 1)
-            content = (f"{self.program.get_program_with_assertion(goal, [], forGPT=True)}\n"
-                       f"Print facts after lines {', '.join(map(str, lines))} "
+                    lines.append(assertion_point)
+            lines.append(line_number)
+            for i, line in enumerate(lines):
+                assertion_points[line] = name[i]
+            content = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
+                       f"Print facts as C assertions at lines {', '.join([assertion_points[line] for line in lines])} "
                        f"that help prove the assertion. "
-                       f"If there are multiple, print them as a single assertion using '&&'. "
-                       f"Don't explain. Your answer should simply be 'line number: assert(...);'")
+                       f"Don't use loop variables at line {assertion_points[line_number]}. "
+                       f"Use '&&' or '||' if necessary. "
+                       f"Don't explain. Each line of your answer should be 'assert(...); // line name'")
 
-        return self.create_message(content, system=False)
+        return self.create_message(content, system=False), assertion_points
 
     @staticmethod
     def dump_messages(messages):

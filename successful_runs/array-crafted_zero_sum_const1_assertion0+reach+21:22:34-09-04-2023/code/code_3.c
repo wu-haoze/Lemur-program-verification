@@ -16,6 +16,7 @@ for (i = 0; i < SIZE; i++) {
 sum = sum + a[i];
 }
 for (i = 0; i < SIZE; i++) {
+assume(sum >= 0 && sum <= SIZE - i);
 sum = sum - a[i];
 }
 assert(sum == 0);
