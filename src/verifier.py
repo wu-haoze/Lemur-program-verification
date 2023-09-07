@@ -19,8 +19,10 @@ class Result(Enum):
     Unknown = 3
 
 class Verifier:
-    def __init__(self, task: Task, verifier: str,  args):
+    def __init__(self, task: Task, verifiers: List[str],  args):
         self.args = args
+        self.verbosity = args.verbosity
+
         self.working_dir, self.prompt_dir, self.code_dir = \
             create_working_dir(args.working_dir, task.source_code, args.prop)
         os.chdir(self.working_dir)
@@ -36,9 +38,9 @@ class Verifier:
 
         self.program.dump()
 
-        self.verifier = verifier
-        os.chdir(dirname(self.verifier))
-        self.verbosity = args.verbosity
+        self.verifiers = verifiers
+        self.log(0, f"Using Verifier: {self.verifiers}", 0)
+
 
         self.prompter = Prompter(self.program, self.prompt_dir, args.cache)
 
@@ -49,12 +51,13 @@ class Verifier:
         self.verify_goal(self.program.assertions[0], [], level=0)
 
     def verify_goal(self, goal: Predicate, assumptions: List[Predicate], level: int):
+        print(goal.line_number, self.program.assertion_points)
         if goal.line_number == min(self.program.assertion_points):
             timeout = 43200
         else:
             timeout = self.args.per_instance_timeout
         self.log(1, f"Verifying goal: {goal.content} after line {goal.line_number} with timeout {timeout}", level)
-        r = self.run_verifier(goal, assumptions, timeout=timeout)
+        r = self.run_verifier(goal, assumptions, timeout=timeout, level=level)
 
         if r == Result.Verified:
             self.log(1, f"Verified", level)
@@ -109,7 +112,7 @@ class Verifier:
                     self.log(1, "Assumption same as goal. Skip", level)
                 else:
                     r = self.run_verifier(goal, assumptions + proof_goal,
-                                          timeout=self.args.per_instance_timeout)
+                                          timeout=self.args.per_instance_timeout, level=level)
                     if r != Result.Verified:
                         proof_goal_to_result.append((proof_goal, Result.Unknown))
                         self.log(1, "No", level)
@@ -169,27 +172,34 @@ class Verifier:
     def add_lemma(self, goal: Predicate):
         self.program.lemmas.append(goal)
 
-    def run_verifier(self, goal: Predicate, assumptions: List[Predicate], timeout : int)-> Result:
+    def run_verifier(self, goal: Predicate, assumptions: List[Predicate], timeout : int, level: int)-> Result:
         self.query_id += 1
         p = self.program.get_program_with_assertion(goal, assumptions, {}, False, dump=True)
         filename = join(self.code_dir, f"code_{self.query_id}.c")
         with open(filename, 'w') as out_file:
             out_file.write(p)
 
-        command = f"python3 -u {self.verifier} --spec {self.property} --file {filename} --architecture {self.arch} --full-output"
+        for verifier in self.verifiers:
+            self.log(1, f"Trying {basename(verifier)}", level)
+            if "uautomizer" in verifier:
+                os.chdir(dirname(verifier))
+                command = f"python3 -u {verifier} --spec {self.property} --file {filename} --architecture {self.arch} --full-output"
+            elif "esbmc" in verifier:
+                os.chdir(dirname(verifier))
+                command = f"python3 -u {verifier} -p {self.property} -s kinduction --arch {self.arch.split('bit')[0]} {filename}"
+            stdout, _ = run_subprocess(command, self.verbosity > 1, timeout)
 
-        stdout, _ = run_subprocess(command, self.verbosity > 1, timeout)
+            command = f"pkill -9 java; pkill -9 z3; pkill -9 esbmc; pkill -9 mathsat"
+            run_subprocess(command, self.verbosity > 1, timeout)
 
-        command = f"pkill -9 java; pkill -9 z3"
-        run_subprocess(command, self.verbosity > 1, timeout)
+            if stdout[-1] == "TRUE\n":
+                return Result.Verified
+            elif stdout[-1] == "FALSE\n" or stdout[-1] == "FALSE_REACH\n":
+                return Result.Falsified
+            else:
+                continue
 
-
-        if stdout[-1] == "TRUE\n":
-            return Result.Verified
-        elif stdout[-1] == "FALSE\n":
-            return Result.Falsified
-        else:
-            return Result.Unknown
+        return Result.Unknown
 
     def log(self, verbosity: int, message: str, level: int = 0):
         if self.verbosity >= verbosity:

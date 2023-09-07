@@ -22,7 +22,11 @@ if __name__ == "__main__":
 
     task = Task(args.input, args.prop)
 
-    VERIFIER = VERIFIERS[args.verifier]
+    if args.verifier != "all":
+        VERIFIER = VERIFIERS[args.verifier]
+        VERIFIERS = [VERIFIERS[args.verifier]]
+    else:
+        VERIFIERS = [VERIFIERS["esbmc"], VERIFIERS["uautomizer"]]
 
     if args.verifier == "cbmc":
         command = f"{VERIFIER} --propertyfile {task.property} --{task.arch.split('bit')[0]} {task.source_code}"
@@ -35,7 +39,7 @@ if __name__ == "__main__":
     else:
         command = ""
     if args.learn:
-        v = Verifier(task, VERIFIER, args)
+        v = Verifier(task, VERIFIERS, args)
         v.verify()
     else:
         os.chdir(dirname(VERIFIER))

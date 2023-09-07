@@ -12,8 +12,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description="GPT4MC.")
     parser.add_argument("input", help="Path to the yaml file.")
     parser.add_argument("-v", "--verifier", type=str, default="esbmc",
-                        choices=["uautomizer", "cbmc", "esbmc", "2ls", "seahorn"],
-                        help="Verifier uautomizer/cbmc/esbmc/2ls/seahorn.")
+                        choices=["uautomizer", "cbmc", "esbmc", "2ls", "seahorn", "all"],
+                        help="Verifier uautomizer/cbmc/esbmc/2ls/seahorn/all.")
     parser.add_argument("--prop", type=str, default="reach", choices=["term", "reach"],
                         help="Property type term/reach.")
     parser.add_argument("--learn", action="store_true", help="Use GPT?")

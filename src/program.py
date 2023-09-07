@@ -43,7 +43,7 @@ class Program:
             if last_line_in_loop and "}" in line:
                 left_bracket -= 1
                 if left_bracket == 0:
-                    #self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.EndOfLoop)
+                    self.add_assertion_point(len(self.lines), AssertionPointAttributes.EndOfLoop)
                     #self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.InLoop)
                     last_line_in_loop = False
 
@@ -171,14 +171,25 @@ class Program:
                         closest_line = tmp
                         break
         else:
-            print("assertion is not in the loop, find the beginning of the closest loop")
-            tmp = goal.line_number
-            while tmp >= 0:
-                tmp -= 1
-                if (tmp in self.assertion_points and
-                        AssertionPointAttributes.BeginningOfLoop in self.assertion_points[tmp]):
-                    closest_line = tmp
-                    break
+            if AssertionPointAttributes.EndOfLoop in self.assertion_points[goal.line_number]:
+                print("assertion is right after a loop, find the beginning of the closest loop")
+                tmp = goal.line_number
+                while tmp >= 0:
+                    tmp -= 1
+                    if (tmp in self.assertion_points and
+                            AssertionPointAttributes.BeginningOfLoop in self.assertion_points[tmp]):
+                        closest_line = tmp
+                        break
+            else:
+                print("assertion is not right after a loop, find the end of the closest loop")
+                tmp = goal.line_number
+                while tmp >= 0:
+                    tmp -= 1
+                    if tmp in self.assertion_points and \
+                            AssertionPointAttributes.EndOfLoop in self.assertion_points[tmp]:
+                        closest_line = tmp
+                        break
+
         if closest_line is None:
             return None, None
         else:

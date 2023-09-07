@@ -36,7 +36,8 @@ class Prompter:
     def create_message(content: str, system = False):
         return {"role": "system" if system else "user", "content": content}
 
-    def prompt(self, messages, max_tokens=150, attempts = 1, penalty = 1.5):
+    # , model="gpt-3.5-turbo"
+    def prompt(self, messages, max_tokens=150, attempts = 1, penalty = 1.5, model = "gpt-4"):
         start = perf_counter()
         self.prompt_id += 1
         prompt_filename = f"prompt{self.prompt_id}.json"
@@ -50,8 +51,7 @@ class Prompter:
         else:
             try:
                 result = openai.ChatCompletion.create(
-                    #model="gpt-3.5-turbo",
-                    model="gpt-4",
+                    model=model,
                     messages=messages,
                     temperature=0.8,
                     max_tokens=max_tokens,
@@ -104,6 +104,15 @@ class Prompter:
             raw_result = raw_result[:-1]
             print(f"{raw_result}")
 
+            tmp_results = []
+            for result in results:
+                if "?" in result[1]:
+                    new_candidates = self.rewrite_case_split_into_disjunction(result[1], simulate)
+                    tmp_results += [(result[0], new_candidate) for new_candidate in new_candidates]
+                else:
+                    tmp_results.append(result)
+            results = tmp_results
+
             for line_name, result in results:
                 key = None
                 if line_name not in name_to_line_number:
@@ -138,7 +147,19 @@ class Prompter:
                     # the while loop
                     predicate = copy(self.line_number_to_assertion_to_predicate[line_number][x])
                     predicate.line_number = line_number - 1
-                    candidates.append([self.line_number_to_assertion_to_predicate[line_number][x], predicate])
+
+                    end_of_loop_line_number = line_number
+                    while end_of_loop_line_number not in self.program.assertion_points or \
+                            AssertionPointAttributes.EndOfLoop not in self.program.assertion_points[end_of_loop_line_number]:
+                        end_of_loop_line_number += 1
+                    predicate2 = copy(self.line_number_to_assertion_to_predicate[line_number][x])
+                    predicate2.line_number = end_of_loop_line_number
+
+                    candidates.append([self.line_number_to_assertion_to_predicate[line_number][x],
+                                       predicate])
+
+                    #candidates.append([predicate2,
+                    #                   self.line_number_to_assertion_to_predicate[line_number][x]])
                 else:
                     candidates.append([self.line_number_to_assertion_to_predicate[line_number][x]])
             return candidates
@@ -158,7 +179,7 @@ class Prompter:
             self.dump_messages(messages)
             raw_result = ""
             results = []
-            for penalty in [1, 2]:
+            for penalty in [-1, 0]:
                 for d in self.prompt(messages, attempts=attempts, penalty=penalty)["choices"]:
                     raw_result += f"GPT output {d['index'] + 1} with penality {penalty}:\n{d['message']['content']}\n"
                     tmp_results = []
@@ -172,6 +193,14 @@ class Prompter:
 
             raw_result = raw_result[:-1]
             print(f"{raw_result}")
+
+            tmp_results = []
+            for result in results:
+                if "?" in result:
+                    tmp_results += self.rewrite_case_split_into_disjunction(result)
+                else:
+                    tmp_results.append(result)
+            results = tmp_results
 
             # clear the previous proof goal
             self.line_number_to_predicate[current_sub_goal.line_number] = dict()
@@ -222,7 +251,7 @@ class Prompter:
             if num_loops == 1:
                 assertion_points[line_number] = "A"
                 content_head = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-                                f"Print loop invariants as C assertions at line A "
+                                f"Print loop invariants as valid C assertions at line A "
                                 f"that help prove the assertion. ")
                 content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
                                f"Don't explain. Your answer should simply be 'assert(...); // line A'")
@@ -231,11 +260,11 @@ class Prompter:
                 for i, line in enumerate(lines):
                     assertion_points[line] = name[i]
                 content = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-                           f"Print loop invariants as C assertions at lines {', '.join([assertion_points[line] for line in lines])} "
-                           f"that help prove the assertion. "
+                           f"Print loop invariants as valid C assertions at lines {', '.join([assertion_points[line] for line in lines])} "
+                           f"about y that help prove the assertion. "
                            f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
                            f"Don't explain. Each line of your answer should be 'assert(...); // line name'")
-        elif AssertionPointAttributes.BeforeLoop in attributes:
+        else:
             lines = []
             for assertion_point, items in self.program.assertion_points.items():
                 if assertion_point < line_number and AssertionPointAttributes.InLoop in items:
@@ -244,8 +273,8 @@ class Prompter:
             for i, line in enumerate(lines):
                 assertion_points[line] = name[i]
             content = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-                       f"Print facts as C assertions at lines {', '.join([assertion_points[line] for line in lines])} "
-                       f"that help prove the assertion. "
+                       f"Print facts as valid C assertions at lines {', '.join([assertion_points[line] for line in lines])} "
+                       f"about y that help prove the assertion. "
                        f"Don't use loop variables at line {assertion_points[line_number]}. "
                        f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
                        f"Don't explain. Each line of your answer should be 'assert(...); // line name'")
@@ -257,7 +286,7 @@ class Prompter:
         assertion_points = {current_subgoal.line_number: "A"}
         if AssertionPointAttributes.InLoop in attributes:
             content_head = f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-            content_head += f"Print loop variants as C assertions at line A that help prove the assertion. "
+            content_head += f"Print loop variants as valid C assertions at line A that help prove the assertion. "
             if falsified:
                 content = f"Correct your previous answer '{current_subgoal.content}'. "
             else:
@@ -268,7 +297,7 @@ class Prompter:
             content = content_head + content + content_end
         else:
             content_head = f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-            content_head += f"Print facts as C assertions at line A that help prove the assertion. "
+            content_head += f"Print facts as valid C assertions at line A that help prove the assertion. "
             if falsified:
                 content = f"Correct your previous answer '{current_subgoal.content}'. "
             else:
@@ -279,7 +308,37 @@ class Prompter:
             content = content_head + content + content_end
         return self.create_message(content, system=False)
 
+    def rewrite_case_split_into_disjunction(self, result: str, simulate: bool):
+        print("Assertion contains `?`, ask GPT to rewrite.")
+        messages = []
+        message = self.create_message(f"Rewrite the C assertion into an equivalent one that does not contain `?` "
+                                      f"using && and ||.", system=True)
+        messages.append(message)
 
+        message = self.create_message(f"assert({result});\nDon't explain. "
+                                      f"Your answer should simply be 'assert(...);", system=False)
+        messages.append(message)
+        if simulate:
+            self.dump_messages(messages)
+            exit(0)
+        else:
+            self.dump_messages(messages)
+            raw_result = ""
+            results = []
+            for d in self.prompt(messages, attempts=3)["choices"]:
+                raw_result += f"GPT output {d['index'] + 1}:\n{d['message']['content']}\n"
+                tmp_results = []
+                for line in d['message']['content'].split("\n"):
+                    result = re.findall(r'assert\((.*?)\);', line)
+                    if len(result) > 0:
+                        tmp_results.append(result[0])
+                    else:
+                        continue
+                    results += tmp_results
+
+            raw_result = raw_result[:-1]
+            print(f"{raw_result}")
+            return results
 
     @staticmethod
     def dump_messages(messages):
