@@ -42,7 +42,8 @@ class Verifier:
         self.log(0, f"Using Verifier: {self.verifiers}", 0)
 
 
-        self.prompter = Prompter(self.program, self.prompt_dir, args.cache)
+        self.prompter = Prompter(self.program, self.prompt_dir, args.cache, args.model)
+        self.log(0, f"Using model {args.model}", 0)
 
         self.query_id = 0
 
@@ -51,11 +52,10 @@ class Verifier:
         self.verify_goal(self.program.assertions[0], [], level=0)
 
     def verify_goal(self, goal: Predicate, assumptions: List[Predicate], level: int):
-        print(goal.line_number, self.program.assertion_points)
-        if goal.line_number == min(self.program.assertion_points):
-            timeout = 43200
-        else:
-            timeout = self.args.per_instance_timeout
+        #if goal.line_number == min(self.program.assertion_points):
+        #    timeout = 43200
+        #else:
+        timeout = self.args.per_instance_timeout
         self.log(1, f"Verifying goal: {goal.content} after line {goal.line_number} with timeout {timeout}", level)
         r = self.run_verifier(goal, assumptions, timeout=timeout, level=level)
 
@@ -68,13 +68,16 @@ class Verifier:
         else:
             self.log(1, f"Unknown", level)
             self.log(1, f"Attempt to propose sub-goals...", level)
-            proof_goals = self.suggest_proof_goals(goal, level)
+            if goal.line_number == min(self.program.assertion_points):
+                proof_goals = []
+            else:
+                proof_goals = self.suggest_proof_goals(goal, level)
             self.log(1, f"Attempt to propose sub-goals - done", level)
 
             proof_goal_to_result : List[(List[Predicate], Result)] = []
 
             attempts = 0
-            while True:
+            while len(proof_goals) > 0:
                 if attempts >= GC.MAX_ATTEMPT_AT_A_LEVEL:
                     break
                 if len(proof_goals) == 0:
@@ -180,11 +183,12 @@ class Verifier:
             out_file.write(p)
 
         for verifier in self.verifiers:
-            self.log(1, f"Trying {basename(verifier)}", level)
             if "uautomizer" in verifier:
+                self.log(1, f"Trying {basename(verifier)}", level)
                 os.chdir(dirname(verifier))
                 command = f"python3 -u {verifier} --spec {self.property} --file {filename} --architecture {self.arch} --full-output"
             elif "esbmc" in verifier:
+                self.log(1, f"Trying {basename(verifier)}", level)
                 os.chdir(dirname(verifier))
                 command = f"python3 -u {verifier} -p {self.property} -s kinduction --arch {self.arch.split('bit')[0]} {filename}"
             stdout, _ = run_subprocess(command, self.verbosity > 1, timeout)

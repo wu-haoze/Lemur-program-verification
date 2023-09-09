@@ -1,7 +1,6 @@
 from typing import List, Set, Dict
 
 import openai
-import os
 from program import Program, AssertionPointAttributes
 from predicate import Predicate
 from time import perf_counter
@@ -14,12 +13,14 @@ from copy import copy
 replacements = {"UCHAR_MAX": "0xff", "UINT_MAX": "0xffffffff"}
 
 class Prompter:
-    def __init__(self, program: Program, prompt_dir: str, cache: str):
+    def __init__(self, program: Program, prompt_dir: str, cache: str, model: str):
         openai.api_key = os.getenv("OPENAI_API")
 
         self.program = program
         self.prompt_dir = prompt_dir
         self.prompt_id = 0
+
+        self.model = model
 
         if cache is not None:
             self.cache = join(cache, "prompts/")
@@ -27,7 +28,6 @@ class Prompter:
             self.cache = None
         models = openai.Model.list()
         #print(models)
-        #self.prompt([self.create_message("how are you?")], max_tokens=5, attempts = 1)
 
         self.line_number_to_predicate: Dict[int, Dict[str, int]] = {}
         self.line_number_to_assertion_to_predicate: Dict[int, Dict[str, Predicate]] = {}
@@ -37,7 +37,7 @@ class Prompter:
         return {"role": "system" if system else "user", "content": content}
 
     # , model="gpt-3.5-turbo"
-    def prompt(self, messages, max_tokens=150, attempts = 1, penalty = 1.5, model = "gpt-4"):
+    def prompt(self, messages, model: str, max_tokens=100, attempts = 1, penalty = 1.5):
         start = perf_counter()
         self.prompt_id += 1
         prompt_filename = f"prompt{self.prompt_id}.json"
@@ -76,6 +76,9 @@ class Prompter:
         messages.append(message)
 
         line_number, attributes = self.program.decide_assertion_point(goal)
+        if line_number is None:
+            return []
+
         message, assertion_points = self.create_message_for_assertion_point(goal, line_number, attributes, num_assertions)
         name_to_line_number = {}
         for k, v in assertion_points.items():
@@ -89,8 +92,8 @@ class Prompter:
             self.dump_messages(messages)
             raw_result = ""
             results = []
-            for penalty in [1, 2]:
-                for d in self.prompt(messages, attempts=attempts, penalty=penalty)["choices"]:
+            for penalty in [1.5, 2]:
+                for d in self.prompt(messages, attempts=attempts, penalty=penalty, model=self.model)["choices"]:
                     raw_result += f"GPT output {d['index'] + 1} with penality {penalty}:\n{d['message']['content']}\n"
                     tmp_results = []
                     for line in d['message']['content'].split("\n"):
@@ -101,9 +104,11 @@ class Prompter:
                             continue
                     results += tmp_results
 
+
             raw_result = raw_result[:-1]
             print(f"{raw_result}")
 
+            """
             tmp_results = []
             for result in results:
                 if "?" in result[1]:
@@ -112,6 +117,8 @@ class Prompter:
                 else:
                     tmp_results.append(result)
             results = tmp_results
+            """
+
 
             for line_name, result in results:
                 key = None
@@ -134,8 +141,6 @@ class Prompter:
                     self.line_number_to_predicate[tmp_line_number][result] = 1
                     predicate = Predicate(result, tmp_line_number)
                     self.line_number_to_assertion_to_predicate[tmp_line_number][result] = predicate
-            print(self.line_number_to_predicate)
-            print(self.line_number_to_assertion_to_predicate)
             # Sort based on occurrence, break tie by picking shorter one
             sorted_assertions = sorted(self.line_number_to_predicate[line_number].keys(),
                                        key=lambda x: (self.line_number_to_predicate[line_number][x], -len(x)), reverse=True)
@@ -180,7 +185,7 @@ class Prompter:
             raw_result = ""
             results = []
             for penalty in [-1, 0]:
-                for d in self.prompt(messages, attempts=attempts, penalty=penalty)["choices"]:
+                for d in self.prompt(messages, attempts=attempts, penalty=penalty, model=self.model)["choices"]:
                     raw_result += f"GPT output {d['index'] + 1} with penality {penalty}:\n{d['message']['content']}\n"
                     tmp_results = []
                     for line in d['message']['content'].split("\n"):
@@ -194,13 +199,15 @@ class Prompter:
             raw_result = raw_result[:-1]
             print(f"{raw_result}")
 
-            tmp_results = []
+            """
+                        tmp_results = []
             for result in results:
                 if "?" in result:
                     tmp_results += self.rewrite_case_split_into_disjunction(result)
                 else:
                     tmp_results.append(result)
             results = tmp_results
+            """
 
             # clear the previous proof goal
             self.line_number_to_predicate[current_sub_goal.line_number] = dict()
@@ -217,8 +224,6 @@ class Prompter:
                     self.line_number_to_predicate[current_sub_goal.line_number][result] = 1
                     predicate = Predicate(result, current_sub_goal.line_number)
                     self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][result] = predicate
-            print(self.line_number_to_predicate)
-            print(self.line_number_to_assertion_to_predicate)
             # Sort based on occurrence, break tie by picking shorter one
             sorted_assertions = sorted(self.line_number_to_predicate[current_sub_goal.line_number].keys(),
                                        key=lambda x: (self.line_number_to_predicate[current_sub_goal.line_number][x], -len(x)), reverse=True)
@@ -251,8 +256,8 @@ class Prompter:
             if num_loops == 1:
                 assertion_points[line_number] = "A"
                 content_head = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-                                f"Print loop invariants as valid C assertions at line A "
-                                f"that help prove the assertion. ")
+                                f"Print a loop invariant as valid C assertions at line A "
+                                f"that helps prove the assertion. ")
                 content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
                                f"Don't explain. Your answer should simply be 'assert(...); // line A'")
                 content = content_head + content_end
@@ -311,12 +316,13 @@ class Prompter:
     def rewrite_case_split_into_disjunction(self, result: str, simulate: bool):
         print("Assertion contains `?`, ask GPT to rewrite.")
         messages = []
-        message = self.create_message(f"Rewrite the C assertion into an equivalent one that does not contain `?` "
-                                      f"using && and ||.", system=True)
+        message = self.create_message(f"You understand C program well.", system=True)
         messages.append(message)
 
-        message = self.create_message(f"assert({result});\nDon't explain. "
-                                      f"Your answer should simply be 'assert(...);", system=False)
+        message = self.create_message(f"assert({result});\n"
+                                      f"Rewrite the C assertion into an equivalent one that does not contain '?'. " 
+                                      "Use '&&' and '||' if necessary. " 
+                                      f"Don't explain. Your answer should simply be 'assert(...);'", system=False)
         messages.append(message)
         if simulate:
             self.dump_messages(messages)
@@ -325,7 +331,7 @@ class Prompter:
             self.dump_messages(messages)
             raw_result = ""
             results = []
-            for d in self.prompt(messages, attempts=3)["choices"]:
+            for d in self.prompt(messages, attempts=3, model=self.model)["choices"]:
                 raw_result += f"GPT output {d['index'] + 1}:\n{d['message']['content']}\n"
                 tmp_results = []
                 for line in d['message']['content'].split("\n"):

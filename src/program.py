@@ -15,7 +15,6 @@ class AssertionPointAttributes(Enum):
     BeginningOfLoop = 4
     EndOfLoop = 5
 
-
 class Program:
     def __init__(self, lines: List[str], replacement: Dict[str, str]):
         self.lines: List[str] = []

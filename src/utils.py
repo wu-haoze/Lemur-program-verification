@@ -25,6 +25,8 @@ def parse_args():
     parser.add_argument("--num-attempts", type=int, default=4, help="Number of attempts for GPT")
     parser.add_argument("--simulate", action="store_true", help="Simulate?")
     parser.add_argument("--per-instance-timeout", type=int, default=60, help="Per-instance timeout")
+    parser.add_argument("--model", type=str, default="gpt-4", choices=["gpt-4", "gpt-3.5-turbo"],
+                        help="Model")
 
     args = parser.parse_args()
     if args.cache is not None:
