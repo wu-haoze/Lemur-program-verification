@@ -1,0 +1,2 @@
+assert(y == (x + ((x < 50000) ? 50000 : x)));
+Rewrite the C assertion into an equivalent one that does not contain '?'. Use '&&' and '||' if necessary. Don't explain. Your answer should simply be 'assert(...);'

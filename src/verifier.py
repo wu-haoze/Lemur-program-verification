@@ -51,13 +51,14 @@ class Verifier:
         assert(len(self.program.assertions) == 1)
         self.verify_goal(self.program.assertions[0], [], level=0)
 
-    def verify_goal(self, goal: Predicate, assumptions: List[Predicate], level: int):
-        #if goal.line_number == min(self.program.assertion_points):
-        #    timeout = 43200
-        #else:
+    def verify_goal(self, goal: Predicate, assumptions: List[Predicate], level: int, recursive_mode: bool = True):
         timeout = self.args.per_instance_timeout
+
         self.log(1, f"Verifying goal: {goal.content} after line {goal.line_number} with timeout {timeout}", level)
-        r = self.run_verifier(goal, assumptions, timeout=timeout, level=level)
+        if level == 0:
+            r = Result.Unknown
+        else:
+            r = self.run_verifier(goal, assumptions, timeout=timeout, level=level)
 
         if r == Result.Verified:
             self.log(1, f"Verified", level)
@@ -65,10 +66,10 @@ class Verifier:
         elif r == Result.Falsified:
             self.log(1, f"Falsified", level)
             return Result.Falsified
-        else:
+        elif recursive_mode:
             self.log(1, f"Unknown", level)
             self.log(1, f"Attempt to propose sub-goals...", level)
-            if goal.line_number == min(self.program.assertion_points):
+            if goal.line_number == min(self.program.assertion_points) and level > 0:
                 proof_goals = []
             else:
                 proof_goals = self.suggest_proof_goals(goal, level)
@@ -77,9 +78,10 @@ class Verifier:
             proof_goal_to_result : List[(List[Predicate], Result)] = []
 
             attempts = 0
-            while len(proof_goals) > 0:
+            while len(proof_goals) > 0 or len(proof_goal_to_result) > 0:
                 if attempts >= GC.MAX_ATTEMPT_AT_A_LEVEL:
                     break
+                # Adapt
                 if len(proof_goals) == 0:
                     self.log(1, "No potential sub-goal left. Adapt failed sub-goal...", level)
                     proof_goal_to_refine = None
@@ -111,22 +113,26 @@ class Verifier:
                 self.log(1,
                          (f"Checking if the assertion is implied by {content}. "
                           f"Attempt {attempts}/{GC.MAX_ATTEMPT_AT_A_LEVEL}"), level)
-                if proof_goal == goal:
+                if proof_goal[0] == goal:
                     self.log(1, "Assumption same as goal. Skip", level)
                 else:
                     r = self.run_verifier(goal, assumptions + proof_goal,
                                           timeout=self.args.per_instance_timeout, level=level)
-                    if r != Result.Verified:
+                    if r == Result.Falsified:
+                        self.log(1, f"Falsified", level)
+                        return Result.Falsified
+                    elif r != Result.Verified:
                         proof_goal_to_result.append((proof_goal, Result.Unknown))
                         self.log(1, "No", level)
                         continue
                     else:
+                        self.log(1, "Yes!", level)
                         all_hold = True
                         # We need to verify a /\ b /\ c
                         # Instead we verify ((b /\ c) -> a) and (c -> b) and c
                         for pred_id, predicate in enumerate(proof_goal):
-                            self.log(1, "Yes!", level)
-                            r = self.verify_goal(predicate, proof_goal[pred_id + 1:], level + 1)
+                            recursive_mode = len(proof_goal[pred_id + 1:]) == 0
+                            r = self.verify_goal(predicate, assumptions + proof_goal[pred_id + 1:], level + 1, recursive_mode)
                             if r == Result.Verified:
                                 continue
                             elif r == Result.Falsified:
@@ -142,8 +148,28 @@ class Verifier:
                             self.log(1, "Verified", level)
                             return Result.Verified
                         else:
-                            continue
+                            # There is another we could prove the assertion.
+                            # If proof_goal has length 1 and is not in loop, we already know proof_goal -> goal,
+                            # we could be done if -proof_goal -> goal.
+                            if len(proof_goal) == 1:
+                                ln = proof_goal[0].line_number
+                                if AssertionPointAttributes.InLoop not in self.program.assertion_points[ln]:
+                                    predicate = Predicate(f"!({proof_goal[0].content})", proof_goal[0].line_number)
+                                    content = f"{predicate.content} after line {predicate.line_number}"
+                                    self.log(1,
+                                             f"Checking if the assertion is also implied by {content}.", level)
 
+
+
+                                    r = self.run_verifier(goal, assumptions + [predicate],
+                                                          timeout=self.args.per_instance_timeout, level=level)
+                                    if r == Result.Verified:
+                                        self.log(1, "Yes!", level)
+                                        self.log(1, f"Verified", level)
+                                        return Result.Verified
+                                    else:
+                                        self.log(1, "No", level)
+                            continue
 
 
             self.log(1, f"Unknown", level)

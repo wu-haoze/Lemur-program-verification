@@ -65,9 +65,10 @@ class Program:
                         self.add_assertion_point(len(self.lines) - 2, AssertionPointAttributes.InLoop)
                     self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.InLoop)
                     self.add_assertion_point(len(self.lines) - 1, AssertionPointAttributes.BeginningOfLoop)
+                    if not last_line_in_loop:
+                        assert ("{" in line)
+                        left_bracket += 1
                     last_line_in_loop = True
-                    assert ("{" in line)
-                    left_bracket += 1
                 if "{" in line:
                     if "}" not in line:
                         self.unclosed_brackets[len(self.lines) - 1] = self.unclosed_brackets[len(self.lines) - 2] + 1
@@ -161,7 +162,7 @@ class Program:
                 assert(AssertionPointAttributes.BeforeLoop in self.assertion_points[goal.line_number - 1])
                 closest_line = goal.line_number - 1
             else:
-                print("assertion is in in the loop, find the beginning of the closest loop")
+                print("assertion is in the loop, find the beginning of the closest loop")
                 tmp = goal.line_number
                 while tmp >= 0:
                     tmp -= 1
@@ -175,7 +176,7 @@ class Program:
                 tmp = goal.line_number
                 while tmp >= 0:
                     tmp -= 1
-                    if (tmp in self.assertion_points and
+                    if (tmp in self.assertion_points and (not self.in_loop[tmp - 1]) and
                             AssertionPointAttributes.BeginningOfLoop in self.assertion_points[tmp]):
                         closest_line = tmp
                         break

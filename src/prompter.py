@@ -83,7 +83,6 @@ class Prompter:
         name_to_line_number = {}
         for k, v in assertion_points.items():
             name_to_line_number[v] = k
-        name = assertion_points[line_number]
         messages.append(message)
         if simulate:
             self.dump_messages(messages)
@@ -92,7 +91,7 @@ class Prompter:
             self.dump_messages(messages)
             raw_result = ""
             results = []
-            for penalty in [1.5, 2]:
+            for penalty in [-1, 1.5, 2]:
                 for d in self.prompt(messages, attempts=attempts, penalty=penalty, model=self.model)["choices"]:
                     raw_result += f"GPT output {d['index'] + 1} with penality {penalty}:\n{d['message']['content']}\n"
                     tmp_results = []
@@ -107,18 +106,6 @@ class Prompter:
 
             raw_result = raw_result[:-1]
             print(f"{raw_result}")
-
-            """
-            tmp_results = []
-            for result in results:
-                if "?" in result[1]:
-                    new_candidates = self.rewrite_case_split_into_disjunction(result[1], simulate)
-                    tmp_results += [(result[0], new_candidate) for new_candidate in new_candidates]
-                else:
-                    tmp_results.append(result)
-            results = tmp_results
-            """
-
 
             for line_name, result in results:
                 key = None
@@ -139,7 +126,15 @@ class Prompter:
                     self.line_number_to_predicate[tmp_line_number][key] += 1
                 else:
                     self.line_number_to_predicate[tmp_line_number][result] = 1
-                    predicate = Predicate(result, tmp_line_number)
+                    if "?" in result:
+                        candidates = self.rewrite_case_split_into_disjunction(result, simulate)
+                        if len(candidates) > 0:
+                            predicate = Predicate(candidates[0], tmp_line_number)
+                        else:
+                            continue
+                    else:
+                        predicate = Predicate(result, tmp_line_number)
+
                     self.line_number_to_assertion_to_predicate[tmp_line_number][result] = predicate
             # Sort based on occurrence, break tie by picking shorter one
             sorted_assertions = sorted(self.line_number_to_predicate[line_number].keys(),
@@ -167,6 +162,8 @@ class Prompter:
                     #                   self.line_number_to_assertion_to_predicate[line_number][x]])
                 else:
                     candidates.append([self.line_number_to_assertion_to_predicate[line_number][x]])
+
+            self.line_number_to_predicate = dict()
             return candidates
 
     def adapt_predicate(self, goal: Predicate, current_sub_goal: Predicate, falsified : bool,
@@ -199,16 +196,6 @@ class Prompter:
             raw_result = raw_result[:-1]
             print(f"{raw_result}")
 
-            """
-                        tmp_results = []
-            for result in results:
-                if "?" in result:
-                    tmp_results += self.rewrite_case_split_into_disjunction(result)
-                else:
-                    tmp_results.append(result)
-            results = tmp_results
-            """
-
             # clear the previous proof goal
             self.line_number_to_predicate[current_sub_goal.line_number] = dict()
             self.line_number_to_assertion_to_predicate[current_sub_goal.line_number] = dict()
@@ -222,7 +209,15 @@ class Prompter:
                     self.line_number_to_predicate[current_sub_goal.line_number][key] += 1
                 else:
                     self.line_number_to_predicate[current_sub_goal.line_number][result] = 1
-                    predicate = Predicate(result, current_sub_goal.line_number)
+                    if "?" in result:
+                        candidates = self.rewrite_case_split_into_disjunction(result, simulate)
+                        if len(candidates) > 0:
+                            predicate = Predicate(candidates[0], current_sub_goal.line_number)
+                        else:
+                            continue
+                    else:
+                        predicate = Predicate(result, current_sub_goal.line_number)
+
                     self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][result] = predicate
             # Sort based on occurrence, break tie by picking shorter one
             sorted_assertions = sorted(self.line_number_to_predicate[current_sub_goal.line_number].keys(),
@@ -238,6 +233,7 @@ class Prompter:
                     candidates.append([self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x], predicate])
                 else:
                     candidates.append([self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x]])
+
             return candidates
 
     def create_message_for_assertion_point(self, goal : Predicate, line_number: int,
@@ -245,6 +241,8 @@ class Prompter:
                                            num_assertions: int):
         assertion_points = {}
         name = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"]
+        content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
+                       f"Don't explain. Your answer should be 'assert(...); // line name'")
         if AssertionPointAttributes.InLoop in attributes:
             lines = []
             num_loops = 0
@@ -256,19 +254,20 @@ class Prompter:
             if num_loops == 1:
                 assertion_points[line_number] = "A"
                 content_head = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-                                f"Print a loop invariant as valid C assertions at line A "
-                                f"that helps prove the assertion. ")
+                                f"Print loop invariants as valid C assertions at line A"
+                                f". "
+                                #f" that helps prove the assertion. "
+                                f"")
                 content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
-                               f"Don't explain. Your answer should simply be 'assert(...); // line A'")
+                               f"Don't explain. Your answer should be 'assert(...); // line A'")
                 content = content_head + content_end
             else:
                 for i, line in enumerate(lines):
                     assertion_points[line] = name[i]
                 content = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-                           f"Print loop invariants as valid C assertions at lines {', '.join([assertion_points[line] for line in lines])} "
-                           f"about y that help prove the assertion. "
-                           f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
-                           f"Don't explain. Each line of your answer should be 'assert(...); // line name'")
+                           f"Print loop invariants as valid C assertions at "
+                           f"lines {', '.join([assertion_points[line] for line in lines])}"
+                           f". ") + content_end
         else:
             lines = []
             for assertion_point, items in self.program.assertion_points.items():
@@ -278,11 +277,8 @@ class Prompter:
             for i, line in enumerate(lines):
                 assertion_points[line] = name[i]
             content = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-                       f"Print facts as valid C assertions at lines {', '.join([assertion_points[line] for line in lines])} "
-                       f"about y that help prove the assertion. "
-                       f"Don't use loop variables at line {assertion_points[line_number]}. "
-                       f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
-                       f"Don't explain. Each line of your answer should be 'assert(...); // line name'")
+                       f"Print facts as valid C assertions at lines {', '.join([assertion_points[line] for line in lines])}. "
+                       f"Don't use loop variables at line {assertion_points[line_number]}. ") + content_end
 
         return self.create_message(content, system=False), assertion_points
 
@@ -297,7 +293,7 @@ class Prompter:
             else:
                 content = f"Strengthen your previous answer '{current_subgoal.content}'. "
 
-            content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
+            content_end = (f"Use '&&' or '||' if necessary. "
                            f"Don't explain. Your answer should simply be 'assert(...);'")
             content = content_head + content + content_end
         else:
@@ -308,7 +304,7 @@ class Prompter:
             else:
                 content = f"Strengthen you previous answer '{current_subgoal.content}'. "
 
-            content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
+            content_end = (f"Use '&&' or '||' if necessary. "
                            f"Don't explain. Your answer should simply be 'assert(...);'")
             content = content_head + content + content_end
         return self.create_message(content, system=False)
@@ -316,13 +312,13 @@ class Prompter:
     def rewrite_case_split_into_disjunction(self, result: str, simulate: bool):
         print("Assertion contains `?`, ask GPT to rewrite.")
         messages = []
-        message = self.create_message(f"You understand C program well.", system=True)
+        message = self.create_message(f"Get rid of the ternary operator. Don't explain. "
+                                      f"Your answer should simply be 'assert(...);'.", system=True)
         messages.append(message)
 
-        message = self.create_message(f"assert({result});\n"
-                                      f"Rewrite the C assertion into an equivalent one that does not contain '?'. " 
-                                      "Use '&&' and '||' if necessary. " 
-                                      f"Don't explain. Your answer should simply be 'assert(...);'", system=False)
+        message = self.create_message((f"assert(b == (a >= 18) ? 0 : b + a); => assert((a >= 18 && b == 0) || (a < 18 && b == b + a));\n"
+                                       f"assert(x  + (a  < 1  ? 1 : 2) == 3); => assert((a < 1 && x  + 1== 3) || (a >= 1 && x + 2 == 3));\n"
+                                       f"assert({result}); => "), system=False)
         messages.append(message)
         if simulate:
             self.dump_messages(messages)
@@ -331,7 +327,7 @@ class Prompter:
             self.dump_messages(messages)
             raw_result = ""
             results = []
-            for d in self.prompt(messages, attempts=3, model=self.model)["choices"]:
+            for d in self.prompt(messages, attempts=1, model=self.model)["choices"]:
                 raw_result += f"GPT output {d['index'] + 1}:\n{d['message']['content']}\n"
                 tmp_results = []
                 for line in d['message']['content'].split("\n"):
