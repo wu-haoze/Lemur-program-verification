@@ -213,11 +213,13 @@ class Verifier:
                 self.log(1, f"Trying {basename(verifier)}", level)
                 os.chdir(dirname(verifier))
                 command = f"python3 -u {verifier} --spec {self.property} --file {filename} --architecture {self.arch} --full-output"
+                to = timeout
             elif "esbmc" in verifier:
                 self.log(1, f"Trying {basename(verifier)}", level)
                 os.chdir(dirname(verifier))
                 command = f"python3 -u {verifier} -p {self.property} -s kinduction --arch {self.arch.split('bit')[0]} {filename}"
-            stdout, _ = run_subprocess(command, self.verbosity > 1, timeout)
+                to = min(10, timeout)
+            stdout, _ = run_subprocess(command, self.verbosity > 1, to)
 
             command = f"pkill -9 java; pkill -9 z3; pkill -9 esbmc; pkill -9 mathsat"
             run_subprocess(command, self.verbosity > 1, timeout)

@@ -171,24 +171,14 @@ class Program:
                         closest_line = tmp
                         break
         else:
-            if AssertionPointAttributes.EndOfLoop in self.assertion_points[goal.line_number]:
-                print("assertion is right after a loop, find the beginning of the closest loop")
-                tmp = goal.line_number
-                while tmp >= 0:
-                    tmp -= 1
-                    if (tmp in self.assertion_points and (not self.in_loop[tmp - 1]) and
-                            AssertionPointAttributes.BeginningOfLoop in self.assertion_points[tmp]):
-                        closest_line = tmp
-                        break
-            else:
-                print("assertion is not right after a loop, find the end of the closest loop")
-                tmp = goal.line_number
-                while tmp >= 0:
-                    tmp -= 1
-                    if tmp in self.assertion_points and \
-                            AssertionPointAttributes.EndOfLoop in self.assertion_points[tmp]:
-                        closest_line = tmp
-                        break
+            print("assertion is right after a loop, find the beginning of the closest loop")
+            tmp = goal.line_number
+            while tmp >= 0:
+                tmp -= 1
+                if (tmp in self.assertion_points and (not self.in_loop[tmp - 1]) and
+                        AssertionPointAttributes.BeginningOfLoop in self.assertion_points[tmp]):
+                    closest_line = tmp
+                    break
 
         if closest_line is None:
             return None, None

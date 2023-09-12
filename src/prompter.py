@@ -91,7 +91,7 @@ class Prompter:
             self.dump_messages(messages)
             raw_result = ""
             results = []
-            for penalty in [-1, 1.5, 2]:
+            for penalty in [1.5, 2]:
                 for d in self.prompt(messages, attempts=attempts, penalty=penalty, model=self.model)["choices"]:
                     raw_result += f"GPT output {d['index'] + 1} with penality {penalty}:\n{d['message']['content']}\n"
                     tmp_results = []
@@ -111,6 +111,12 @@ class Prompter:
                 key = None
                 if line_name not in name_to_line_number:
                     continue
+                if "?" in result:
+                    candidates = self.rewrite_case_split_into_disjunction(result, simulate)
+                    if len(candidates) > 0:
+                        result = candidates[0]
+                    else:
+                        continue
                 for k, v in replacements.items():
                     result = result.replace(k, v)
                 tmp_line_number = name_to_line_number[line_name]
@@ -126,15 +132,7 @@ class Prompter:
                     self.line_number_to_predicate[tmp_line_number][key] += 1
                 else:
                     self.line_number_to_predicate[tmp_line_number][result] = 1
-                    if "?" in result:
-                        candidates = self.rewrite_case_split_into_disjunction(result, simulate)
-                        if len(candidates) > 0:
-                            predicate = Predicate(candidates[0], tmp_line_number)
-                        else:
-                            continue
-                    else:
-                        predicate = Predicate(result, tmp_line_number)
-
+                    predicate = Predicate(result, tmp_line_number)
                     self.line_number_to_assertion_to_predicate[tmp_line_number][result] = predicate
             # Sort based on occurrence, break tie by picking shorter one
             sorted_assertions = sorted(self.line_number_to_predicate[line_number].keys(),
@@ -181,7 +179,7 @@ class Prompter:
             self.dump_messages(messages)
             raw_result = ""
             results = []
-            for penalty in [-1, 0]:
+            for penalty in [1.5 , 2]:
                 for d in self.prompt(messages, attempts=attempts, penalty=penalty, model=self.model)["choices"]:
                     raw_result += f"GPT output {d['index'] + 1} with penality {penalty}:\n{d['message']['content']}\n"
                     tmp_results = []
@@ -200,6 +198,12 @@ class Prompter:
             self.line_number_to_predicate[current_sub_goal.line_number] = dict()
             self.line_number_to_assertion_to_predicate[current_sub_goal.line_number] = dict()
             for result in results:
+                if "?" in result:
+                    candidates = self.rewrite_case_split_into_disjunction(result, simulate)
+                    if len(candidates) > 0:
+                        result = candidates[0]
+                    else:
+                        continue
                 key = None
                 for a in self.line_number_to_predicate[current_sub_goal.line_number]:
                     if check_equivalence(a, result):
@@ -209,15 +213,7 @@ class Prompter:
                     self.line_number_to_predicate[current_sub_goal.line_number][key] += 1
                 else:
                     self.line_number_to_predicate[current_sub_goal.line_number][result] = 1
-                    if "?" in result:
-                        candidates = self.rewrite_case_split_into_disjunction(result, simulate)
-                        if len(candidates) > 0:
-                            predicate = Predicate(candidates[0], current_sub_goal.line_number)
-                        else:
-                            continue
-                    else:
-                        predicate = Predicate(result, current_sub_goal.line_number)
-
+                    predicate = Predicate(result, current_sub_goal.line_number)
                     self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][result] = predicate
             # Sort based on occurrence, break tie by picking shorter one
             sorted_assertions = sorted(self.line_number_to_predicate[current_sub_goal.line_number].keys(),
@@ -287,23 +283,21 @@ class Prompter:
         assertion_points = {current_subgoal.line_number: "A"}
         if AssertionPointAttributes.InLoop in attributes:
             content_head = f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-            content_head += f"Print loop variants as valid C assertions at line A that help prove the assertion. "
+            content_head += f"Print loop invariants as valid C assertions at line A. "
             if falsified:
-                content = f"Correct your previous answer '{current_subgoal.content}'. "
+                content = f"Your previous answer '{current_subgoal.content}' is incorrect. "
             else:
-                content = f"Strengthen your previous answer '{current_subgoal.content}'. "
-
+                content = f"Your previous answer '{current_subgoal.content}' is too weak. "
             content_end = (f"Use '&&' or '||' if necessary. "
                            f"Don't explain. Your answer should simply be 'assert(...);'")
             content = content_head + content + content_end
         else:
             content_head = f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-            content_head += f"Print facts as valid C assertions at line A that help prove the assertion. "
+            content_head += f"Print facts as valid C assertions at line A. "
             if falsified:
-                content = f"Correct your previous answer '{current_subgoal.content}'. "
+                content = f"Your previous answer '{current_subgoal.content}' is incorrect. "
             else:
-                content = f"Strengthen you previous answer '{current_subgoal.content}'. "
-
+                content = f"Your previous answer '{current_subgoal.content}' is too weak. "
             content_end = (f"Use '&&' or '||' if necessary. "
                            f"Don't explain. Your answer should simply be 'assert(...);'")
             content = content_head + content + content_end
@@ -317,7 +311,7 @@ class Prompter:
         messages.append(message)
 
         message = self.create_message((f"assert(b == (a >= 18) ? 0 : b + a); => assert((a >= 18 && b == 0) || (a < 18 && b == b + a));\n"
-                                       f"assert(x  + (a  < 1  ? 1 : 2) == 3); => assert((a < 1 && x  + 1== 3) || (a >= 1 && x + 2 == 3));\n"
+                                       f"assert(c > 0 && x  + (a  < 1  ? 1 : 2) == 3); => assert(c > 0 && (a < 1 && x  + 1== 3) || (a >= 1 && x + 2 == 3));\n"
                                        f"assert({result}); => "), system=False)
         messages.append(message)
         if simulate:
