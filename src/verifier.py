@@ -12,6 +12,7 @@ import gloal_configurations as GC
 from program import Program, AssertionPointAttributes
 import random
 from prompter import Prompter
+import time
 
 class Result(Enum):
     Verified = 1
@@ -49,7 +50,14 @@ class Verifier:
 
     def verify(self):
         assert(len(self.program.assertions) == 1)
-        self.verify_goal(self.program.assertions[0], [], level=0)
+        start = time.perf_counter()
+        r, a = self.verify_goal(self.program.assertions[0], [], level=0)
+        if r == Result.Verified:
+            with open(join(self.working_dir, "result.txt"), 'w') as f:
+                f.write(f"verified,{a},{time.perf_counter() - start}")
+        if r == Result.Falsified:
+            with open(join(self.working_dir, "result.txt"), 'w') as f:
+                f.write(f"falsified,{a},{time.perf_counter() - start}")
 
     def verify_goal(self, goal: Predicate, assumptions: List[Predicate], level: int, recursive_mode: bool = True):
         timeout = self.args.per_instance_timeout
@@ -62,10 +70,10 @@ class Verifier:
 
         if r == Result.Verified:
             self.log(1, f"Verified", level)
-            return Result.Verified
+            return Result.Verified, 0
         elif r == Result.Falsified:
             self.log(1, f"Falsified", level)
-            return Result.Falsified
+            return Result.Falsified, 0
         elif recursive_mode:
             self.log(1, f"Unknown", level)
             self.log(1, f"Attempt to propose sub-goals...", level)
@@ -120,7 +128,7 @@ class Verifier:
                                           timeout=self.args.per_instance_timeout, level=level)
                     if r == Result.Falsified:
                         self.log(1, f"Falsified", level)
-                        return Result.Falsified
+                        return Result.Falsified, attempts
                     elif r != Result.Verified:
                         proof_goal_to_result.append((proof_goal, Result.Unknown))
                         self.log(1, "No", level)
@@ -132,7 +140,7 @@ class Verifier:
                         # Instead we verify ((b /\ c) -> a) and (c -> b) and c
                         for pred_id, predicate in enumerate(proof_goal):
                             recursive_mode = len(proof_goal[pred_id + 1:]) == 0
-                            r = self.verify_goal(predicate, assumptions + proof_goal[pred_id + 1:], level + 1, recursive_mode)
+                            r, a = self.verify_goal(predicate, assumptions + proof_goal[pred_id + 1:], level + 1, recursive_mode)
                             if r == Result.Verified:
                                 continue
                             elif r == Result.Falsified:
@@ -146,7 +154,7 @@ class Verifier:
                         if all_hold:
                             self.log(1, f"Sub-goal proven", level)
                             self.log(1, "Verified", level)
-                            return Result.Verified
+                            return Result.Verified, attempts
                         else:
                             # There is another we could prove the assertion.
                             # If proof_goal has length 1 and is not in loop, we already know proof_goal -> goal,
@@ -159,21 +167,18 @@ class Verifier:
                                     self.log(1,
                                              f"Checking if the assertion is also implied by {content}.", level)
 
-
-
                                     r = self.run_verifier(goal, assumptions + [predicate],
                                                           timeout=self.args.per_instance_timeout, level=level)
                                     if r == Result.Verified:
                                         self.log(1, "Yes!", level)
                                         self.log(1, f"Verified", level)
-                                        return Result.Verified
+                                        return Result.Verified, attempts
                                     else:
                                         self.log(1, "No", level)
                             continue
 
-
             self.log(1, f"Unknown", level)
-            return Result.Unknown
+            return Result.Unknown, attempts
 
     def suggest_proof_goals(self, goal : Predicate, level : int)->List[List[Predicate]]:
         predicates = self.prompter.suggest_predicate(goal, self.args.num_assertions, self.args.num_attempts,

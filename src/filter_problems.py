@@ -1,40 +1,40 @@
-import csv
+import tiktoken
+import sys
+import os
+from task import Task
+import utils
+from os.path import dirname, join, basename
+from rewriter import Rewriter
+import yaml
+from copy import copy
+from program import Program
+from predicate import Predicate
 
-def parse_csv_to_dict(csv_filename):
-    result_dict = {}
+enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
-    with open(csv_filename, 'r') as csvfile:
-        csv_reader = csv.DictReader(csvfile)
-        
-        for row in csv_reader:
-            benchmark = row['benchmark']
-            config = row['config']
-            if int(row['sat']) > 0:
-                solved = "sat"
-            elif int(row["unsat"]) > 0:
-                solved = "unsat"
-            else:
-                solved = "unknown"
- 
-            if benchmark not in result_dict:
-                result_dict[benchmark] = {}
-            
-            result_dict[benchmark][config] = solved
-    
-    return result_dict
+MAX_NUM_TOKENS = 150
+import re
 
-# Replace 'input.csv' with the actual CSV filename
-csv_filename = 'result.csv'
-benchmark_to_results = parse_csv_to_dict(csv_filename)
+array_access = 0
+index = 1
+for filename in os.listdir("./benchmarks/code2inv/"):
+    if filename[-2:] != ".c":
+        continue
+    full_filename = "./benchmarks/code2inv/" + filename
+    yml_file =  filename[:-1] + "yml"
+    yml_file_content = (f"format_version: '2.0'\n"
+                        f"input_files: {filename}\n"
+                        f"options:\n"
+                        f"  data_model: ILP32\n"
+                        f"  language: C\n"
+                        f"properties:\n"
+                        f"- expected_verdict: true\n"
+                        f"  property_file: ../properties/unreach-call.prp\n")
+    r = Rewriter(full_filename, handle_reach_error=False)
+    program = Program(r.lines_to_verify, r.replacement)
 
-short_benchmarks = list(map(lambda x: "/".join(x.strip().split("/")[-2:]), open("benchmarks/benchmark_set_reach_safety_short").readlines()))
-
-for benchmark, results in benchmark_to_results.items():
-    if benchmark in short_benchmarks:
-        if results["esbmc_default"] == "unknown":# and \
-           #(results["uautomizer_bitprecise"] != "unknown"
-        #    or results["uautomizer_default"] != "unknown"):
-        #    print(benchmark)
-        #if (results["cbmc_default"] != "unknown" or results["esbmc_default"] != "unknown") and \
-        #if results["uautomizer_default"] == "unknown" and results["uautomizer_bitprecise"] == "unknown":
-            print(benchmark)
+    with open(f"/home/haozewu/GPT_MC/benchmarks/code2inv/c/{yml_file}", 'w') as f:
+        f.write(yml_file_content)
+    with open(f"/home/haozewu/GPT_MC/benchmarks/code2inv/c/{filename}", 'w') as f:
+        p = program.get_program_with_assertion(program.assertions[0], [], dict(),forGPT=False)
+        f.write(p)

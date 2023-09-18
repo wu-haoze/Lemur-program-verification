@@ -139,7 +139,7 @@ class Prompter:
                                        key=lambda x: (self.line_number_to_predicate[line_number][x], -len(x)), reverse=True)
             candidates = []
             for x in sorted_assertions:
-                if AssertionPointAttributes.BeginningOfLoop in attributes and \
+                if False and AssertionPointAttributes.BeginningOfLoop in attributes and \
                         ("while " in self.program.lines[line_number] or "do " in self.program.lines[line_number]):
                     # we are adding an assumption to the beginning of the while loop, might as well add it right before
                     # the while loop

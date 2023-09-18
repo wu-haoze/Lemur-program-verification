@@ -4,6 +4,7 @@ from os.path import join, abspath,dirname
 class Task:
     def __init__(self, yml_file, prop="unreach"):
         self.data = utils.load_yaml_file(yml_file)
+        print(self.data)
         assert(prop in ["reach", "term"])
 
         base_dir = abspath(dirname(yml_file))
