@@ -139,7 +139,7 @@ class Prompter:
                                        key=lambda x: (self.line_number_to_predicate[line_number][x], -len(x)), reverse=True)
             candidates = []
             for x in sorted_assertions:
-                if False and AssertionPointAttributes.BeginningOfLoop in attributes and \
+                if AssertionPointAttributes.BeginningOfLoop in attributes and \
                         ("while " in self.program.lines[line_number] or "do " in self.program.lines[line_number]):
                     # we are adding an assumption to the beginning of the while loop, might as well add it right before
                     # the while loop
@@ -153,11 +153,10 @@ class Prompter:
                     predicate2 = copy(self.line_number_to_assertion_to_predicate[line_number][x])
                     predicate2.line_number = end_of_loop_line_number
 
-                    candidates.append([self.line_number_to_assertion_to_predicate[line_number][x],
-                                       predicate])
+                    candidates.append([self.line_number_to_assertion_to_predicate[line_number][x]])
 
-                    #candidates.append([predicate2,
-                    #                   self.line_number_to_assertion_to_predicate[line_number][x]])
+                    candidates.append([predicate2,
+                                       self.line_number_to_assertion_to_predicate[line_number][x]])
                 else:
                     candidates.append([self.line_number_to_assertion_to_predicate[line_number][x]])
 
@@ -226,7 +225,18 @@ class Prompter:
                     # the while loop
                     predicate = copy(self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x])
                     predicate.line_number = current_sub_goal.line_number - 1
-                    candidates.append([self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x], predicate])
+                    end_of_loop_line_number = current_sub_goal.line_number
+                    while end_of_loop_line_number not in self.program.assertion_points or \
+                            AssertionPointAttributes.EndOfLoop not in self.program.assertion_points[end_of_loop_line_number]:
+                        end_of_loop_line_number += 1
+                    predicate2 = copy(self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x])
+                    predicate2.line_number = end_of_loop_line_number
+
+                    candidates.append([self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x]])
+
+                    candidates.append([predicate2,
+                                       self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x]])
+
                 else:
                     candidates.append([self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x]])
 
@@ -237,7 +247,7 @@ class Prompter:
                                            num_assertions: int):
         assertion_points = {}
         name = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"]
-        content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
+        content_end = (f"Use '&&' or '||' if necessary. "#Prefer equality over inequality. "
                        f"Don't explain. Your answer should be 'assert(...); // line name'")
         if AssertionPointAttributes.InLoop in attributes:
             lines = []
@@ -251,10 +261,10 @@ class Prompter:
                 assertion_points[line_number] = "A"
                 content_head = (f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
                                 f"Print loop invariants as valid C assertions at line A"
-                                f". "
-                                #f" that helps prove the assertion. "
+                                #f". "
+                                f" that helps prove the assertion. "
                                 f"")
-                content_end = (f"Use '&&' or '||' if necessary. Prefer equality over inequality. "
+                content_end = (f"Use '&&' or '||' if necessary. "#"Prefer equality over inequality. "
                                f"Don't explain. Your answer should be 'assert(...); // line A'")
                 content = content_head + content_end
             else:
@@ -283,7 +293,7 @@ class Prompter:
         assertion_points = {current_subgoal.line_number: "A"}
         if AssertionPointAttributes.InLoop in attributes:
             content_head = f"{self.program.get_program_with_assertion(goal, [], assertion_points, forGPT=True)}\n"
-            content_head += f"Print loop invariants as valid C assertions at line A. "
+            content_head += f"Print loop invariants as valid C assertions at line A that helps prove the assertion. "
             if falsified:
                 content = f"Your previous answer '{current_subgoal.content}' is incorrect. "
             else:

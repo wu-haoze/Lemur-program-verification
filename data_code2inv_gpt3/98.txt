@@ -1,0 +1,66 @@
+Namespace(input='./benchmarks/code2inv/c/98.yml', verifier='all', prop='reach', learn=True, working_dir='./data_code2inv_gpt3/', verbosity=1, seed=1, cache=None, num_assertions=2, num_attempts=4, simulate=False, per_instance_timeout=10, model='gpt-3.5-turbo')
+{'format_version': '2.0', 'input_files': '98.c', 'options': {'data_model': 'ILP32', 'language': 'C'}, 'properties': [{'expected_verdict': True, 'property_file': '../properties/unreach-call.prp'}]}
+Working directory created: /home/haozewu/GPT_MC/data_code2inv_gpt3/98+reach+10:45:00-09-19-2023
+
+Dumping program...
+
+Program without assertion:
+	0: int main() { // In loop: False, unclosed bracket: 1
+	1: int i; // In loop: False, unclosed bracket: 1
+	2: int j; // In loop: False, unclosed bracket: 1
+	3: int x; // In loop: False, unclosed bracket: 1
+	4: int y; // In loop: False, unclosed bracket: 1
+	5: (j = 0); // In loop: False, unclosed bracket: 1
+	6: (i = 0); // In loop: False, unclosed bracket: 1
+	7: (y = 2); // In loop: False, unclosed bracket: 1
+	8: while ((i <= x)) { // In loop: True, unclosed bracket: 2
+	9: { // In loop: True, unclosed bracket: 3
+	10: (i = (i + 1)); // In loop: True, unclosed bracket: 3
+	11: (j = (j + y)); // In loop: True, unclosed bracket: 3
+	12: } // In loop: True, unclosed bracket: 2
+	13: } // In loop: False, unclosed bracket: 1
+	14: if ((i != j)) { // In loop: False, unclosed bracket: 2
+	15: } // In loop: False, unclosed bracket: 1
+	16: } // In loop: False, unclosed bracket: 0
+
+Assertion:
+	assert (y != 1) after line 14
+
+Lemmas:
+
+Replacements for GPT:
+
+Potential assertion points:
+After line 8: InLoop, BeginningOfLoop
+After line 13: EndOfLoop
+After line 14: BeforeAssertion
+
+Dumping program - done
+
+[1mLevel 0 - [0mUsing Verifier: ['/home/haozewu/GPT_MC/src/../tools/esbmc/esbmc-wrapper.py', '/home/haozewu/GPT_MC/src/../tools/uautomizer/Ultimate.py']
+[1mLevel 0 - [0mUsing model gpt-3.5-turbo
+[1mLevel 0 - [0mVerifying goal: (y != 1) after line 14 with timeout 10
+----------------------
+void assert(int cond) { if (!(cond)) { ERROR : { reach_error(); abort(); } } }
+void assume(int cond) { if (!cond) { abort(); } }
+int main() {
+int i;
+int j;
+int x;
+int y;
+(j = 0);
+(i = 0);
+(y = 2);
+while ((i <= x)) {
+{
+(i = (i + 1));
+(j = (j + y));
+}
+}
+if ((i != j)) {
+assert((y != 1));
+}
+}
+----------------------
+[1mLevel 0 - [0mTrying esbmc-wrapper.py
+[1mLevel 0 - [0mVerified

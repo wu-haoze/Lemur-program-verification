@@ -1,0 +1,68 @@
+Namespace(input='./benchmarks/code2inv/c/79.yml', verifier='all', prop='reach', learn=True, working_dir='./data_code2inv_esbmc_uautomizer_gpt/', verbosity=1, seed=1, cache=None, num_assertions=2, num_attempts=4, simulate=False, per_instance_timeout=10, model='gpt-4')
+{'format_version': '2.0', 'input_files': '79.c', 'options': {'data_model': 'ILP32', 'language': 'C'}, 'properties': [{'expected_verdict': True, 'property_file': '../properties/unreach-call.prp'}]}
+Working directory created: /home/haozewu/GPT_MC/data_code2inv_esbmc_uautomizer_gpt/79+reach+12:23:20-09-18-2023
+
+Dumping program...
+
+Program without assertion:
+	0: int main() { // In loop: False, unclosed bracket: 1
+	1: int i; // In loop: False, unclosed bracket: 1
+	2: int x; // In loop: False, unclosed bracket: 1
+	3: int y; // In loop: False, unclosed bracket: 1
+	4: (i = 0); // In loop: False, unclosed bracket: 1
+	5: while (unknown()) { // In loop: True, unclosed bracket: 2
+	6: if ((i < y)) { // In loop: True, unclosed bracket: 3
+	7: (i = (i + 1)); // In loop: True, unclosed bracket: 3
+	8: } // In loop: True, unclosed bracket: 2
+	9: } // In loop: False, unclosed bracket: 1
+	10: if ((i >= x)) { // In loop: False, unclosed bracket: 2
+	11: if ((0 > i)) { // In loop: False, unclosed bracket: 3
+	12: } // In loop: False, unclosed bracket: 2
+	13: } // In loop: False, unclosed bracket: 1
+	14: } // In loop: False, unclosed bracket: 0
+
+Assertion:
+	assert (i >= y) after line 11
+
+Lemmas:
+	assume (x >= 0) after line 4
+	assume (y >= 0) after line 4
+	assume (x >= y) after line 4
+
+Replacements for GPT:
+
+Potential assertion points:
+After line 5: BeginningOfLoop, InLoop
+After line 9: EndOfLoop
+After line 11: BeforeAssertion
+
+Dumping program - done
+
+[1mLevel 0 - [0mUsing Verifier: ['/home/haozewu/GPT_MC/src/../tools/esbmc/esbmc-wrapper.py', '/home/haozewu/GPT_MC/src/../tools/uautomizer/Ultimate.py']
+[1mLevel 0 - [0mUsing model gpt-4
+[1mLevel 0 - [0mVerifying goal: (i >= y) after line 11 with timeout 10
+----------------------
+void assert(int cond) { if (!(cond)) { ERROR : { reach_error(); abort(); } } }
+void assume(int cond) { if (!cond) { abort(); } }
+int main() {
+int i;
+int x;
+int y;
+(i = 0);
+assume((x >= 0));
+assume((y >= 0));
+assume((x >= y));
+while (unknown()) {
+if ((i < y)) {
+(i = (i + 1));
+}
+}
+if ((i >= x)) {
+if ((0 > i)) {
+assert((i >= y));
+}
+}
+}
+----------------------
+[1mLevel 0 - [0mTrying esbmc-wrapper.py
+[1mLevel 0 - [0mVerified

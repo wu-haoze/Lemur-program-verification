@@ -63,10 +63,10 @@ class Verifier:
         timeout = self.args.per_instance_timeout
 
         self.log(1, f"Verifying goal: {goal.content} after line {goal.line_number} with timeout {timeout}", level)
-        if level == 0:
-            r = Result.Unknown
-        else:
-            r = self.run_verifier(goal, assumptions, timeout=timeout, level=level)
+        #if level == 0:
+        #    r = Result.Unknown
+        #else:
+        r = self.run_verifier(goal, assumptions, timeout=timeout, level=level)
 
         if r == Result.Verified:
             self.log(1, f"Verified", level)
@@ -100,9 +100,9 @@ class Verifier:
                         if result == Result.Unknown and proof_goal_to_strengthen is None:
                             proof_goal_to_strengthen = i
                     if proof_goal_to_refine is not None:
-                        i, proof_goal_to_adapt, falsified = proof_goal_to_refine, proof_goal_to_result[proof_goal_to_refine][0][0], True
+                        i, proof_goal_to_adapt, falsified = proof_goal_to_refine, proof_goal_to_result[proof_goal_to_refine][0][-1], True
                     elif proof_goal_to_strengthen is not None:
-                        i, proof_goal_to_adapt, falsified = proof_goal_to_strengthen, proof_goal_to_result[proof_goal_to_strengthen][0][0], False
+                        i, proof_goal_to_adapt, falsified = proof_goal_to_strengthen, proof_goal_to_result[proof_goal_to_strengthen][0][-1], False
                     self.log(1,
                              (f"Adapting {proof_goal_to_adapt.content} after line {proof_goal_to_adapt.line_number}, "
                               f"falsified: {falsified}."),
@@ -194,7 +194,7 @@ class Verifier:
                        falsified : bool, level : int)->List[List[Predicate]]:
         predicates = self.prompter.adapt_predicate(goal, current_sub_goal,
                                                    falsified,
-                                                   self.args.num_attempts,
+                                                   2,
                                                    simulate=self.args.simulate)
         self.log(1, f"Found {len(predicates)} potential adapted sub-goals", level)
 
@@ -212,9 +212,8 @@ class Verifier:
         filename = join(self.code_dir, f"code_{self.query_id}.c")
         with open(filename, 'w') as out_file:
             out_file.write(p)
-
         for verifier in self.verifiers:
-            if "uautomizer" in verifier:
+            if "uautomizer" in verifier and level > 0:
                 self.log(1, f"Trying {basename(verifier)}", level)
                 os.chdir(dirname(verifier))
                 command = f"python3 -u {verifier} --spec {self.property} --file {filename} --architecture {self.arch} --full-output"
@@ -224,9 +223,13 @@ class Verifier:
                 os.chdir(dirname(verifier))
                 command = f"python3 -u {verifier} -p {self.property} -s kinduction --arch {self.arch.split('bit')[0]} {filename}"
                 to = min(10, timeout)
+            else:
+                continue
+
             stdout, _ = run_subprocess(command, self.verbosity > 1, to)
 
-            command = f"pkill -9 java; pkill -9 z3; pkill -9 esbmc; pkill -9 mathsat"
+            command = f"pkill -9 esbmc"
+            #command = f"pkill -9 java; pkill -9 z3; pkill -9 esbmc; pkill -9 mathsat"
             run_subprocess(command, self.verbosity > 1, timeout)
 
             if stdout[-1] == "TRUE\n":

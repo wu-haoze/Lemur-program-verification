@@ -1,0 +1,53 @@
+Namespace(input='./benchmarks/code2inv/c/84.yml', verifier='esbmc', prop='reach', learn=True, working_dir='./data_code2inv_esbmc/', verbosity=1, seed=1, cache=None, num_assertions=2, num_attempts=4, simulate=False, per_instance_timeout=10, model='gpt-4')
+{'format_version': '2.0', 'input_files': '84.c', 'options': {'data_model': 'ILP32', 'language': 'C'}, 'properties': [{'expected_verdict': True, 'property_file': '../properties/unreach-call.prp'}]}
+Working directory created: /home/haozewu/GPT_MC/data_code2inv_esbmc/84+reach+01:03:25-09-18-2023
+
+Dumping program...
+
+Program without assertion:
+	0: int main() { // In loop: False, unclosed bracket: 1
+	1: int x; // In loop: False, unclosed bracket: 1
+	2: int y; // In loop: False, unclosed bracket: 1
+	3: (x = -50); // In loop: False, unclosed bracket: 1
+	4: while ((x < 0)) { // In loop: True, unclosed bracket: 2
+	5: { // In loop: True, unclosed bracket: 3
+	6: (x = (x + y)); // In loop: True, unclosed bracket: 3
+	7: (y = (y + 1)); // In loop: True, unclosed bracket: 3
+	8: } // In loop: True, unclosed bracket: 2
+	9: } // In loop: False, unclosed bracket: 1
+	10: } // In loop: False, unclosed bracket: 0
+
+Assertion:
+	assert (y > 0) after line 9
+
+Lemmas:
+
+Replacements for GPT:
+
+Potential assertion points:
+After line 4: InLoop, BeginningOfLoop
+After line 9: EndOfLoop, BeforeAssertion
+
+Dumping program - done
+
+[1mLevel 0 - [0mUsing Verifier: ['/home/haozewu/GPT_MC/src/../tools/esbmc/esbmc-wrapper.py']
+[1mLevel 0 - [0mUsing model gpt-4
+[1mLevel 0 - [0mVerifying goal: (y > 0) after line 9 with timeout 10
+----------------------
+void assert(int cond) { if (!(cond)) { ERROR : { reach_error(); abort(); } } }
+void assume(int cond) { if (!cond) { abort(); } }
+int main() {
+int x;
+int y;
+(x = -50);
+while ((x < 0)) {
+{
+(x = (x + y));
+(y = (y + 1));
+}
+}
+assert((y > 0));
+}
+----------------------
+[1mLevel 0 - [0mTrying esbmc-wrapper.py
+[1mLevel 0 - [0mFalsified

@@ -9,5 +9,5 @@ else
     python3 -u ./src/run.py $@
 fi
 
-pkill -9 python3
-pkill -9 z3
+#pkill -9 python3
+#pkill -9 z3
