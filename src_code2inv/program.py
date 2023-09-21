@@ -3,7 +3,6 @@ from typing import List, Set, Dict
 import re
 from predicate import Predicate
 from copy import copy
-from utils import blue
 
 PATCH = ('void assert(int cond) { if (!(cond)) { ERROR : { reach_error(); abort(); } } }\n'
          'void assume(int cond) { if (!cond) { abort(); } }\n')
@@ -141,7 +140,7 @@ class Program:
 
         if dump:
             print("----------------------")
-            print(blue(program))
+            print(program)
             print("----------------------")
         return program
 
@@ -159,11 +158,11 @@ class Program:
         closest_line = None
         if AssertionPointAttributes.InLoop in self.assertion_points[goal.line_number]:
             if AssertionPointAttributes.BeginningOfLoop in self.assertion_points[goal.line_number]:
-                #print("assertion is the beginning of the loop, get the line right before the loop")
+                print("assertion is the beginning of the loop, get the line right before the loop")
                 assert(AssertionPointAttributes.BeforeLoop in self.assertion_points[goal.line_number - 1])
                 closest_line = goal.line_number - 1
             else:
-                #print("assertion is in the loop, find the beginning of the closest loop")
+                print("assertion is in the loop, find the beginning of the closest loop")
                 tmp = goal.line_number
                 while tmp >= 0:
                     tmp -= 1
@@ -172,7 +171,7 @@ class Program:
                         closest_line = tmp
                         break
         else:
-            #print("assertion is right after a loop, find the beginning of the closest loop")
+            print("assertion is right after a loop, find the beginning of the closest loop")
             tmp = goal.line_number
             while tmp >= 0:
                 tmp -= 1

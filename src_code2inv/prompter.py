@@ -105,7 +105,7 @@ class Prompter:
 
 
             raw_result = raw_result[:-1]
-            #print(f"{raw_result}")
+            print(f"{raw_result}")
 
             for line_name, result in results:
                 key = None
@@ -153,10 +153,10 @@ class Prompter:
                     predicate2 = copy(self.line_number_to_assertion_to_predicate[line_number][x])
                     predicate2.line_number = end_of_loop_line_number
 
-                    candidates.append([self.line_number_to_assertion_to_predicate[line_number][x], predicate])
+                    candidates.append([self.line_number_to_assertion_to_predicate[line_number][x]])
 
-                    #candidates.append([predicate2,
-                    #                   self.line_number_to_assertion_to_predicate[line_number][x]])
+                    candidates.append([predicate2,
+                                       self.line_number_to_assertion_to_predicate[line_number][x]])
                 else:
                     candidates.append([self.line_number_to_assertion_to_predicate[line_number][x]])
 
@@ -232,10 +232,10 @@ class Prompter:
                     predicate2 = copy(self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x])
                     predicate2.line_number = end_of_loop_line_number
 
-                    candidates.append([self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x], predicate])
+                    candidates.append([self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x]])
 
-                    #candidates.append([predicate2,
-                    #                   self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x]])
+                    candidates.append([predicate2,
+                                       self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x]])
 
                 else:
                     candidates.append([self.line_number_to_assertion_to_predicate[current_sub_goal.line_number][x]])
@@ -350,6 +350,6 @@ class Prompter:
     def dump_messages(messages):
         print("\nDumping messages...")
         for message in messages:
-            print(f"{bold(message['role'])}:\n{red(message['content'])}")
+            print(f"{bold(message['role'])}:\n{message['content']}")
 
         print("\nDumping messages - done")

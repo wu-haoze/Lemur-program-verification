@@ -1,0 +1,2 @@
+time ./run.sh ./benchmarks/short_hard_benchmarks/c/loops-crafted-1_in-de20_assertion0.yml --learn --per-instance-timeout 15 -v all
+time ./run.sh ./benchmarks/short_hard_benchmarks/c/bitvector_jain_5-2_assertion0.yml --learn -v all --per-instance-timeout 15

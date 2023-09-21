@@ -114,12 +114,6 @@ class color:
 def bold(text : str) -> str:
    return color.BOLD + text + color.END
 
-def red(text : str) -> str:
-   return color.RED + text + color.END
-
-def blue(text : str) -> str:
-   return color.BLUE + text + color.END
-
 def check_equivalence(c1, c2):
     # parse the statements into ASTs
     try:

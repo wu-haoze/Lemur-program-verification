@@ -213,7 +213,7 @@ class Verifier:
         with open(filename, 'w') as out_file:
             out_file.write(p)
         for verifier in self.verifiers:
-            if "uautomizer" in verifier:
+            if "uautomizer" in verifier and level > 0:
                 self.log(1, f"Trying {basename(verifier)}", level)
                 os.chdir(dirname(verifier))
                 command = f"python3 -u {verifier} --spec {self.property} --file {filename} --architecture {self.arch} --full-output"
