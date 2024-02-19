@@ -1,2 +1,0 @@
-loops-crafted-1_mono-crafted_14  possible
-nla-digbenchm/bresenham.c possible

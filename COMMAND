@@ -1,1 +1,0 @@
- ./run.sh benchmarks/short_single_assertion/c/jain_5-2_0.yml -v uautomizer --verbosity=1 --seed 1 --learn --cache ./data/jain_5-2_0+reach+00\:45\:04-08-25-2023/

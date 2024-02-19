@@ -1,1 +1,0 @@
-verified_by_cbmc,0,2.3
