@@ -15,6 +15,7 @@ then
     wget https://gitlab.com/sosy-lab/sv-comp/archives-2023/raw/svcomp23/2023/uautomizer.zip
     rm -rf uautomizer
     unzip uautomizer.zip
+    mv UAutomizer-linux uautomizer
 fi
 
 cd ../
