@@ -1,4 +1,4 @@
-pycparser
-openai
-tiktoken
-pyyaml
+pycparser==2.21
+openai==0.28.0
+tiktoken==0.5.0
+pyyaml==5.4.1
