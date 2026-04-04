@@ -24,6 +24,22 @@ You need to download two software verification tools by running
 
 ``./build.sh``
 
+**Important**: UAutomizer depends on Java (`sudo apt install openjdk-11-jdk`)
+
+To test UAutomizer, run:
+
+`python3 -u ./tools/uautomizer/Ultimate.py --spec ./lemur/benchmarks/sv_comp/properties/unreach-call.prp --file ./code2inv/benchmarks/code2inv/c/3.c --architecture 32bit --full-output`
+
+The program should finish in a few seconds and the last few lines should be
+
+```
+Execution finished normally
+Writing output log to file Ultimate.log
+Result:
+TRUE
+```
+
+
 ## Experiments
 
 There are two experiments that we performed. The source code as well as the log files for each are contained in "code2inv/" and "lemur/", respectively.
